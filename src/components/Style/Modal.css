@@ -1,0 +1,7 @@
+/* the Modal component do a some conflict beacuse we work with semantic ui and bootstrap, so i repair this with some css */
+#content {
+    text-align: center;
+    margin: 40vh 0px 0px 25vw;
+    height: 200px;
+    width: 50vw;
+}
