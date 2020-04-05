@@ -14,7 +14,7 @@ const LecturerView = ({ getMaterials, materials }) => {
         if (idChanged === id) {
             return (
                 <div>
-                    <button className="ui button primary">View Class</button>
+                    <Link to="/viewClass" className="ui button primary">View Class</Link>
                     <button className="ui button primary">View Subjects</button>
                     <button className="ui button green">Edit</button>
                     <Link to={`LecturerView/deleteMaterial/${id}`} className="ui button red">Delete</Link>

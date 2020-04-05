@@ -9,6 +9,7 @@ import StudentView from './Learning/Student/StudentView';
 import IntroductionMain from './General/IntroductionMain';
 import NewMaterial from './Learning/Lecturer/NewMaterial';
 import DeleteMaterial from './Learning/Lecturer/DeleteMaterial';
+import ViewClass from '../components/Learning/Lecturer/ViewClass';
 import StudentPermissions from '../components/Learning/Lecturer/StudentPermissions';
 const App = () => {
     return (
@@ -25,6 +26,7 @@ const App = () => {
                         <Route path="/AboutUs" exact component={AboutUs} />
                         <Route path="/newMaterial" exact component={NewMaterial} />
                         <Route path="/studentPermissions" exact component={StudentPermissions} />
+                        <Route path="/viewClass" exact component={ViewClass} />
                         <Route path="/LecturerView/deleteMaterial/:id" exact component={DeleteMaterial} />
                         <Route path="*" exact component={() => { return (<h1 style={{ textAlign: "center" }}>404 NOT FOUND</h1>) }} />
                     </Switch>

@@ -5,7 +5,6 @@ import { connect } from 'react-redux';
 import { SignIn, SignOut } from '../../Redux/actions';
 
 const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
-
     const currentUser = () => {
         let concatenationElement = [];
         const typeRoute = isLecturer ? '/LecturerView' : '/StudentView';
