@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { getMaterials } from '../../../Redux/actions';
-
+import { Link } from 'react-router-dom';
 
 const StudentView = ({ getMaterials, materials }) => {
     const [isClickButton, setIsClickButton] = useState({ id: '' });
@@ -20,7 +20,7 @@ const StudentView = ({ getMaterials, materials }) => {
                         (
                             <div>
                                 <button className="ui button primary">View Subjects</button>
-                                <button className="ui button green">View Class</button>
+                                <Link to="StudentView/ViewClass" className="ui button green">View Class</Link>
                             </div>)
                         : ''}
                 </div >

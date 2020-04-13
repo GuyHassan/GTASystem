@@ -3,26 +3,29 @@ import { Link } from "react-router-dom";
 import JumbotronMain from './JumbotronMain';
 import { connect } from 'react-redux';
 import { SignIn, SignOut } from '../../Redux/actions';
+import '../Style/Header.css';
 
 const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
     const currentUser = () => {
         let concatenationElement = [];
+
         const typeRoute = isLecturer ? '/LecturerView' : '/StudentView';
         if (!isLoggedIn) {
             return <Link to='/Login' style={{ fontWeight: '900' }} className="item">Login</Link>
         }
         if (isLecturer) {
             concatenationElement.push(
-                <Link key={0} to='/studentPermissions' className='item'>Student Permission</Link>
+                <Link key={0} to='/LecturerView/StudentPermissions' className='item'>Student Permission</Link>
             )
         }
         concatenationElement.push(
             <Link key={1} to={typeRoute} className="item">Metarial View</Link>,
-            <p key={3} className="item" style={{ color: 'red', fontWeight: '800' }}>{userID}</p>,
+            <p key={3} className="item" style={{ color: '#87CEFA', fontWeight: '800' }}>{userID}</p>,
             <Link key={2} to='/Login' onClick={logOut} style={{ fontWeight: '900' }} className='item'>Logout</Link>
         )
         return concatenationElement;
     }
+
     const logOut = () => {
         SignOut();
         localStorage.clear();
@@ -44,7 +47,7 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
 
     return (
         <div>
-            <div className="ui container ui secondary pointing menu">
+            <div id="navbar" className="ui container ui secondary pointing menu">
                 <Link to={{
                     pathname: '/'
                 }}
