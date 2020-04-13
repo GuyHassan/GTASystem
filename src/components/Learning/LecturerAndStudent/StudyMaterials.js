@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { getMaterials } from '../../../Redux/actions';
 import { Link } from 'react-router-dom';
-const LecturerView = ({ getMaterials, materials }) => {
+const StudyMaterials = ({ getMaterials, materials }) => {
     const [idChanged, setIdChanged] = useState('');
 
     //return buttons by the specific id clicked
     const buttonsCreate = ({ id }) => {
-        if (idChanged === id) {
-            return (
+        return idChanged === id ? (
+            (
                 <div>
                     <Link to="/LecturerView/ViewClass" className="ui button primary">View Class</Link>
                     <button className="ui button primary">View Subjects</button>
@@ -16,8 +16,7 @@ const LecturerView = ({ getMaterials, materials }) => {
                     <Link to={`/LecturerView/DeleteMaterial/${id}`} className="ui button red">Delete</Link>
                 </div>
             )
-        }
-        else return null;
+        ) : null;
     }
 
     const renderList = () => {
@@ -55,4 +54,4 @@ const mapStateToProps = (state) => {
         materials: Object.values(state.materials)
     }
 }
-export default connect(mapStateToProps, { getMaterials })(LecturerView);
+export default connect(mapStateToProps, { getMaterials })(StudyMaterials);
