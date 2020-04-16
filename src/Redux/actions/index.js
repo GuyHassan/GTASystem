@@ -1,4 +1,4 @@
-import server from "../../Apis/server";
+import {server} from "../../Apis/server";
 import history from '../../history';
 export const SignIn = (userDetails) => {
     return {

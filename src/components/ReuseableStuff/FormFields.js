@@ -1,15 +1,12 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
-const FormFields = ({ handleSubmit, FirstField, SecondField, children, buttonName, onSubmit: onSubmitFunc }) => {
-    // when the user click on the button this function called
-    const onSubmit = (formValues) => {
-        onSubmitFunc(formValues);
-    }
+const FormFields = ({ handleSubmit, FirstField, SecondField, children, buttonName }) => {
+
     return (
         <form
             //handleSubmit is a function from redux form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={(event) => handleSubmit(event)}
             className='ui form error'>
             <Field
                 name={FirstField}

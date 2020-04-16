@@ -3,37 +3,40 @@ import { connect } from 'react-redux';
 import { getUsers, SignIn } from '../../Redux/actions';
 import history from '../../history';
 import FormField from '../ReuseableStuff/FormFields';
+import { server } from '../../Apis/server';
+
 
 const Login = ({ users, SignIn, getUsers }) => {
-
-    const setLocalStorage = (currUser) => {
+    const setLocalStorage = (username, isLecturer) => {
         const user = {
-            'user': currUser.username,
-            'isLecturer': currUser.isLecturer
+            'user': username,
+            'isLecturer': isLecturer
         }
         localStorage.setItem('userCredential', JSON.stringify(user))
     }
+    const userType = ({ username, isLecturer }) => {
+        SignIn({ userID: username, isLecturer: isLecturer })
+        setLocalStorage(username, isLecturer)
+        if (isLecturer)
+            history.push("/LecturerView");
+        else
+            history.push("/StudentView");
+    }
+
     // when the user click on the button this function called
-    const onSubmit = (formValues) => {
-        let isExist = false;
-        users.forEach(user => {
-            if (formValues.Username === user.username
-                &&
-                formValues.Password === user.password) {
-                SignIn({ userID: user.username, isLecturer: user.isLecturer })
-                setLocalStorage(user)
-                isExist = !isExist;
-                if (user.isLecturer)
-                    history.push("/LecturerView");
-                else
-                    history.push("/StudentView");
-            }
-        })
-        if (!isExist) alert("User Not Exist");
+    const onSubmit = async (formValues) => {
+        server.post('/loginRequest', formValues)
+            .then((response) => {
+                const userDetails = response.data;
+                userType(userDetails);
+            }, (error) => {
+                console.log(error);
+                alert("username or password are incorrect");
+            });
 
     }
 
-    useEffect(() => { getUsers(); }, [getUsers])
+    // useEffect(() => { getUsers(); }, [getUsers])
 
     return (
         <div>
