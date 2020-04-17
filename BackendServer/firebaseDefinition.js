@@ -55,7 +55,7 @@ const existInDB = async (root, child) => {
 
 const addStudent = (studentDetails) => {
     const studentLoginTree = { password: studentDetails.password, isLecturer: false };
-    const studentDetailsTree = { id: studentDetails.studentID, name: studentDetails.name, gender: studentDetails.gender }
+    const studentDetailsTree = { id: studentDetails.ID, name: studentDetails.name, gender: studentDetails.gender }
     firebase.database().ref(`users/${studentDetails.username}`).set(studentLoginTree);
     firebase.database().ref(`students/${studentDetails.username}`).set(studentDetailsTree);
     return true;

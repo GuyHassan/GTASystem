@@ -1,6 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router';
-import FormField from '../../ReuseableStuff/FormFields';
+import FormField from '../../ReuseableComponents/FormFields';
 import { createNewMaterial } from '../../../Redux/actions';
 import { connect } from 'react-redux';
 

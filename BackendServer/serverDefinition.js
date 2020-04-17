@@ -32,7 +32,7 @@ app.post('/loginRequest', (req, res) => {
   });
 });
 
-let user = { username: "yinon123", password: 12345, studentID: 203409024, name: "yinon hirary", gender: "male" };
+let user = { username: "yinon123", password: 12345, ID: 203409024, name: "yinon hirary", gender: "male" };
 
 //new student to the DB 
 app.post("/LecturerView/StudentPermissions", (req, res) => {

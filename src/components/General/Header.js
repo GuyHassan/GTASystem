@@ -8,7 +8,6 @@ import '../Style/Header.css';
 const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
     const currentUser = () => {
         let concatenationElement = [];
-
         const typeRoute = isLecturer ? '/LecturerView' : '/StudentView';
         if (!isLoggedIn) {
             return <Link to='/Login' style={{ fontWeight: '900' }} className="item">Login</Link>
@@ -48,9 +47,7 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
     return (
         <div>
             <div id="navbar" className="ui container ui secondary pointing menu">
-                <Link to={{
-                    pathname: '/'
-                }}
+                <Link to={{ pathname: '/' }}
                     className="item">
                     GTA - System
              </Link>

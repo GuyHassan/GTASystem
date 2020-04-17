@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Modal from '../../ReuseableStuff/Modal';
+import Modal from '../../ReuseableComponents/Modal';
 import { Link } from 'react-router-dom';
 import history from '../../../history';
 import { connect } from 'react-redux';
