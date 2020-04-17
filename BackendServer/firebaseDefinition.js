@@ -22,7 +22,7 @@ const firebaseConfig = {
 //initial the database
 firebase.initializeApp(firebaseConfig);
 
-//make const to enter the DB 
+// enter to DB 
 const database = firebase.database();
 
 //function for check if username and password are exist
@@ -42,9 +42,13 @@ const checkUsernamePassword = async (details) => {
     }
 }
 
-//function that get the 
-const checkIfObjExist = async (root,obj) => {
-    const ans = await (database.ref(`${root}/${obj}`).once("value"));
+/* 
+    root - the main node of tree
+    child - branch of current root
+    function - return promise if the child is exist in the root or not (true/false)!
+*/
+const existInDB = async (root, child) => {
+    const ans = await (database.ref(`${root}/${child}`).once("value"));
     return ans.exists();
 }
 
@@ -60,19 +64,19 @@ const deleteTree = (root, username) => {
     database.ref(`${root}/${username}`).remove();
 }
 
-const getClassRooms =async (LectureName)=>{
-    return  await (database.ref(`lecturers/${LectureName}`).once("value"));
+const getClassRooms = async (LectureName) => {
+    return await (database.ref(`lecturers/${LectureName}`).once("value"));
 }
 
-const addClassRooms = (classRoomDetails)=>{
-
-}
-
-const removeClassrooms = ()=>{
+const addClassRooms = (classRoomDetails) => {
 
 }
 
-const addStudentToClassroom = ()=>{
+const removeClassrooms = () => {
+
+}
+
+const addStudentToClassroom = () => {
 
 }
 
@@ -84,9 +88,9 @@ const addStudentToClassroom = ()=>{
 /////Test!!!!!!!!!!!!!!
 //let user = { username: "yinon123", password: 12345, studentID: 203409024, name: "yinon hirary", gender: "male" };
 //addStudent(user);
- //deleteTree("users","yinon123");
- //deleteTree("students","yinon123");
+//deleteTree("users","yinon123");
+//deleteTree("students","yinon123");
 
 
-module.exports = { checkIfObjExist,checkUsernamePassword, addStudent };
+module.exports = { existInDB, checkUsernamePassword, addStudent };
 
