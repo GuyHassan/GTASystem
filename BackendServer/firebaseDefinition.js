@@ -43,10 +43,11 @@ const checkUsernamePassword = async (details) => {
 }
 
 //function that get the 
-const checkIfUsernameExist = async (username) => {
-    const ans = await (database.ref(`users/${username}`).once("value"));
+const checkIfObjExist = async (root,obj) => {
+    const ans = await (database.ref(`${root}/${obj}`).once("value"));
     return ans.exists();
 }
+
 
 const addStudent = (studentDetails) => {
     const studentLoginTree = { password: studentDetails.password, isLecturer: false };
@@ -55,12 +56,25 @@ const addStudent = (studentDetails) => {
     firebase.database().ref(`students/${studentDetails.username}`).set(studentDetailsTree);
     return true;
 }
-
-const deleteTree = async (root, username) => {
+const deleteTree = (root, username) => {
     database.ref(`${root}/${username}`).remove();
 }
 
+const getClassRooms =async (LectureName)=>{
+    return  await (database.ref(`lecturers/${LectureName}`).once("value"));
+}
 
+const addClassRooms = (classRoomDetails)=>{
+
+}
+
+const removeClassrooms = ()=>{
+
+}
+
+const addStudentToClassroom = ()=>{
+
+}
 
 
 
@@ -74,4 +88,5 @@ const deleteTree = async (root, username) => {
  //deleteTree("students","yinon123");
 
 
-module.exports = { checkIfUsernameExist,checkUsernamePassword, addStudent };
+module.exports = { checkIfObjExist,checkUsernamePassword, addStudent };
+
