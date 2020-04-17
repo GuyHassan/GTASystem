@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router';
 import { connect } from 'react-redux';
 import { createStudent } from '../../../Redux/actions';
+import {server} from '../../../Apis/server';
 
 const StudentPermissions = ({ createStudent }) => {
     const [state, setState] = useState({
@@ -46,8 +47,14 @@ const StudentPermissions = ({ createStudent }) => {
         event.preventDefault();
         const isValid = validate();
         if (isValid) {
-            //submit here !!
-            console.log(state)
+            server.post('/LecturerView/StudentPermissions')
+            .then((response) => {
+                //need to implement here !!
+                console.log("the user been added!!!");
+                }, (error) => {
+                console.log(error);
+                alert("the username is taken!!!");
+            });
         }
     }
     const genderChoosen = () => {

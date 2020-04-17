@@ -19,10 +19,13 @@ const firebaseConfig = {
     measurementId: "G-RMWLSFVZ9M"
 };
 
+//initial the database
 firebase.initializeApp(firebaseConfig);
 
+//make const to enter the DB 
 const database = firebase.database();
 
+//function for check if username and password are exist
 const checkUsernamePassword = async (details) => {
     try {
         const { isLecturer, password } = (await database.ref(`users/${details.Username}`).once("value")).val();
@@ -38,5 +41,37 @@ const checkUsernamePassword = async (details) => {
         return null;
     }
 }
-module.exports = { checkUsernamePassword };
 
+//function that get the 
+const checkIfUsernameExist = async (username) => {
+    const ans = await (database.ref(`users/${username}`).once("value"));
+    return ans.exists();
+}
+
+const addStudent = (studentDetails) => {
+    const studentLoginTree = { password: studentDetails.password, isLecturer: false };
+    const studentDetailsTree = { id: studentDetails.studentID, name: studentDetails.name, gender: studentDetails.gender }
+    firebase.database().ref(`users/${studentDetails.username}`).set(studentLoginTree);
+    firebase.database().ref(`students/${studentDetails.username}`).set(studentDetailsTree);
+    return true;
+}
+
+const deleteTree = async (root, username) => {
+    database.ref(`${root}/${username}`).remove();
+}
+
+
+
+
+
+
+
+
+/////Test!!!!!!!!!!!!!!
+//let user = { username: "yinon123", password: 12345, studentID: 203409024, name: "yinon hirary", gender: "male" };
+//addStudent(user);
+ //deleteTree("users","yinon123");
+ //deleteTree("students","yinon123");
+
+
+module.exports = { checkIfUsernameExist,checkUsernamePassword, addStudent };

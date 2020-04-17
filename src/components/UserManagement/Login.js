@@ -33,7 +33,6 @@ const Login = ({ users, SignIn, getUsers }) => {
                 console.log(error);
                 alert("username or password are incorrect");
             });
-
     }
 
     // useEffect(() => { getUsers(); }, [getUsers])

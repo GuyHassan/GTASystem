@@ -1,6 +1,5 @@
 
-
-const { checkUsernamePassword } = require("./firebaseDefinition");
+const { checkUsernamePassword, addStudent,checkIfUsernameExist } = require("./firebaseDefinition");
 const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
@@ -32,6 +31,27 @@ app.post('/loginRequest', (req, res) => {
     res.send(response);
   });
 });
+
+let user = { username: "yinon123", password: 12345, studentID: 203409024, name: "yinon hirary", gender: "male" };
+
+app.post("/LecturerView/StudentPermissions", (req, res) => {
+  const userDetails = req.body;
+  console.log(req.body);
+  checkIfUsernameExist(userDetails.username).then((response) => {
+    if (response === true) {
+      res.status("404").send("the username is used");
+      return;
+    }
+    addStudent(user);
+    console.log("the user is added to the DB");
+    res.send(response);
+  });
+
+
+});
+
+
+
 
 app.listen(PORT, () =>
   console.log(`Example app listening on port ${PORT}!`)
