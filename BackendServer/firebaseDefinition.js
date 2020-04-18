@@ -61,6 +61,7 @@ const addUsers = (userDetails) => {
         ? firebase.database().ref(`lecturers/${userDetails.username}`).set(userDetailsTree)
         : firebase.database().ref(`students/${userDetails.username}`).set(userDetailsTree);
     firebase.database().ref(`users/${userDetails.username}`).set(userLoginTree);
+    console.log("check merge");
     return true;
 }
 const deleteTree = (root, username) => {
