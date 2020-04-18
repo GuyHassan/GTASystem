@@ -42,6 +42,7 @@ const StudyMaterials = ({ getMaterials, materials, children, userMessage }) => {
             )
         })
     }
+
     /* when the value in getMaterials is changed useEffect call again to this function,
          but the value never change that way is call only 1 time, (like componentDidMount) */
     useEffect(() => { getMaterials(); }, [getMaterials])

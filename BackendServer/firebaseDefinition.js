@@ -71,8 +71,10 @@ const getClassRooms = async (LectureName) => {
 
 const getSizeOfChildrens = async (root,childRoot) =>{
     const ans= await (database.ref(`${root}/${childRoot}`).once("value")).numChildren();
+    console.log();
     return ans;
 }
+
 
 const addClassRooms = (classRoomDetails) => {
 
@@ -96,6 +98,7 @@ let user = { username: "yinon123", password: 12345, ID: 203409024, name: "yinon 
 //addStudent(user);
 //deleteTree("users","yinon123");
 //deleteTree("students","yinon123");
+getSizeOfChildrens("")
 
 
 module.exports = { getClassRooms,existInDB, checkUsernamePassword, addStudent };
