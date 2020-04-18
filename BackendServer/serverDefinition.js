@@ -33,10 +33,15 @@ app.post('/loginRequest', (req, res) => {
   });
 });
 
+<<<<<<< HEAD
 let user = { username: "yinon123", password: 12345, ID: 203409024, name: "yinon hirary", gender: "male" };
 pathPermission = ["/LecturerView/StudentPermissions", '/AdminPermission'];
 //new user to the DB 
 app.post(pathPermission, (req, res) => {
+=======
+//new student to the DB 
+app.post("/LecturerView/StudentPermissions", (req, res) => {
+>>>>>>> 40d8f417416f13be892a319a05ab36a92864a114
   //Added for test !!!
   // const userDetails = user;
   const userDetails = { ...req.body, path: req.url };
@@ -45,8 +50,13 @@ app.post(pathPermission, (req, res) => {
       res.status("404").send("The Username Is Used");
       return;
     }
+<<<<<<< HEAD
     addUsers(userDetails);
     console.log("The User Is Added To The DB");
+=======
+    addStudent(userDetails);
+    console.log("the user is added to the DB");
+>>>>>>> 40d8f417416f13be892a319a05ab36a92864a114
     res.send(response);
   });
 
