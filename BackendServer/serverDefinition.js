@@ -1,5 +1,5 @@
 
-const { checkUsernamePassword, addStudent, existInDB } = require("./firebaseDefinition");
+const { checkUsernamePassword, addUsers, existInDB } = require("./firebaseDefinition");
 const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
@@ -22,6 +22,7 @@ app.use(function (req, res, next) {
 
 // create a login request and check if the user exist
 app.post('/loginRequest', (req, res) => {
+  console.log(req.body)
   const userDetails = req.body;
   checkUsernamePassword(userDetails).then((response) => {
     if (response === null) {
@@ -33,19 +34,19 @@ app.post('/loginRequest', (req, res) => {
 });
 
 let user = { username: "yinon123", password: 12345, ID: 203409024, name: "yinon hirary", gender: "male" };
-
-//new student to the DB 
-app.post("/LecturerView/StudentPermissions", (req, res) => {
+pathPermission = ["/LecturerView/StudentPermissions", '/AdminPermission'];
+//new user to the DB 
+app.post(pathPermission, (req, res) => {
   //Added for test !!!
   // const userDetails = user;
-  const userDetails = req.body;
+  const userDetails = { ...req.body, path: req.url };
   existInDB("users", userDetails.username).then((response) => {
     if (response === true) {
-      res.status("404").send("the username is used");
+      res.status("404").send("The Username Is Used");
       return;
     }
-    addStudent(user);
-    console.log("the user is added to the DB");
+    addUsers(userDetails);
+    console.log("The User Is Added To The DB");
     res.send(response);
   });
 
@@ -54,5 +55,5 @@ app.post("/LecturerView/StudentPermissions", (req, res) => {
 
 // inital the server in default PORT (3005)
 app.listen(PORT, () =>
-  console.log(`Example app listening on port ${PORT}!`)
+  console.log(`App listening on port ${PORT}!`)
 );

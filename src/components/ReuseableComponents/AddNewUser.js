@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory, useLocation } from 'react-router';
 import { server } from '../../Apis/server';
-
+const details = { username: '', password: '', firstName: '', lastName: '', ID: '', gender: '' }
 const AddNewUser = ({ titleMessage }) => {
-    const [state, setState] = useState({ username: '', password: '', firstName: '', lastName: '', ID: '', gender: '' });
-    const [errorState, setErrorState] = useState({ username: '', password: '', firstName: '', lastName: '', ID: '', gender: '' });
+    const [state, setState] = useState(details);
+    const [errorState, setErrorState] = useState(details);
     const history = useHistory();
+    const { pathname } = useLocation();
     const generateRandomizePass = () => {
         const randomPassword = Math.random().toString(15).replace(/[^a-z1-9]+/g, '').substr(0, 7)
         setState({ ...state, password: randomPassword });
@@ -36,6 +37,8 @@ const AddNewUser = ({ titleMessage }) => {
             case 'gender':
                 setNewValues(name, value);
                 break;
+            default:
+                break;
         }
     }
     const validate = () => {
@@ -57,9 +60,9 @@ const AddNewUser = ({ titleMessage }) => {
         const isValid = validate();
         if (isValid) {
             const name = state.firstName + ' ' + state.lastName;
-            server.post('/LecturerView/StudentPermissions', { ...state, name: name })
+            server.post(pathname, { ...state, name: name })
                 .then((response) => {
-                    //need to implement here !!
+                    setState(details)
                     console.log("The User As Been Added...");
                 }, (error) => {
                     console.log(error);

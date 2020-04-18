@@ -1,4 +1,4 @@
-import {server} from "../../Apis/server";
+import { server } from "../../Apis/server";
 import history from '../../history';
 export const SignIn = (userDetails) => {
     return {
@@ -20,12 +20,6 @@ export const SignOut = () => {
 //     return clonedObj;
 // };
 
-export const getUsers = () => async (dispatch) => {
-    // const { userId } = getState().auth;
-    //formValues is the value from the form and the server get him and update the database
-    const response = await server.get("/users");
-    dispatch({ type: 'GET_USERS', payload: response.data });
-};
 // export const createStudent = (studentDetails) => async (dispatch) => {
 //     const newKeys = ['username', 'password'];
 //     Object.keys(studentDetails).forEach((oldKey, index) => { studentDetails = renameKey(studentDetails, oldKey, newKeys[index]) });

@@ -1,17 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
-import { getUsers, SignIn } from '../../Redux/actions';
+import { SignIn } from '../../Redux/actions';
 import history from '../../history';
 import FormField from '../ReuseableComponents/FormFields';
 import { server } from '../../Apis/server';
 
 
-const Login = ({ users, SignIn, getUsers }) => {
+const Login = ({ SignIn }) => {
     const setLocalStorage = (username, isLecturer) => {
-        const user = {
-            'user': username,
-            'isLecturer': isLecturer
-        }
+        const user = { 'user': username, 'isLecturer': isLecturer }
         localStorage.setItem('userCredential', JSON.stringify(user))
     }
     const userType = ({ username, isLecturer }) => {
@@ -24,7 +21,7 @@ const Login = ({ users, SignIn, getUsers }) => {
     }
 
     // when the user click on the button this function called
-    const onSubmit = async (formValues) => {
+    const onSubmit = (formValues) => {
         server.post('/loginRequest', formValues)
             .then((response) => {
                 const userDetails = response.data;
@@ -34,8 +31,6 @@ const Login = ({ users, SignIn, getUsers }) => {
                 alert("username or password are incorrect");
             });
     }
-
-    // useEffect(() => { getUsers(); }, [getUsers])
 
     return (
         <div>
@@ -48,8 +43,8 @@ const Login = ({ users, SignIn, getUsers }) => {
 
 
 
-const mapStateToProps = (state) => {
-    return { users: Object.values(state.listOfUsers) }
-}
+// const mapStateToProps = (state) => {
+//     return { users: Object.values(state.listOfUsers) }
+// }
 
-export default connect(mapStateToProps, { getUsers, SignIn })(Login)
+export default connect(null, { SignIn })(Login)

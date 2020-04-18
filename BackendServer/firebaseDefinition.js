@@ -53,11 +53,14 @@ const existInDB = async (root, child) => {
 }
 
 
-const addStudent = (studentDetails) => {
-    const studentLoginTree = { password: studentDetails.password, isLecturer: false };
-    const studentDetailsTree = { id: studentDetails.ID, name: studentDetails.name, gender: studentDetails.gender }
-    firebase.database().ref(`users/${studentDetails.username}`).set(studentLoginTree);
-    firebase.database().ref(`students/${studentDetails.username}`).set(studentDetailsTree);
+const addUsers = (userDetails) => {
+    const isLecturer = userDetails.path === '/AdminPermission' ? true : false;
+    const userLoginTree = { password: userDetails.password, isLecturer: isLecturer };
+    const userDetailsTree = { id: userDetails.ID, name: userDetails.name, gender: userDetails.gender }
+    isLecturer
+        ? firebase.database().ref(`lecturers/${userDetails.username}`).set(userDetailsTree)
+        : firebase.database().ref(`students/${userDetails.username}`).set(userDetailsTree);
+    firebase.database().ref(`users/${userDetails.username}`).set(userLoginTree);
     return true;
 }
 const deleteTree = (root, username) => {
@@ -92,5 +95,5 @@ const addStudentToClassroom = () => {
 //deleteTree("students","yinon123");
 
 
-module.exports = { existInDB, checkUsernamePassword, addStudent };
+module.exports = { existInDB, checkUsernamePassword, addUsers };
 
