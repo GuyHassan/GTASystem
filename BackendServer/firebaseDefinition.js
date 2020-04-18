@@ -86,7 +86,7 @@ const addStudentToClassroom = () => {
 
 
 /////Test!!!!!!!!!!!!!!
-//let user = { username: "yinon123", password: 12345, studentID: 203409024, name: "yinon hirary", gender: "male" };
+//let user = { username: "yinon123", password: 12345, ID: 203409024, name: "yinon hirary", gender: "male" };
 //addStudent(user);
 //deleteTree("users","yinon123");
 //deleteTree("students","yinon123");
