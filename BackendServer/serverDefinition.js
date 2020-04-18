@@ -1,5 +1,5 @@
 
-const { checkUsernamePassword, addStudent, existInDB } = require("./firebaseDefinition");
+const { getClassRooms,checkUsernamePassword, addStudent, existInDB } = require("./firebaseDefinition");
 const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
@@ -34,8 +34,6 @@ app.post('/loginRequest', (req, res) => {
 
 //new student to the DB 
 app.post("/LecturerView/StudentPermissions", (req, res) => {
-  //Added for test !!!
-  // const userDetails = user;
   const userDetails = req.body;
   existInDB("users", userDetails.username).then((response) => {
     if (response === true) {
@@ -49,6 +47,14 @@ app.post("/LecturerView/StudentPermissions", (req, res) => {
 
 
 });
+
+
+//choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+app.get("LecturerView/Classes",(req,res)=>{
+  console.log(getClassRooms("tamar123"));
+  //res.send(getClassRooms(req.body.username));
+});
+
 
 // inital the server in default PORT (3005)
 app.listen(PORT, () =>

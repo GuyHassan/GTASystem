@@ -65,7 +65,13 @@ const deleteTree = (root, username) => {
 }
 
 const getClassRooms = async (LectureName) => {
-    return await (database.ref(`lecturers/${LectureName}`).once("value"));
+    const ans= await (await (database.ref(`lecturers/${LectureName}/classes`).once("value"))).exportVal();
+    return ans;
+}
+
+const getSizeOfChildrens = async (root,childRoot) =>{
+    const ans= await (database.ref(`${root}/${childRoot}`).once("value")).numChildren();
+    return ans;
 }
 
 const addClassRooms = (classRoomDetails) => {
@@ -86,11 +92,11 @@ const addStudentToClassroom = () => {
 
 
 /////Test!!!!!!!!!!!!!!
-//let user = { username: "yinon123", password: 12345, ID: 203409024, name: "yinon hirary", gender: "male" };
+let user = { username: "yinon123", password: 12345, ID: 203409024, name: "yinon hirary", gender: "male" };
 //addStudent(user);
 //deleteTree("users","yinon123");
 //deleteTree("students","yinon123");
 
 
-module.exports = { existInDB, checkUsernamePassword, addStudent };
+module.exports = { getClassRooms,existInDB, checkUsernamePassword, addStudent };
 
