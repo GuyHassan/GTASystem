@@ -1,13 +1,14 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
-const FormFields = ({ handleSubmit, FirstField, SecondField, children, buttonName }) => {
+const FormFields = ({ handleSubmit, FirstField, SecondField, children, buttonName, choosenType }) => {
 
     return (
         <form
             //handleSubmit is a function from redux form
             onSubmit={(event) => handleSubmit(event)}
             className='ui form error'>
+            {choosenType ? choosenType() : null}
             <Field
                 name={FirstField}
                 component={renderInput}
@@ -21,6 +22,7 @@ const FormFields = ({ handleSubmit, FirstField, SecondField, children, buttonNam
             <button className="ui button primary">{buttonName || 'Submit'}</button>
             {/* children coming as props from parent component */}
             {children}
+            <br /><br />
         </form >
     );
 };

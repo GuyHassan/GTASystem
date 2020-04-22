@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { server } from '../../Apis/server';
 const details = { username: '', password: '', firstName: '', lastName: '', ID: '', gender: '' }
-const AddNewUser = ({ titleMessage }) => {
+
+const AddNewUser = ({ titleMessage, classNameJsx }) => {
+    const { pathname } = useLocation();
+    if (classNameJsx) details.className = ''
     const [state, setState] = useState(details);
     const [errorState, setErrorState] = useState(details);
     const history = useHistory();
-    const { pathname } = useLocation();
+
     const generateRandomizePass = () => {
-        const randomPassword = Math.random().toString(15).replace(/[^a-z1-9]+/g, '').substr(0, 7)
+        const randomPassword = Math.random().toString(36).replace(/[^a-z1-9]+/g, '').substr(0, 8)
         setState({ ...state, password: randomPassword });
     }
     const setNewValues = (key, value) => {
@@ -37,6 +40,9 @@ const AddNewUser = ({ titleMessage }) => {
             case 'gender':
                 setNewValues(name, value);
                 break;
+            case 'className':
+                setNewValues(name, value);
+                break;
             default:
                 break;
         }
@@ -45,7 +51,7 @@ const AddNewUser = ({ titleMessage }) => {
         const errorMessages = {
             username: 'Must Enter Username', password: 'Must Enter Password',
             firstName: 'Must Enter Name', lastName: 'Must Enter Last Name',
-            ID: 'Must Enter ID', gender: 'Must Choose Gender'
+            ID: 'Must Enter ID', gender: 'Must Choose Gender', className: 'Must Enter Class Name'
         }
         let newObjErrors = {};
         for (const key of Object.keys(state)) {
@@ -54,6 +60,8 @@ const AddNewUser = ({ titleMessage }) => {
         setErrorState({ ...errorState, ...newObjErrors })
         return !Object.keys(newObjErrors).length ? true : false;
     }
+
+
     const handleSubmit = (event) => {
         //if we use preventDefault is ignore the default submit that the js give us.
         event.preventDefault();
@@ -80,6 +88,7 @@ const AddNewUser = ({ titleMessage }) => {
             );
         });
     };
+    console.log(state)
     return (
         <form
             className="ui error form"
@@ -107,7 +116,10 @@ const AddNewUser = ({ titleMessage }) => {
                 </div>
             </div>
             <div>
-                <label htmlFor="cars">Gender</label>
+                {classNameJsx ? classNameJsx(handleChange, state.className, errorState.className) : null}
+            </div>
+            <div>
+                <label htmlFor="gender">Gender</label>
                 <select name="gender" defaultValue={0} onChange={handleChange}>
                     {genderChoosen()}
                 </select>
