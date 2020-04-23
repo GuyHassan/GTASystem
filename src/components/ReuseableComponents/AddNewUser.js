@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router';
 import { server } from '../../Apis/server';
 const details = { username: '', password: '', firstName: '', lastName: '', ID: '', gender: '' }

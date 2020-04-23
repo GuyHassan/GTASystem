@@ -7,6 +7,10 @@ import { server } from '../../Apis/server';
 
 
 const Login = ({ SignIn }) => {
+    const propertiesName = {
+        firstLabel: 'User Name', secondLabel: 'Password',
+        firstField: 'Username', secondField: 'Password', buttonName: 'LOGIN'
+    }
     const setLocalStorage = (username, isLecturer) => {
         const user = { 'user': username, 'isLecturer': isLecturer }
         localStorage.setItem('userCredential', JSON.stringify(user))
@@ -36,7 +40,7 @@ const Login = ({ SignIn }) => {
         <div>
             <h1 style={{ fontWeight: '700', textDecoration: 'underline' }}>Sign In</h1>
             <br />
-            <FormField onSubmit={onSubmit} FirstField={'Username'} SecondField={'Password'} />
+            <FormField onSubmit={onSubmit} propertiesName={propertiesName} />
         </div>
     );
 };

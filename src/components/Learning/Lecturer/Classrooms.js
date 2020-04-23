@@ -5,8 +5,8 @@ import { getClasses } from '../../../Redux/actions/index';
 
 const Professions = ({ children, getClasses, classes, match: { params } }) => {
     const [showButtonsID, setShowButtonsID] = useState('');
-    const { isLecturer } = JSON.parse(localStorage.getItem('userCredential'));
-    const typeUser = isLecturer ? '/LecturerView' : '/StudentView';
+    // const { isLecturer } = JSON.parse(localStorage.getItem('userCredential'));
+    // const typeUser = isLecturer ? '/LecturerView' : '/StudentView';
     // to={`/LecturerView/ViewStudents/${params.id}/${classroom}`}
     const Buttons = ({ idClass }) => {
         return showButtonsID === idClass ?
@@ -25,7 +25,7 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
                 <div className="item" key={idClassroom}>
                     <div className="content">
                         <h2>
-                            <a onClick={() => setShowButtonsID(classroom)}> {classroom}</a>
+                            <p onClick={() => setShowButtonsID(classroom)}> {classroom}</p>
                         </h2>
                         {<Buttons idClass={classroom} />}
                     </div>
@@ -33,7 +33,7 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
             )
         })
     }
-    useEffect(() => { getClasses(params.id) }, [getClasses])
+    useEffect(() => { getClasses(params.id) }, [getClasses, params.id])
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">
@@ -46,7 +46,6 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
     )
 }
 const mapStateToProps = (state) => {
-    console.log(state)
     return { classes: state.learningProperties }
 }
 export default connect(mapStateToProps, { getClasses })(Professions);

@@ -1,14 +1,14 @@
 import React, { useEffect } from 'react';
-import { getStudents, getClasses } from '../../../Redux/actions';
+import { getStudents } from '../../../Redux/actions';
 import { connect } from 'react-redux';
-const ViewStudent = ({ students, match, getStudents }) => {
+const ViewStudent = ({ students, match: { params }, getStudents }) => {
     const renderStudent = () => {
         return students.map(student => {
             return (
                 <div className="item" key={Object.keys(student)}>
                     <div className="content">
                         <h3>
-                            {Object.values(student)} 
+                            {Object.values(student)}
                         </h3>
                     </div>
                 </div >
@@ -16,8 +16,9 @@ const ViewStudent = ({ students, match, getStudents }) => {
         })
     }
     useEffect(() => {
-        getStudents(match.params);
-    }, [getStudents])
+        console.log('params - ', params)
+        getStudents(params);
+    }, [getStudents, params])
     return (
         <div>
             <h1>Student </h1>
