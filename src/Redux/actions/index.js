@@ -48,8 +48,7 @@ export const getProfessions = () => async (dispatch, getState) => {
 };
 export const getStudents = (details) => async (dispatch) => {
     const { profession, className } = details;
-    console.log('getStudent actions - ', details);
-    const response = await server.get(`/getStudentsClass/${profession}/${className}`);
+    const response = await server.get(`/getStudentsClass?professionName=${profession}&className=${className}`);
     dispatch({ type: 'GET_STUDENTS', payload: response.data });
 }
 
