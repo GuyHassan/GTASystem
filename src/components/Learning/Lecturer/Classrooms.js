@@ -4,18 +4,30 @@ import { connect } from 'react-redux';
 import { getClasses } from '../../../Redux/actions/index';
 
 const Professions = ({ children, getClasses, classes, match: { params } }) => {
-    const [id, setId] = useState('');
+    const [showButtonsID, setShowButtonsID] = useState('');
     const { isLecturer } = JSON.parse(localStorage.getItem('userCredential'));
     const typeUser = isLecturer ? '/LecturerView' : '/StudentView';
-
+    // to={`/LecturerView/ViewStudents/${params.id}/${classroom}`}
+    const Buttons = ({ idClass }) => {
+        return showButtonsID === idClass ?
+            (
+                <div>
+                    <Link to={`/LecturerView/ViewStudents/${params.id}/${idClass}`} className="ui red basic button small">View Students</Link>
+                    <button className="ui red basic button small">View Materials</button>
+                    <button className="ui violet basic button small">Add Student</button>
+                    <button className="ui violet basic button small">Add Material</button>
+                </div>
+            ) : null;
+    }
     const renderClasses = () => {
         return classes.map((classroom, idClassroom) => {
             return (
                 <div className="item" key={idClassroom}>
                     <div className="content">
                         <h2>
-                            <Link to={`/LecturerView/ViewStudents/${params.id}/${classroom}`} > {classroom}</Link>
+                            <a onClick={() => setShowButtonsID(classroom)}> {classroom}</a>
                         </h2>
+                        {<Buttons idClass={classroom} />}
                     </div>
                 </div >
             )

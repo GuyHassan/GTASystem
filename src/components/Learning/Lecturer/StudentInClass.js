@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const ViewClass = () => {
+const StudentInClass = () => {
     const students = ["YinonHirary", 'GuyHassan', 'Yahav231', 'Shmual784']
     const [newStudent, setNewStudent] = useState([])
     const listNewStudent = (newS) => {
@@ -39,4 +39,4 @@ const ViewClass = () => {
         </div>
     )
 }
-export default ViewClass;
+export default StudentInClass;
