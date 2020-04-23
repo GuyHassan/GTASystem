@@ -1,5 +1,5 @@
 
-const { addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword, addUsers, existInDB, getClassrooms, addClassrooms } = require("./firebaseDefinition");
+const { getProfession, addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword, addUsers, existInDB, getClassrooms, addClassrooms } = require("./firebaseDefinition");
 const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
@@ -22,7 +22,6 @@ app.use(function (req, res, next) {
 
 // create a login request and check if the user exist
 app.post('/loginRequest', (req, res) => {
-  console.log(req.body)
   const userDetails = req.body;
   checkUsernamePassword(userDetails).then((response) => {
     if (response === null) {
@@ -52,10 +51,17 @@ app.post(pathPermission, (req, res) => {
 
 //get class for specific lecturer : NEED lecturerName , RETURN : classesList!!
 //choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-app.get("LecturerView/getClasses", (req, res) => {
-  const { lecturerName } = req.body; 
-  getClassrooms(lecturerName,true).then(classesList => {
+app.get("/getClasses/:username/:professionName", (req, res) => {
+  const { username, professionName } = req.params;
+  getClassrooms(username, professionName).then(classesList => {
     res.send(classesList);
+  });
+});
+
+app.get("/getProfession/:username/:isLecturer", (req, res) => {
+  const { username, isLecturer } = req.params;
+  getProfession(username, (isLecturer === 'true')).then(professionList => {
+    res.send(professionList);
   });
 });
 
@@ -65,7 +71,7 @@ app.post("LecturerView/AddClasses", (req, res) => {
   const classDetails = req.body;
   getClassrooms(classDetails.lecturerName).then((classesObj) => {
     //if the path is exist so the classroom is used
-    if (classesObj.professionName===className) {
+    if (classesObj.professionName === className) {
       res.status("404").send("you have this Classroom in your list");
       return;
     }
@@ -76,9 +82,9 @@ app.post("LecturerView/AddClasses", (req, res) => {
 });
 
 //get list of students to add to the class : NEED {professionName} ,RETURN studentList{username:studentName} THAT NOT EXIST IN THIS CLASS!! 
-//choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-app.get("LecturerView/getStudentsForAddToClass", (req, res) => {
-  getStudentsNamesAsObject(req.body.professionName, false).then(studentsName => {
+app.get("LecturerView/:getStudentsForAddToClass", (req, res) => {
+  const professionName = req.params;
+  getStudentsNamesAsObject(professionName, false).then(studentsName => {
     res.send(studentsName);
   });
 });
@@ -92,9 +98,10 @@ app.post("LecturerView/addStudentsToClass", (req, res) => {
 
 
 //get list of students that inside the class : NEED {professionName} ,RETURN studentList THAT IN THIS CLASS!! 
-//choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-app.get("LecturerView/getStudentsInsideThatClass", (req, res) => {
-  getStudentsNamesAsObject(req.body.professionName, true).then(studentsName => {
+app.get("/getStudentsClass/:professionName/:className", (req, res) => {
+  const { professionName, className } = req.params;
+  console.log("dfdfaf");
+  getStudentsNamesAsObject(professionName, className, true).then(studentsName => {
     res.send(studentsName);
   });
 });

@@ -5,12 +5,12 @@ import { Link } from 'react-router-dom';
 const StudyMaterials = ({ getMaterials, materials, children, userMessage }) => {
     const [idChanged, setIdChanged] = useState('');
     const { isLecturer } = JSON.parse(localStorage.getItem("userCredential"));
-
+    const mat = [{ type: "Math", description: 'Learn Some Math', id: 0 }, { type: "English", description: 'Learn Some English', id: 1 }]
     const lecturerButtons = () => {
         return isLecturer ?
             <React.Fragment>
-                <button className="ui button red">Edit</button>
-                <Link to={`/LecturerView/DeleteMaterial/${idChanged}`} className="ui button red">Delete</Link>
+                {/* <button className="ui button red">Edit</button> */}
+                {/* <Link to={`/LecturerView/DeleteMaterial/${idChanged}`} className="ui button red">Delete</Link> */}
             </React.Fragment> : null;
     }
     //return buttons by the specific id clicked
@@ -19,16 +19,16 @@ const StudyMaterials = ({ getMaterials, materials, children, userMessage }) => {
         return idChanged === id ? (
             (
                 <React.Fragment>
+                    {lecturerButtons()}
                     <Link to={`/${userType}/ViewClass`} className="ui button green">View Class</Link>
                     <button className="ui button primary">View Subjects</button>
-                    {lecturerButtons()}
                 </React.Fragment>
             )
         ) : null;
     }
 
     const renderList = () => {
-        return materials.map(material => {
+        return mat.map(material => {
             return (
                 <div className="item" key={material.id}>
                     <div className="content">
@@ -45,8 +45,8 @@ const StudyMaterials = ({ getMaterials, materials, children, userMessage }) => {
 
     /* when the value in getMaterials is changed useEffect call again to this function,
          but the value never change that way is call only 1 time, (like componentDidMount) */
-    useEffect(() => { getMaterials(); }, [getMaterials])
-
+    // useEffect(() => { getMaterials(); }, [getMaterials])
+    console.log("inside study material !!!")
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">
@@ -58,9 +58,9 @@ const StudyMaterials = ({ getMaterials, materials, children, userMessage }) => {
         </div>
     )
 }
-const mapStateToProps = (state) => {
-    return {
-        materials: Object.values(state.materials)
-    }
-}
-export default connect(mapStateToProps, { getMaterials })(StudyMaterials);
+// const mapStateToProps = (state) => {
+//     return {
+//         materials: Object.values(state.materials)
+//     }
+// }
+export default connect(null, { getMaterials })(StudyMaterials);

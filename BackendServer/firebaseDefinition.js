@@ -83,16 +83,20 @@ manage by needForSpecificClass boolean option , have 2 option!!! :
     1.false - get all the student that not exist in specific class!! FOR know which one to get .
     2.true -  get the students that inside the class we send FOR view the students we have inside this class.
 */
-const getStudentsNamesAsObject = (professionName,className,isForSpecificClass) => {
+const getStudentsNamesAsObject = (professionName, className, isForSpecificClass) => {
+    // [{id:'guy123',name:"guy hassan"},{id:'yinon123',name:"yinon hassan"}]
     return getStudentsTree().then(key => {
         const studentsNames = {};
         Object.values(key).forEach((value, index) => {
-            if ((isForSpecificClass===false)&&(className===value.className)&&(Object.values(value.professionList).indexOf(professionName)===-1)) {
+            if ((("materials" in value === false) || (professionName in value.materials === false)) && (isForSpecificClass === false)) {
+                if (value.className === className)
                     studentsNames[Object.keys(key)[index]] = value.name;
             }
-            else if ((isForSpecificClass===true)&&(Object.values(value.professionList).indexOf(professionName)>-1)) {
+            else if ((isForSpecificClass === true) && (value.hasOwnProperty("materials"))) {
+                if ((professionName in value.materials)) {
                     studentsNames[Object.keys(key)[index]] = value.name;
                 }
+            }
         });
         return studentsNames;
     });
@@ -117,7 +121,7 @@ const addClassrooms = (classroomDetails) => {
 }
 
 //WORKING!!! inside method to get student list FOR addStudentToClassroom !!!
-const getStudentFromSpecificClassroom = async (lecturerName, professionName,className) => {
+const getStudentFromSpecificClassroom = async (lecturerName, professionName, className) => {
     const students = await (database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).once("value"));
     return students.val();
 }
@@ -125,14 +129,14 @@ const getStudentFromSpecificClassroom = async (lecturerName, professionName,clas
 // inside method : add class root for specific username at first give child link as null for addStudentsToClassroom
 const addClassForSpecificStudent = (username, professionName) => {
     database.ref(`students/${username}/materials/${professionName}`).set({ link: "null" });
-    getSizeOfChilds(`students/${username}/professionList`).then((size)=>{
+    getSizeOfChilds(`students/${username}/professionList`).then((size) => {
         database.ref(`students/${username}/professionList`).update({ [size]: professionName });
     });
 }
 
 ///FIXED!!!!     need to give {studentsNames},LecturerName,professionName,className
 const addStudentToClassroom = (classroomDetails) => {
-    getStudentFromSpecificClassroom(classroomDetails.lecturerName, classroomDetails.professionName,classroomDetails.className).then(response => {
+    getStudentFromSpecificClassroom(classroomDetails.lecturerName, classroomDetails.professionName, classroomDetails.className).then(response => {
         response
             ? database.ref(`classrooms/${classroomDetails.lecturerName}/${classroomDetails.professionName}/${classroomDetails.className}/students`).set(response.concat(classroomDetails.studentsNames))
             : database.ref(`classrooms/${classroomDetails.lecturerName}/${classroomDetails.professionName}/${classroomDetails.className}/students`).set(classroomDetails.studentsNames);
@@ -143,15 +147,17 @@ const addStudentToClassroom = (classroomDetails) => {
 }
 
 /// FIXED!!! return all the classrooms for specific lecturer/students!!!
-const getClassrooms = async (userName,isLecturer) => {
-    if(isLecturer){
-        return await (await (database.ref(`lecturers/${userName}/classes`).once("value"))).val();
-    }
-    else{
-        return await (await (database.ref(`students/${userName}/professionList`).once("value"))).val();
-    }
+const getProfession = async (username, isLecturer) => {
+    return isLecturer
+        ? Object.keys(await (await (database.ref(`lecturers/${username}/classes`).once("value"))).exportVal())
+        : await (await (database.ref(`students/${username}/professionList`).once("value"))).val()
+
 }
 
+
+const getClassrooms = async (username, professionName) => {
+    return await (await (database.ref(`lecturers/${username}/classes/${professionName}`).once("value"))).val();
+}
 
 //******************************************** END NEED TO ADD ***********************************************/
 
@@ -161,7 +167,7 @@ const deleteTree = (root) => {
 }
 
 //delete student from class : NEED {studentName,LecturerNama,professionName,className}
-const deleteStudentFromClass = (studentDetails) =>{
+const deleteStudentFromClass = (studentDetails) => {
     deleteTree(`classrooms/${studentDetails.lecturerName}/${studentDetials.professionName}/${studentDetails.className}/studnets/${studentDetails.studentName}`);
     deleteTree(`students/${studentDetails.studentName}/materials/${studentDetials.professionName}/`);
 }
@@ -169,7 +175,7 @@ const deleteStudentFromClass = (studentDetails) =>{
 
 
 //function for initial materials!!
-const addMaterials= (lecturerName,professionName,className,materialsTree) =>{
+const addMaterials = (lecturerName, professionName, className, materialsTree) => {
     /*
     control by getSizeChilds and build enter rootTree inside Method 
     topics
@@ -187,12 +193,12 @@ const addMaterials= (lecturerName,professionName,className,materialsTree) =>{
 //function for students and lecturers!!!
 //need to get username,isLecturer 
 //also need a root to get to the inside DB
-const getMaterials= (userDetails) =>{
+const getMaterials = (userDetails) => {
 
 }
 
 //lecturerPermission!!!  NEED TO SET ALL THE materials Tree!!!
-const addTopics =(lecturerName,professionName,className,) =>{
+const addTopics = (lecturerName, professionName, className, ) => {
 
 }
 
@@ -219,9 +225,6 @@ const addTopics =(lecturerName,professionName,className,) =>{
 //addClassrooms(addClass);
 //let studentDetailsForClassroom={lecturerName:"tamar123",professionName:"physics",studentsNames:["guy123","yinon123"]};
 //addStudentToClassroom(studentDetailsForClassroom);
-getStudentsTree().then(val=>{console.log(val)});
-//getStudentsNamesAsObject("math","cita b",false).then(val=>{console.log(val)});
 
-
-module.exports = { addStudentToClassroom, getStudentsNamesAsObject, getClassrooms, existInDB, checkUsernamePassword, addUsers, addClassrooms };
+module.exports = { getProfession, addStudentToClassroom, getStudentsNamesAsObject, getClassrooms, existInDB, checkUsernamePassword, addUsers, addClassrooms };
 
