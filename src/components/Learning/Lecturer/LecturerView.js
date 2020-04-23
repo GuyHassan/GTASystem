@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import StudyMaterials from '../LecturerAndStudent/StudyMaterials';
 import { Link } from 'react-router-dom';
-import Classrooms from '../LecturerAndStudent/Classrooms';
+import Professions from '../LecturerAndStudent/Professions';
 const LecturerView = () => {
     return (
         <div className="ui container" >
@@ -11,9 +11,9 @@ const LecturerView = () => {
                 <button className="right floated ui button black">Add Students</button>
                 
             </StudyMaterials> */}
-            <Classrooms>
+            <Professions>
                 <Link to='/LecturerView/NewClassroom' className="right floated ui primary button">Add New Class</Link>
-            </Classrooms>
+            </Professions>
         </div>
     )
 }

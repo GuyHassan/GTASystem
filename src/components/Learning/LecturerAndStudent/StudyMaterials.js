@@ -46,7 +46,7 @@ const StudyMaterials = ({ getMaterials, materials, children, userMessage }) => {
     /* when the value in getMaterials is changed useEffect call again to this function,
          but the value never change that way is call only 1 time, (like componentDidMount) */
     // useEffect(() => { getMaterials(); }, [getMaterials])
-
+    console.log("inside study material !!!")
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">
