@@ -11,9 +11,10 @@ const Classrooms = ({ children }) => {
             return (
                 <div className="item" key={currentClass}>
                     <div className="content">
-                        <Link to={`${typeUser}/StudyMaterial`} ><h3 value={idClass} style={{ color: 'blue' }}>
-                            {currentClass}
-                        </h3>
+                        <Link to={`${typeUser}/StudyMaterial`} >
+                            <h3 value={idClass} style={{ color: 'blue' }}>
+                                {currentClass}
+                            </h3>
                         </Link >
                     </div>
                 </div >
