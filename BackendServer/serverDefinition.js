@@ -50,7 +50,6 @@ app.post(pathPermission, (req, res) => {
 });
 
 //get class for specific lecturer : NEED lecturerName , RETURN : classesList!!
-//choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 app.get("/getClasses/:username/:professionName", (req, res) => {
   const { username, professionName } = req.params;
   getClassrooms(username, professionName).then(classesList => {
@@ -69,9 +68,9 @@ app.get("/getProfession/:username/:isLecturer", (req, res) => {
 //choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 app.post("LecturerView/AddClasses", (req, res) => {
   const classDetails = req.body;
-  getClassrooms(classDetails.lecturerName).then((classesObj) => {
+  getClassrooms(classDetails.lecturerName,classDetails.professionName).then((classesList) => {
     //if the path is exist so the classroom is used
-    if (classesObj.professionName === className) {
+    if (className in classesList) {
       res.status("404").send("you have this Classroom in your list");
       return;
     }
@@ -98,11 +97,10 @@ app.post("LecturerView/addStudentsToClass", (req, res) => {
 
 
 //get list of students that inside the class : NEED {professionName} ,RETURN studentList THAT IN THIS CLASS!! 
-app.get("/getStudentsClass/:professionName/:className", (req, res) => {
-  const { professionName, className } = req.params;
-  console.log("dfdfaf");
+app.get("/getStudentsClass", (req, res) => {
+  const { professionName, className } = req.query;
   getStudentsNamesAsObject(professionName, className, true).then(studentsName => {
-    res.send(studentsName);
+   res.send(studentsName);
   });
 });
 

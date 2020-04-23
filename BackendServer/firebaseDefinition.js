@@ -114,7 +114,7 @@ const addClassrooms = (classroomDetails) => {
     const classroomDetailsTree = { description: classroomDetails.description };
     getSizeOfChilds(`lecturers/${classroomDetails.lecturerName}/classes/${classroomDetails.professionName}`).then(response => {
         const newClassroom = {};
-        newClassroom[response] = classroomDetails.professionName;
+        newClassroom[response] = classroomDetails.className;
         database.ref(`classrooms/${classroomDetails.lecturerName}/${classroomDetails.professionName}/${classroomDetails.className}`).set(classroomDetailsTree);
         database.ref(`lecturers/${classroomDetails.lecturerName}/classes/${classroomDetails.professionName}`).update(newClassroom)
     });
@@ -172,10 +172,6 @@ const deleteStudentFromClass = (studentDetails) => {
     deleteTree(`students/${studentDetails.studentName}/materials/${studentDetials.professionName}/`);
 }
 
-
-
-//function for initial materials!!
-const addMaterials = (lecturerName, professionName, className, materialsTree) => {
     /*
     control by getSizeChilds and build enter rootTree inside Method 
     topics
@@ -188,24 +184,25 @@ const addMaterials = (lecturerName, professionName, className, materialsTree) =>
         -> 2: 
     
     */
+
+
+//function for initial materials NEED {lecturerName, professionName, className, materialsTree}
+const addMaterials = (materialsDetails) => {
+    
 }
 
 //function for students and lecturers!!!
 //need to get username,isLecturer 
 //also need a root to get to the inside DB
-const getMaterials = (userDetails) => {
-
+const getMaterials = async (username, professionName, className,isLecturer) => {
+    const materialTree = await (database.ref(`classrooms/${username}/${professionName}/${className}/topics`).once("value"));
+    return materialTree.val();
 }
 
 //lecturerPermission!!!  NEED TO SET ALL THE materials Tree!!!
 const addTopics = (lecturerName, professionName, className, ) => {
 
 }
-
-
-
-
-
 
 
 
@@ -221,10 +218,16 @@ const addTopics = (lecturerName, professionName, className, ) => {
 //deleteTree("students","yinon123");
 //getClassrooms("tamar123").then(val =>{console.log(val.includes("sdsako"));});
 //getSizeOfChilds("lecturers/tamar123/classes").then(val =>{console.log(val);});
-//let addClass={lecturerName:"tamar123",professionName:"physics",description:"special class for physics"};
+let addClass={lecturerName:"tamar123",professionName:"physics",className:"cita b",description:"special class for physics"};
 //addClassrooms(addClass);
 //let studentDetailsForClassroom={lecturerName:"tamar123",professionName:"physics",studentsNames:["guy123","yinon123"]};
 //addStudentToClassroom(studentDetailsForClassroom);
+
+//getMaterials("tamar123","english","cita b",true).then(val=>{console.log(val)})
+//addClassrooms(addClass)
+const check=[ { subTopic: { subTopicName: 'rational shvarim' },topicName: 'shvarim' },{ topicName: 'multiple' } ]
+const addMaterialsTree=[{topicName:"kinematics",subTopic1:{subTopicName:"accelerate"},subTopic2:{subTopicName:"vectors"}},{topicName:"force",subTopic1:{subTopicName:"newton rule 1"},subTopic2:{subTopicName:"newton rule 2"}}]
+getClassrooms("tamar123","english").then(val=>{console.log(val)});
 
 module.exports = { getProfession, addStudentToClassroom, getStudentsNamesAsObject, getClassrooms, existInDB, checkUsernamePassword, addUsers, addClassrooms };
 
