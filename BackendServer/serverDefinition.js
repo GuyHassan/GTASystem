@@ -81,9 +81,10 @@ app.post("LecturerView/AddClasses", (req, res) => {
 });
 
 //get list of students to add to the class : NEED {professionName} ,RETURN studentList{username:studentName} THAT NOT EXIST IN THIS CLASS!! 
-app.get("LecturerView/:getStudentsForAddToClass", (req, res) => {
-  const professionName = req.params;
-  getStudentsNamesAsObject(professionName, false).then(studentsName => {
+app.get("getStudentsForAddToClass/:professionName/:className", (req, res) => {
+  const professionName = req.params.professionName;
+  const className=req.params.className;
+  getStudentsNamesAsObject(professionName,className, false).then(studentsName => {
     res.send(studentsName);
   });
 });
