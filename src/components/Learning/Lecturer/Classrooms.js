@@ -12,10 +12,10 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
         return showButtonsID === idClass ?
             (
                 <div>
-                    <Link to={`/LecturerView/ViewStudents/${params.id}/${idClass}`} className="ui red basic button small">View Students</Link>
-                    <button className="ui red basic button small">View Materials</button>
-                    <button className="ui violet basic button small">Add Student</button>
-                    <button className="ui violet basic button small">Add Material</button>
+                    <Link to={`/LecturerView/ViewStudents/${params.id}/${idClass}`} className="ui blue basic button small">View Students</Link>
+                    <button className="ui blue basic button small">View Materials</button>
+                    <button className="ui black basic button small">Add Student</button>
+                    <button className="ui black basic button small">Add Material</button>
                 </div>
             ) : null;
     }
@@ -23,11 +23,11 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
         return classes.map((classroom, idClassroom) => {
             return (
                 <div className="item" key={idClassroom}>
-                    <div className="content">
-                        <h2>
-                            <p onClick={() => setShowButtonsID(classroom)}> {classroom}</p>
+                    <div className="content" style={{ color: '#1a75ff' }}>
+                        <h2 onClick={() => setShowButtonsID(classroom)} >
+                            {classroom}
                         </h2>
-                        {<Buttons idClass={classroom} />}
+                        <Buttons idClass={classroom} />
                     </div>
                 </div >
             )
@@ -46,6 +46,6 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
     )
 }
 const mapStateToProps = (state) => {
-    return { classes: state.learningProperties }
+    return { classes: state.classes }
 }
 export default connect(mapStateToProps, { getClasses })(Professions);

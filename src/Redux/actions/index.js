@@ -46,15 +46,18 @@ export const getProfessions = () => async (dispatch, getState) => {
     dispatch({ type: 'GET_PROFESSIONS', payload: response.data });
 
 };
+
 export const getStudents = (details) => async (dispatch) => {
     const { profession, className } = details;
     const response = await server.get(`/getStudentsClass?professionName=${profession}&className=${className}`);
     dispatch({ type: 'GET_STUDENTS', payload: response.data });
 }
+// {lecturerName,className,professionName,description} 
 export const createClassroom = (details) => async (dispatch, getState) => {
     const { userID } = getState().whoIsOnline;
-    const response = await server.post('/LecturerView/AddClasses', { ...details, lecturerName: userID });
-    dispatch({ type: 'CREATE_CLASSES', payload: response.data });
+    const response = await server.post('/LecturerView/createClassroom', { ...details, lecturerName: userID });
+    console.log('response- ', response)
+    // dispatch({ type: 'CREATE_CLASSES', payload: response.data });
 }
 export const createNewMaterial = (material) => async (dispatch, getState) => {
     const { loggedInUser } = getState();

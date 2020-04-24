@@ -16,11 +16,11 @@ const CreateClassroom = ({ createClassroom }) => {
     const onSubmit = (formValues) => {
         createClassroom(formValues)
     }
-    const choosenType = (renderInput) => {
+    const extraField = (renderInput) => {
         return (
             <Fragment>
                 <Field
-                    name={"profession"}
+                    name={"professionName"}
                     component={renderInput}
                     label='Enter Profession' >
                 </Field>
@@ -33,7 +33,7 @@ const CreateClassroom = ({ createClassroom }) => {
             <FormField
                 propertiesName={propertiesName}
                 onSubmit={onSubmit}
-                choosenType={choosenType}>
+                extraField={extraField}>
                 <button onClick={history.goBack} className="ui button green">Back</button>
             </FormField>
         </div>

@@ -19,9 +19,9 @@ const Login = ({ SignIn }) => {
         SignIn({ userID: username, isLecturer: isLecturer })
         setLocalStorage(username, isLecturer)
         if (isLecturer)
-            history.push("/LecturerView");
+            history.push("/LecturerView/Profession");
         else
-            history.push("/StudentView");
+            history.push("/StudentView/Profession");
     }
 
     // when the user click on the button this function called

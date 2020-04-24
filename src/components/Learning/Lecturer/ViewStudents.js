@@ -6,24 +6,33 @@ const ViewStudent = ({ students, match: { params }, getStudents }) => {
         return students.map(student => {
             return (
                 <div className="item" key={Object.keys(student)}>
-                    <div className="content">
-                        <h3>
-                            {Object.values(student)}
-                        </h3>
+                    <div className="content" style={{ color: '#1a75ff' }}>
+                        <h2>
+                            <ul>
+                                <li>
+                                    {Object.values(student)}
+                                </li>
+                            </ul>
+
+                        </h2>
                     </div>
                 </div >
             )
         })
     }
     useEffect(() => {
-        console.log('params - ', params)
         getStudents(params);
     }, [getStudents, params])
     return (
         <div>
-            <h1>Student </h1>
-            {renderStudent()}
+            <h1>Students </h1>
+            <div className="ui container" style={{ marginTop: '20px' }}>
+                <div className="ui celled list">
+                    {renderStudent()}
+                </div>
+            </div>
         </div>
+
     )
 }
 const mapStateToProps = (state) => {

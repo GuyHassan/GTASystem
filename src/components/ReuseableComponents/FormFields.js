@@ -1,14 +1,14 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
-const FormFields = ({ handleSubmit, propertiesName, children, choosenType }) => {
+const FormFields = ({ handleSubmit, propertiesName, children, extraField }) => {
     // console.log(handleSubmit)
     return (
         <form
             //handleSubmit is a function from redux form
             onSubmit={(event) => handleSubmit(event)}
             className='ui form error'>
-            {choosenType ? choosenType(renderInput) : null}
+            {extraField ? extraField(renderInput) : null}
             <Field
                 name={propertiesName.firstField}
                 component={renderInput}
@@ -59,8 +59,8 @@ const validate = (formValues, { propertiesName: { firstField, secondField } }) =
     if (!formValues[secondField])
         errors[secondField] = `You must enter ${secondField}`;
     // used only when profession component is called
-    if (!formValues['profession'])
-        errors['profession'] = 'You must enter Profession';
+    if (!formValues['professionName'])
+        errors['professionName'] = 'You must enter Profession';
 
     return errors;
 };

@@ -12,7 +12,7 @@ const Professions = ({ children, getProfessions, professions }) => {
         return professions.map((currProfession, idProfession) => {
             return (
                 <div className="item" key={idProfession}>
-                    <div className="content">
+                    <div className="content" style={{ margin: '5px' }}>
                         {isLecturer ?
                             (<Link
                                 to={`/LecturerView/Classrooms/${currProfession}`}
@@ -41,6 +41,6 @@ const Professions = ({ children, getProfessions, professions }) => {
     )
 }
 const mapStateToProps = (state) => {
-    return { professions: state.learningProperties }
+    return { professions: state.profession }
 }
 export default connect(mapStateToProps, { getProfessions })(Professions);

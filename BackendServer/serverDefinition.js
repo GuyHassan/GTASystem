@@ -66,32 +66,32 @@ app.get("/getProfession/:username/:isLecturer", (req, res) => {
 
 //add class for the lecturer : NEED {lecturerName,className,professionName,description} , RETURN new classroomList !!!
 //choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-app.post("LecturerView/AddClasses", (req, res) => {
+app.post("/LecturerView/createClassroom", (req, res) => {
   const classDetails = req.body;
-  getClassrooms(classDetails.lecturerName,classDetails.professionName).then((classesList) => {
-    //if the path is exist so the classroom is used
-    if (className in classesList) {
+  getClassrooms(classDetails.lecturerName, classDetails.professionName).then((classesList) => {
+    //if the path is exist so the classroom is used\
+    if (classesList !== null && classDetails.className in classesList) {
       res.status("404").send("you have this Classroom in your list");
       return;
     }
     addClassrooms(classDetails);
     console.log("The class Is Added To The DB");
+
     //res.send(classesObj.push(classDetails.professionName));
   });
 });
 
 //get list of students to add to the class : NEED {professionName} ,RETURN studentList{username:studentName} THAT NOT EXIST IN THIS CLASS!! 
-app.get("getStudentsForAddToClass/:professionName/:className", (req, res) => {
-  const professionName = req.params.professionName;
-  const className=req.params.className;
-  getStudentsNamesAsObject(professionName,className, false).then(studentsName => {
+app.get("/getStudentsForAddToClass/:professionName/:className", (req, res) => {
+  const { professionName, className } = req.params;
+  getStudentsNamesAsObject(professionName, className, false).then(studentsName => {
     res.send(studentsName);
   });
 });
 
 //add list of students to given class : NEED {lecturerName,professionName,{studentsNames}} ,RETURN None
 //choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-app.post("LecturerView/addStudentsToClass", (req, res) => {
+app.post("/LecturerView/addStudentsToClass", (req, res) => {
   addStudentToClassroom(req.body);
   res.send("the student's are added to the class");
 });
@@ -101,7 +101,7 @@ app.post("LecturerView/addStudentsToClass", (req, res) => {
 app.get("/getStudentsClass", (req, res) => {
   const { professionName, className } = req.query;
   getStudentsNamesAsObject(professionName, className, true).then(studentsName => {
-   res.send(studentsName);
+    res.send(studentsName);
   });
 });
 
