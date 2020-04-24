@@ -70,7 +70,7 @@ app.post("/LecturerView/createClassroom", (req, res) => {
   const classDetails = req.body;
   getClassrooms(classDetails.lecturerName, classDetails.professionName).then((classesList) => {
     //if the path is exist so the classroom is used\
-    if (classesList !== null && classDetails.className in classesList) {
+    if (classesList !== null && classesList.indexOf(classDetails.className)>-1) {
       res.status("404").send("you have this Classroom in your list");
       return;
     }
