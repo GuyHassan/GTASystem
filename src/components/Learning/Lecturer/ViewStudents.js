@@ -13,7 +13,6 @@ const ViewStudent = ({ students, match: { params }, getStudents }) => {
                                     {Object.values(student)}
                                 </li>
                             </ul>
-
                         </h2>
                     </div>
                 </div >
