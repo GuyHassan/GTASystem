@@ -18,7 +18,7 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
             )
         }
         concatenationElement.push(
-            <Link key={1} to={typeRoute} className="item">Metarial View</Link>,
+            <Link key={1} to={`${typeRoute}/Profession`} className="item">Profession View</Link>,
             <p key={3} className="item" style={{ color: '#87CEFA', fontWeight: '800' }}>{userID}</p>,
             <Link key={2} to='/Login' onClick={logOut} style={{ fontWeight: '900' }} className='item'>Logout</Link>
         )

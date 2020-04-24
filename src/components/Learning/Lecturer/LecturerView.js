@@ -1,5 +1,5 @@
-import React, { Fragment } from 'react';
-import StudyMaterials from '../LecturerAndStudent/StudyMaterials';
+import React from 'react';
+// import StudyMaterials from '../LecturerAndStudent/StudyMaterials';
 import { Link } from 'react-router-dom';
 import Professions from '../LecturerAndStudent/Professions';
 const LecturerView = () => {
@@ -12,7 +12,7 @@ const LecturerView = () => {
                 
             </StudyMaterials> */}
             <Professions>
-                <Link to='/LecturerView/NewClassroom' className="right floated ui primary button">Add New Class</Link>
+                <Link to='/LecturerView/CreateClassroom' className="right floated ui primary button">Add New Class</Link>
             </Professions>
         </div>
     )

@@ -1,25 +1,25 @@
 import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 
-const FormFields = ({ handleSubmit, FirstField, SecondField, children, buttonName, choosenType }) => {
-
+const FormFields = ({ handleSubmit, propertiesName, children, extraField }) => {
+    // console.log(handleSubmit)
     return (
         <form
             //handleSubmit is a function from redux form
             onSubmit={(event) => handleSubmit(event)}
             className='ui form error'>
-            {choosenType ? choosenType() : null}
+            {extraField ? extraField(renderInput) : null}
             <Field
-                name={FirstField}
+                name={propertiesName.firstField}
                 component={renderInput}
-                label={`Enter ${FirstField}`} >
+                label={`Enter ${propertiesName.firstLabel}`} >
             </Field>
             <Field
-                name={SecondField}
+                name={propertiesName.secondField}
                 component={renderInput}
-                label={`Enter ${SecondField}`}>
+                label={`Enter ${propertiesName.secondLabel}`}>
             </Field>
-            <button className="ui button primary">{buttonName || 'Submit'}</button>
+            <button className="ui button primary">{propertiesName.buttonName}</button>
             {/* children coming as props from parent component */}
             {children}
             <br /><br />
@@ -52,14 +52,15 @@ const renderInput = ({ input, label, meta }) => {
     );
 };
 //validate fucntion check if someone write on the field (Enter Title / Enter Description)
-const validate = (formValues, { FirstField, SecondField }) => {
+const validate = (formValues, { propertiesName: { firstField, secondField } }) => {
     const errors = {};
-
-    if (!formValues[FirstField])
-        errors[FirstField] = `You must enter ${FirstField}`;
-
-    if (!formValues[SecondField])
-        errors[SecondField] = `You must enter ${SecondField}`;
+    if (!formValues[firstField])
+        errors[firstField] = `You must enter ${firstField}`;
+    if (!formValues[secondField])
+        errors[secondField] = `You must enter ${secondField}`;
+    // used only when profession component is called
+    if (!formValues['professionName'])
+        errors['professionName'] = 'You must enter Profession';
 
     return errors;
 };

@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getProfessions } from '../../../Redux/actions/index';
 
 const Professions = ({ children, getProfessions, professions }) => {
-    const [id, setId] = useState('');
+    // const [id, setId] = useState('');
     const { isLecturer } = JSON.parse(localStorage.getItem('userCredential'));
     const typeUser = isLecturer ? '/LecturerView' : '/StudentView';
 
@@ -12,10 +12,10 @@ const Professions = ({ children, getProfessions, professions }) => {
         return professions.map((currProfession, idProfession) => {
             return (
                 <div className="item" key={idProfession}>
-                    <div className="content">
+                    <div className="content" style={{ margin: '5px' }}>
                         {isLecturer ?
                             (<Link
-                                to={ `/LecturerView/Classrooms/${currProfession}`} 
+                                to={`/LecturerView/Classrooms/${currProfession}`}
                                 style={{ fontSize: '30px', fontWeight: '600' }} >
                                 {currProfession}
                             </Link>)
@@ -41,6 +41,6 @@ const Professions = ({ children, getProfessions, professions }) => {
     )
 }
 const mapStateToProps = (state) => {
-    return { professions: state.learningProperties }
+    return { professions: state.profession }
 }
 export default connect(mapStateToProps, { getProfessions })(Professions);

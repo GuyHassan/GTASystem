@@ -12,7 +12,6 @@ const ProtectedRoute = ({ component: Component, ...rest }) => {
             {...rest}
             render={props => {
                 const existsStorage = JSON.parse(localStorage.getItem('userCredential'))
-
                 if ((existsStorage && (existsStorage.isLecturer || !blockStudentPermission()))) {
                     return <Component {...props} />;
                 }

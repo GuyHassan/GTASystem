@@ -7,6 +7,10 @@ import { server } from '../../Apis/server';
 
 
 const Login = ({ SignIn }) => {
+    const propertiesName = {
+        firstLabel: 'User Name', secondLabel: 'Password',
+        firstField: 'Username', secondField: 'Password', buttonName: 'LOGIN'
+    }
     const setLocalStorage = (username, isLecturer) => {
         const user = { 'user': username, 'isLecturer': isLecturer }
         localStorage.setItem('userCredential', JSON.stringify(user))
@@ -15,9 +19,9 @@ const Login = ({ SignIn }) => {
         SignIn({ userID: username, isLecturer: isLecturer })
         setLocalStorage(username, isLecturer)
         if (isLecturer)
-            history.push("/LecturerView");
+            history.push("/LecturerView/Profession");
         else
-            history.push("/StudentView");
+            history.push("/StudentView/Profession");
     }
 
     // when the user click on the button this function called
@@ -36,7 +40,7 @@ const Login = ({ SignIn }) => {
         <div>
             <h1 style={{ fontWeight: '700', textDecoration: 'underline' }}>Sign In</h1>
             <br />
-            <FormField onSubmit={onSubmit} FirstField={'Username'} SecondField={'Password'} />
+            <FormField onSubmit={onSubmit} propertiesName={propertiesName} />
         </div>
     );
 };
