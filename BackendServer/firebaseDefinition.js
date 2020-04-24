@@ -86,21 +86,24 @@ manage by needForSpecificClass boolean option , have 2 option!!! :
 const getStudentsNamesAsObject = (professionName, className, isForSpecificClass) => {
     // [{id:'guy123',name:"guy hassan"},{id:'yinon123',name:"yinon hassan"}]
     return getStudentsTree().then(key => {
-        const studentsNames = {};
-        Object.values(key).forEach((value, index) => {
-            if ((("materials" in value === false) || (professionName in value.materials === false)) && (isForSpecificClass === false)) {
-                if (value.className === className)
-                    studentsNames[Object.keys(key)[index]] = value.name;
+        const studentsNames = [];
+        Object.values(key).forEach((item, index) => {
+            if ((!item.hasOwnProperty("materials")||(!(professionName in item.materials) )) && (isForSpecificClass === false)) {
+                if (item.className === className){
+                    studentsNames.push({id:Object.keys(key)[index],name:item.name})
+                }
             }
-            else if ((isForSpecificClass === true) && (value.hasOwnProperty("materials"))) {
-                if ((professionName in value.materials)) {
-                    studentsNames[Object.keys(key)[index]] = value.name;
+            else if ((isForSpecificClass === true) && (item.hasOwnProperty("materials")&&(item.className===className))) {
+                if ((professionName in item.materials)) {
+                    studentsNames.push({id:Object.keys(key)[index],name:item.name})
                 }
             }
         });
         return studentsNames;
     });
 }
+
+getStudentsNamesAsObject("english","cita b",true).then(val =>{console.log(val)});
 
 /// WORKING!!!
 const getSizeOfChilds = async (root) => {
@@ -225,9 +228,8 @@ let addClass={lecturerName:"tamar123",professionName:"physics",className:"cita b
 
 //getMaterials("tamar123","english","cita b",true).then(val=>{console.log(val)})
 //addClassrooms(addClass)
-const check=[ { subTopic: { subTopicName: 'rational shvarim' },topicName: 'shvarim' },{ topicName: 'multiple' } ]
-const addMaterialsTree=[{topicName:"kinematics",subTopic1:{subTopicName:"accelerate"},subTopic2:{subTopicName:"vectors"}},{topicName:"force",subTopic1:{subTopicName:"newton rule 1"},subTopic2:{subTopicName:"newton rule 2"}}]
-getClassrooms("tamar123","english").then(val=>{console.log(val)});
+//const check=[ { subTopic: { subTopicName: 'rational shvarim' },topicName: 'shvarim' },{ topicName: 'multiple' } ]
+//const addMaterialsTree=[{topicName:"kinematics",subTopic1:{subTopicName:"accelerate"},subTopic2:{subTopicName:"vectors"}},{topicName:"force",subTopic1:{subTopicName:"newton rule 1"},subTopic2:{subTopicName:"newton rule 2"}}]
 
 module.exports = { getProfession, addStudentToClassroom, getStudentsNamesAsObject, getClassrooms, existInDB, checkUsernamePassword, addUsers, addClassrooms };
 
