@@ -12,9 +12,9 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
         return showButtonsID === idClass ?
             (
                 <div>
-                    <Link to={`/LecturerView/ViewStudents/${params.id}/${idClass}`} className="ui blue basic button small">View Students</Link>
+                    <Link to={`/LecturerView/ViewStudents/${params.profession}/${idClass}`} className="ui blue basic button small">View Students</Link>
                     <button className="ui blue basic button small">View Materials</button>
-                    <button className="ui black basic button small">Add Student</button>
+                    <Link to={`/LecturerView/AddingStudentToClass/${params.profession}/${idClass}`} className="ui black basic button small">Add Student</Link>
                     <button className="ui black basic button small">Add Material</button>
                 </div>
             ) : null;
@@ -33,7 +33,7 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
             )
         })
     }
-    useEffect(() => { getClasses(params.id) }, [getClasses, params.id])
+    useEffect(() => { getClasses(params.profession) }, [getClasses, params])
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">

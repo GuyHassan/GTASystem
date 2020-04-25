@@ -88,7 +88,6 @@ const AddNewUser = ({ titleMessage, classNameJsx }) => {
             );
         });
     };
-    console.log(state)
     return (
         <form
             className="ui error form"

@@ -14,7 +14,6 @@ const currentUserReducer = (state = {}, action) => {
     }
 }
 const classes = (state = [], action) => {
-    // console.log(state, action)
     switch (action.type) {
         case 'GET_CLASSES':
             return [...action.payload]
@@ -23,7 +22,6 @@ const classes = (state = [], action) => {
     }
 }
 const profession = (state = [], action) => {
-    // console.log(state, action)
     switch (action.type) {
         case 'GET_PROFESSIONS':
             return [...action.payload]
@@ -31,10 +29,11 @@ const profession = (state = [], action) => {
             return state;
     }
 }
+
 const students = (state = {}, action) => {
     switch (action.type) {
         case 'GET_STUDENTS':
-            return { ...state, ...action.payload }
+            return [...action.payload]
         default:
             return state;
     }

@@ -5,12 +5,12 @@ const ViewStudent = ({ students, match: { params }, getStudents }) => {
     const renderStudent = () => {
         return students.map(student => {
             return (
-                <div className="item" key={Object.keys(student)}>
+                <div className="item" key={student.id}>
                     <div className="content" style={{ color: '#1a75ff' }}>
                         <h2>
                             <ul>
                                 <li>
-                                    {Object.values(student)}
+                                    {student.name}
                                 </li>
                             </ul>
                         </h2>
@@ -21,6 +21,7 @@ const ViewStudent = ({ students, match: { params }, getStudents }) => {
     }
     useEffect(() => {
         getStudents(params);
+        return () => { getStudents({}) }
     }, [getStudents, params])
     return (
         <div>
@@ -35,6 +36,6 @@ const ViewStudent = ({ students, match: { params }, getStudents }) => {
     )
 }
 const mapStateToProps = (state) => {
-    return { students: [state.students] }
+    return { students: Object.values(state.students) };
 }
 export default connect(mapStateToProps, { getStudents })(ViewStudent);
