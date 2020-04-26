@@ -53,6 +53,11 @@ app.post(pathPermission, (req, res) => {
 app.get("/getClasses/:username/:professionName", (req, res) => {
   const { username, professionName } = req.params;
   getClassrooms(username, professionName).then(classesList => {
+    if(classesList.length===0){
+      res.status("404").send("you don't have classes in this profession");
+      res.send([])
+      return [];
+    }
     res.send(classesList);
   });
 });
@@ -60,6 +65,11 @@ app.get("/getClasses/:username/:professionName", (req, res) => {
 app.get("/getProfession/:username/:isLecturer", (req, res) => {
   const { username, isLecturer } = req.params;
   getProfession(username, (isLecturer === 'true')).then(professionList => {
+    if(professionList.length===0){
+      res.status("404").send("you don't have profession yet");
+      res.send([])
+      return [];
+    }
     res.send(professionList);
   });
 });
@@ -72,12 +82,10 @@ app.post("/LecturerView/createClassroom", (req, res) => {
     //if the path is exist so the classroom is used\
     if (classesList !== null && classesList.indexOf(classDetails.className)>-1) {
       res.status("404").send("you have this Classroom in your list");
-      return;
+      return false;
     }
     addClassrooms(classDetails);
     console.log("The class Is Added To The DB");
-
-    //res.send(classesObj.push(classDetails.professionName));
   });
 });
 
@@ -85,6 +93,11 @@ app.post("/LecturerView/createClassroom", (req, res) => {
 app.get("/getStudentsForAddToClass/:professionName/:className", (req, res) => {
   const { professionName, className } = req.params;
   getStudentsNamesAsObject(professionName, className, false).then(studentsName => {
+    if(studentsName.length===0){
+      res.status("404").send("you don't have students in this class that you can add!!");
+      res.send([]);
+      return [];
+    }
     res.send(studentsName);
   });
 });
@@ -101,15 +114,14 @@ app.post("/LecturerView/addStudentsToClass", (req, res) => {
 app.get("/getStudentsClass", (req, res) => {
   const { professionName, className } = req.query;
   getStudentsNamesAsObject(professionName, className, true).then(studentsName => {
+    if(studentsName.length===0){
+      res.status("404").send("you don't have student in this class");
+      res.send([]);
+      return [];
+    }
     res.send(studentsName);
   });
 });
-
-
-
-
-
-
 
 
 

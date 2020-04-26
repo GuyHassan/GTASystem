@@ -103,7 +103,6 @@ const getStudentsNamesAsObject = (professionName, className, isForSpecificClass)
     });
 }
 
-getStudentsNamesAsObject("english","cita b",true).then(val =>{console.log(val)});
 
 /// WORKING!!!
 const getSizeOfChilds = async (root) => {
@@ -230,6 +229,12 @@ let addClass={lecturerName:"tamar123",professionName:"physics",className:"cita b
 //addClassrooms(addClass)
 //const check=[ { subTopic: { subTopicName: 'rational shvarim' },topicName: 'shvarim' },{ topicName: 'multiple' } ]
 //const addMaterialsTree=[{topicName:"kinematics",subTopic1:{subTopicName:"accelerate"},subTopic2:{subTopicName:"vectors"}},{topicName:"force",subTopic1:{subTopicName:"newton rule 1"},subTopic2:{subTopicName:"newton rule 2"}}]
+
+
+//getStudentsNamesAsObject("english","cita b",false).then(val =>{console.log(val.length)});
+
+
+
 
 module.exports = { getProfession, addStudentToClassroom, getStudentsNamesAsObject, getClassrooms, existInDB, checkUsernamePassword, addUsers, addClassrooms };
 
