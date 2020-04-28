@@ -55,8 +55,7 @@ app.get("/getClasses/:username/:professionName", (req, res) => {
   getClassrooms(username, professionName).then(classesList => {
     if(classesList.length===0){
       res.status("404").send("you don't have classes in this profession");
-      res.send([])
-      return [];
+      return;
     }
     res.send(classesList);
   });
@@ -67,8 +66,7 @@ app.get("/getProfession/:username/:isLecturer", (req, res) => {
   getProfession(username, (isLecturer === 'true')).then(professionList => {
     if(professionList.length===0){
       res.status("404").send("you don't have profession yet");
-      res.send([])
-      return [];
+      return;
     }
     res.send(professionList);
   });
@@ -80,11 +78,12 @@ app.post("/LecturerView/createClassroom", (req, res) => {
   const classDetails = req.body;
   getClassrooms(classDetails.lecturerName, classDetails.professionName).then((classesList) => {
     //if the path is exist so the classroom is used\
-    if (classesList !== null && classesList.indexOf(classDetails.className)>-1) {
+    if (classesList !== null && classesList.indexOf(classDetails.className) > -1) {
       res.status("404").send("you have this Classroom in your list");
       return false;
     }
     addClassrooms(classDetails);
+    res.send("The class was successfully added");
     console.log("The class Is Added To The DB");
   });
 });
@@ -95,14 +94,13 @@ app.get("/getStudentsForAddToClass/:professionName/:className", (req, res) => {
   getStudentsNamesAsObject(professionName, className, false).then(studentsName => {
     if(studentsName.length===0){
       res.status("404").send("you don't have students in this class that you can add!!");
-      res.send([]);
-      return [];
+      return;
     }
     res.send(studentsName);
   });
 });
 
-//add list of students to given class : NEED {lecturerName,professionName,{studentsNames}} ,RETURN None
+//add list of students to given class : NEED {lecturerName,professionName,className,{studentsUsername}} ,RETURN None
 //choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 app.post("/LecturerView/addStudentsToClass", (req, res) => {
   addStudentToClassroom(req.body);
@@ -116,8 +114,7 @@ app.get("/getStudentsClass", (req, res) => {
   getStudentsNamesAsObject(professionName, className, true).then(studentsName => {
     if(studentsName.length===0){
       res.status("404").send("you don't have student in this class");
-      res.send([]);
-      return [];
+      return;
     }
     res.send(studentsName);
   });

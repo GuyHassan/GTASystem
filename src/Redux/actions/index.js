@@ -44,7 +44,6 @@ export const getProfessions = () => async (dispatch, getState) => {
     const { userID, isLecturer } = getState().whoIsOnline;
     const response = await server.get(`/getProfession/${userID}/${isLecturer}`);
     dispatch({ type: 'GET_PROFESSIONS', payload: response.data });
-
 };
 
 export const getStudents = (details) => async (dispatch) => {
@@ -52,12 +51,17 @@ export const getStudents = (details) => async (dispatch) => {
     const response = await server.get(`/getStudentsClass?professionName=${profession}&className=${className}`);
     dispatch({ type: 'GET_STUDENTS', payload: response.data });
 }
-// {lecturerName,className,professionName,description} 
-export const createClassroom = (details) => async (dispatch, getState) => {
+
+export const createClassroom = (details) => (dispatch, getState) => {
     const { userID } = getState().whoIsOnline;
-    const response = await server.post('/LecturerView/createClassroom', { ...details, lecturerName: userID });
-    console.log('response- ', response)
-    // dispatch({ type: 'CREATE_CLASSES', payload: response.data });
+    server.post('/LecturerView/createClassroom', { ...details, lecturerName: userID })
+        .then((response) => {
+            alert(response.data);
+            history.push("/LecturerView/Profession");
+        }, (error) => {
+            alert("This Classroom is exists in your list!");
+        })
+
 }
 export const createNewMaterial = (material) => async (dispatch, getState) => {
     const { loggedInUser } = getState();

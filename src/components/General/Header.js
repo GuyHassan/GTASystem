@@ -6,6 +6,8 @@ import { SignIn, SignOut } from '../../Redux/actions';
 import '../Style/Header.css';
 
 const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
+    // pass a user id and return uppercase first character
+    const prettyUserName = user => { return user.substring(0, 1).toUpperCase() + user.substring(1) }
     const currentUser = () => {
         let concatenationElement = [];
         const typeRoute = isLecturer ? '/LecturerView' : '/StudentView';
@@ -19,7 +21,9 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
         }
         concatenationElement.push(
             <Link key={1} to={`${typeRoute}/Profession`} className="item">Profession View</Link>,
-            <p key={3} className="item" style={{ color: '#87CEFA', fontWeight: '800' }}>{userID}</p>,
+            <p key={3} className="item" style={{ color: '#87CEFA', fontWeight: '800' }}>
+                {prettyUserName(userID)}
+            </p>,
             <Link key={2} to='/Login' onClick={logOut} style={{ fontWeight: '900' }} className='item'>Logout</Link>
         )
         return concatenationElement;
