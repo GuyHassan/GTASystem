@@ -40,8 +40,8 @@ const students = (state = {}, action) => {
 }
 export default combineReducers({
     form: formReducer,
-    materials: materialsReducers,
     whoIsOnline: currentUserReducer,
+    materials: materialsReducers,
     classes,
     profession,
     students

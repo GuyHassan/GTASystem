@@ -21,8 +21,7 @@ const AddingStudentToClass = ({ match: { params } }) => {
                             {student.name} - {student.id}
                         </li>
                     </ul >
-
-                </div >
+                </div>
             )
         })
     }

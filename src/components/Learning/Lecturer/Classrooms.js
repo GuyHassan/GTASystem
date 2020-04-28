@@ -13,7 +13,7 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
             (
                 <div>
                     <Link to={`/LecturerView/ViewStudents/${params.profession}/${idClass}`} className="ui blue basic button small">View Students</Link>
-                    <button className="ui blue basic button small">View Materials</button>
+                    <Link to={`/MaterialView/${params.profession}/${idClass}`} className="ui blue basic button small">View Materials</Link>
                     <Link to={`/LecturerView/AddingStudentToClass/${params.profession}/${idClass}`} className="ui black basic button small">Add Student</Link>
                     <button className="ui black basic button small">Add Material</button>
                 </div>

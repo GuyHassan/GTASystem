@@ -10,6 +10,7 @@ import StudyMaterials from "./LecturerAndStudent/StudyMaterials";
 import Classrooms from "./Lecturer/Classrooms";
 import ViewStudents from "./Lecturer/ViewStudents";
 import AddingStudentToClass from "./Lecturer/AddingStudentToClass";
+import MaterialView from "./LecturerAndStudent/MaterialView";
 const LearningManagement = () => {
     return (
         <Switch>
@@ -17,6 +18,7 @@ const LearningManagement = () => {
             <ProtectedRoute path="/LecturerView/Profession" exact component={LecturerView} />
             <ProtectedRoute path="/LecturerView/ViewStudents/:profession/:className" exact component={ViewStudents} />
             <ProtectedRoute path="/LecturerView/DeleteMaterial/:id" exact component={DeleteMaterial} />
+            <ProtectedRoute path="/MaterialView/:profession/:className" exact component={MaterialView} />
             <ProtectedRoute path="/LecturerView/AddingStudentToClass/:profession/:className" exact component={AddingStudentToClass} />
             <ProtectedRoute path="/LecturerView/CreateClassroom" exact component={CreateClassroom} />
             <ProtectedRoute path="/LecturerView/StudentPermissions" exact component={StudentPermission} />
