@@ -180,24 +180,28 @@ control by getSizeChilds and build enter rootTree inside Method
 topics
     -> 1:
         -> name:
-        -> finishTopic(boolean):Backend initial FALSE
+        (-> finishTopic(boolean):Backend initial FALSE)
         -> subTopics:(if needed)
             ->subTopicName:
-            ->finishTopic(boolean):Backend initial FALSE
+            (->finishTopic(boolean):Backend initial FALSE)
     -> 2: 
  
+    [false,[false,false],false]
 */
+
 
 
 //function for initial materials NEED {lecturerName, professionName, className, materialsTree}
 const addMaterials = (materialsDetails) => {
-
+    database.ref(`classrooms/${materialsDetails.lecturerName}/${materialsDetails.professionName}/${materialsDetails.className}/topics`).set(response)
 }
 
 //function for students and lecturers!!!
 //need to get username,isLecturer 
 //also need a root to get to the inside DB
-const getMaterials = async (username, professionName, className, isLecturer) => {
+//getMaterials("tamar123","english","cita b",true).then(val=>{console.log(val)})
+
+const getMaterials = async (username, professionName, className, isLecturer=false) => {
     const materialTree = await (database.ref(`classrooms/${username}/${professionName}/${className}/topics`).once("value"));
     return materialTree.val();
 }
@@ -226,7 +230,6 @@ let addClass = { lecturerName: "tamar123", professionName: "physics", className:
 //let studentDetailsForClassroom={lecturerName:"tamar123",professionName:"physics",studentsNames:["guy123","yinon123"]};
 //addStudentToClassroom(studentDetailsForClassroom);
 
-//getMaterials("tamar123","english","cita b",true).then(val=>{console.log(val)})
 //addClassrooms(addClass)
 //const check=[ { subTopic: { subTopicName: 'rational shvarim' },topicName: 'shvarim' },{ topicName: 'multiple' } ]
 //const addMaterialsTree=[{topicName:"kinematics",subTopic1:{subTopicName:"accelerate"},subTopic2:{subTopicName:"vectors"}},{topicName:"force",subTopic1:{subTopicName:"newton rule 1"},subTopic2:{subTopicName:"newton rule 2"}}]
@@ -234,7 +237,9 @@ let addClass = { lecturerName: "tamar123", professionName: "physics", className:
 
 
 
+//[ { subTopic: { subTopicName: 'rational shvarim' },topicName: 'shvarim' },{ topicName: 'multiple' } ]
 
 
-module.exports = { getProfession, addStudentToClassroom, getStudentsNamesAsObject, getClassrooms, existInDB, checkUsernamePassword, addUsers, addClassrooms };
+
+module.exports = {getMaterials, getProfession, addStudentToClassroom, getStudentsNamesAsObject, getClassrooms, existInDB, checkUsernamePassword, addUsers, addClassrooms };
 

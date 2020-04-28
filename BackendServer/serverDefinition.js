@@ -1,5 +1,5 @@
 
-const { getProfession, addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword, addUsers, existInDB, getClassrooms, addClassrooms } = require("./firebaseDefinition");
+const { getMaterials,getProfession, addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword, addUsers, existInDB, getClassrooms, addClassrooms } = require("./firebaseDefinition");
 const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
@@ -121,7 +121,18 @@ app.get("/getStudentsClass", (req, res) => {
 });
 
 
+//get Materials Tree : NEED {username,professionName,className} RETURN materials tree .
+app.get("/getMaterials",(req,res)=>{
+  const {username,professionName,className}=req.params;
+  getMaterials(username).then(materialTree=>{
+    if(materialTree===null){
+      res.status("404").send("you don't have materials for this class");
+      return;
+    }
+    res.send(materialTree);
 
+  });
+});
 
 
 
