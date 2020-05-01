@@ -1,5 +1,5 @@
 #header {
-    background: url('../../assets/img/jumbotronPicture1.jpg');
+    background: url('../../assets/img/jumbotronPicture2.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100%;
@@ -16,13 +16,15 @@
 
 hr {
     width: 70vw;
+    border-color:red;
 }
 
 @media only screen and (max-width: 768px) {
-    #Jumbo{
+    #Jumbo {
         background-size: 100vw;
     }
-    #Jumbo>h1{
+
+    #Jumbo>h1 {
         font-size: 10vw;
     }
 

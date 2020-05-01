@@ -1,35 +1,59 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, Fragment, useState } from 'react';
 import { Link } from "react-router-dom";
 import JumbotronMain from './JumbotronMain';
+import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { ReactComponent as Logo } from "../../assets/img/LogoNavbar.svg";
 import { connect } from 'react-redux';
 import { SignIn, SignOut } from '../../Redux/actions';
 import '../Style/Header.css';
 
 const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
+    const [userExists, setUserExists] = useState('');
     // pass a user id and return uppercase first character
     const prettyUserName = user => { return user.substring(0, 1).toUpperCase() + user.substring(1) }
-    const currentUser = () => {
+
+    const NavbarBootstrap = () => {
+        return (
+            <Navbar collapseOnSelect expand="lg" className="color-nav" variant="dark" sticky="top">
+                <Navbar.Brand as={Link} to="/">
+                    < Logo alt="" width="40" height="30" className="d-inline-block align-top mr-2 " />
+                    <span>GTA - System</span>
+                </Navbar.Brand>
+                <Navbar.Toggle aria-controls="responsive-navbar-nav" />
+                <Navbar.Collapse id="responsive-navbar-nav">
+                    <Nav className="mr-auto">
+                        <Nav.Link className="userTitle">
+                            <p>{userID ? prettyUserName(userID) : null}</p>
+                        </Nav.Link >
+                        <Nav.Link as={Link} to="/AboutUs">About Us</Nav.Link>
+                    </Nav>
+                    <Nav>
+                        {dynamicElements()}
+                    </Nav>
+                </Navbar.Collapse>
+            </Navbar>
+        )
+    }
+    const dynamicElements = () => {
         let concatenationElement = [];
         const typeRoute = isLecturer ? '/LecturerView' : '/StudentView';
         if (!isLoggedIn) {
-            return <Link to='/Login' style={{ fontWeight: '900' }} className="item">Login</Link>
+            return <Nav.Link as={Link} to='/Login' className="loginLogout"><p>Login</p></Nav.Link>
         }
         if (isLecturer) {
             concatenationElement.push(
-                <Link key={0} to='/LecturerView/StudentPermissions' className='item'>Student Permission</Link>
+                <Nav.Link as={Link} key={0} to='/LecturerView/StudentPermissions' className='item'>Student Permission</Nav.Link>
             )
         }
         concatenationElement.push(
-            <Link key={1} to={`${typeRoute}/Profession`} className="item">Profession View</Link>,
-            <p key={3} className="item" style={{ color: '#87CEFA', fontWeight: '800' }}>
-                {prettyUserName(userID)}
-            </p>,
-            <Link key={2} to='/Login' onClick={logOut} style={{ fontWeight: '900' }} className='item'>Logout</Link>
+            <Nav.Link as={Link} key={1} to={`${typeRoute}/Profession`} className="item">Profession View</Nav.Link>,
+            <Nav.Link as={Link} key={2} to='/Login' onClick={logOut} className='loginLogout'><p>Logout</p></Nav.Link>
         )
         return concatenationElement;
     }
 
     const logOut = () => {
+        setUserExists('')
         SignOut();
         localStorage.clear();
     }
@@ -37,8 +61,10 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
         // let mounted = true;
         const setStorage = () => {
             const currUser = JSON.parse(localStorage.getItem('userCredential'));
-            if (currUser)
+            if (currUser) {
+                setUserExists(currUser.user)
                 SignIn({ userID: currUser.user, isLecturer: currUser.isLecturer });
+            }
         }
         setStorage();
 
@@ -50,16 +76,7 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
 
     return (
         <div>
-            <div id="navbar" className="ui container ui secondary pointing menu">
-                <Link to={{ pathname: '/' }}
-                    className="item">
-                    GTA - System
-             </Link>
-                <div className="right menu">
-                    <Link to="/AboutUs" className="item">About Us </Link>
-                    {currentUser()}
-                </div>
-            </div>
+            <NavbarBootstrap />
             <JumbotronMain />
         </div>
     );
