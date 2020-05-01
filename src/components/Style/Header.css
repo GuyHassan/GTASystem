@@ -1,0 +1,23 @@
+.color-nav {
+    background-color: #1a1a1a;
+}
+
+span {
+    color: white;
+    font-weight: 700;
+}
+
+.userTitle {
+
+    pointer-events: none;
+}
+
+.userTitle>p {
+    color: #87CEFA;
+    font-weight: 700;
+}
+
+.loginLogout>p {
+    font-weight: 900;
+    color: white;
+}

@@ -53,7 +53,7 @@ app.post(pathPermission, (req, res) => {
 app.get("/getClasses/:username/:professionName", (req, res) => {
   const { username, professionName } = req.params;
   getClassrooms(username, professionName).then(classesList => {
-    if(classesList.length===0){
+    if (classesList.length === 0) {
       res.status("404").send("you don't have classes in this profession");
       return;
     }
@@ -64,7 +64,7 @@ app.get("/getClasses/:username/:professionName", (req, res) => {
 app.get("/getProfession/:username/:isLecturer", (req, res) => {
   const { username, isLecturer } = req.params;
   getProfession(username, (isLecturer === 'true')).then(professionList => {
-    if(professionList.length===0){
+    if (professionList.length === 0) {
       res.status("404").send("you don't have profession yet");
       return;
     }
@@ -92,7 +92,7 @@ app.post("/LecturerView/createClassroom", (req, res) => {
 app.get("/getStudentsForAddToClass/:professionName/:className", (req, res) => {
   const { professionName, className } = req.params;
   getStudentsNamesAsObject(professionName, className, false).then(studentsName => {
-    if(studentsName.length===0){
+    if (studentsName.length === 0) {
       res.status("404").send("you don't have students in this class that you can add!!");
       return;
     }
@@ -112,8 +112,8 @@ app.post("/LecturerView/addStudentsToClass", (req, res) => {
 app.get("/getStudentsClass", (req, res) => {
   const { professionName, className } = req.query;
   getStudentsNamesAsObject(professionName, className, true).then(studentsName => {
-    if(studentsName.length===0){
-      res.status("404").send("you don't have student in this class");
+    if (studentsName.length === 0) {
+      res.send([])
       return;
     }
     res.send(studentsName);
