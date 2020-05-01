@@ -1,5 +1,5 @@
 
-const { getMaterials,getProfession, addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword, addUsers, existInDB, getClassrooms, addClassrooms } = require("./firebaseDefinition");
+const { addMaterials,getMaterials,getProfession, addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword, addUsers, existInDB, getClassrooms, addClassrooms } = require("./firebaseDefinition");
 const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
@@ -130,13 +130,20 @@ app.get("/getMaterials",(req,res)=>{
       return;
     }
     res.send(materialTree);
-
   });
+});
+
+
+//function for add materials NEED : {lecturerName, professionName, className, materialsTree}
+app.post("/addMaterials",(req,res)=>{
+  addMaterials(req.body);
+  res.send("the material's added to this class");;
 });
 
 
 
 
+//IMPROTENT add the option to add materials inside addStudentToClassroom
 
 
 // inital the server in default PORT (3005)

@@ -137,15 +137,18 @@ const addClassForSpecificStudent = (username, professionName) => {
 }
 
 ///FIXED!!!!     need to give [studentsUsername],LecturerName,professionName,className
-const addStudentToClassroom = (classroomDetails) => {
-    getStudentFromSpecificClassroom(classroomDetails.lecturerName, classroomDetails.professionName, classroomDetails.className).then(response => {
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//NEED add option to add to all users the specific materials
+//NEED to use get materials and to check !!
+const addStudentToClassroom = ({ lecturerName, professionName, className, students }) => {
+    getStudentFromSpecificClassroom(lecturerName, professionName, className).then(response => {
         response
-            ? database.ref(`classrooms/${classroomDetails.lecturerName}/${classroomDetails.professionName}/${classroomDetails.className}/students`).set(response.concat(classroomDetails.students))
-            : database.ref(`classrooms/${classroomDetails.lecturerName}/${classroomDetails.professionName}/${classroomDetails.className}/students`).set(classroomDetails.students);
+            ? database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).set(response.concat(students))
+            : database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).set(students);
     });
+    students.forEach(student => {
+        addClassForSpecificStudent(student, professionName)
 
-    classroomDetails.students.forEach(student => {
-        addClassForSpecificStudent(student, classroomDetails.professionName)
     });
 }
 
@@ -188,20 +191,37 @@ topics
  
     [false,[false,false],false]
 */
-
+const initialArrayOfObj = (materialTree, type) => {
+    let objArray = []
+    for (let i = 0; i < materialTree.length; i++) {
+        objArray.push({ [type]: -1 });
+        if (materialTree[i].hasOwnProperty("subTopics")) {
+            objArray[i]["sub" + (type.charAt(0).toUpperCase() + type.slice(1)) + "s"] = initialArrayOfObj(materialTree[i].subTopics, type);
+        }
+    }
+    return objArray;
+}
 
 
 //function for initial materials NEED {lecturerName, professionName, className, materialsTree}
 const addMaterials = (materialsDetails) => {
     database.ref(`classrooms/${materialsDetails.lecturerName}/${materialsDetails.professionName}/${materialsDetails.className}/topics`).set(response)
+    getStudentsNamesAsObject(materialsDetails.professionName, materialsDetails.className, true).then(students => {
+        students.forEach(student => {
+            const gradeTree = initialArrayOfObj(materialsDetails.materialTree, "grade");
+            const needHelpTree = initialArrayOfObj(materialsDetails.materialTree, "needHelp");
+            database.ref(`students/${student.id}/materials/${materialsDetails.professionName}/grades`).set(gradeTree);
+            database.ref(`students/${student.id}/materials/${materialsDetails.professionName}/needHelpScale`).set(needHelpTree);
+        });
+        //need to pass on every student and add topics to his materials
+    });
 }
 
 //function for students and lecturers!!!
 //need to get username,isLecturer 
 //also need a root to get to the inside DB
-//getMaterials("tamar123","english","cita b",true).then(val=>{console.log(val)})
 
-const getMaterials = async (username, professionName, className, isLecturer=false) => {
+const getMaterials = async (username, professionName, className, isLecturer = false) => {
     const materialTree = await (database.ref(`classrooms/${username}/${professionName}/${className}/topics`).once("value"));
     return materialTree.val();
 }
@@ -231,15 +251,12 @@ let addClass = { lecturerName: "tamar123", professionName: "physics", className:
 //addStudentToClassroom(studentDetailsForClassroom);
 
 //addClassrooms(addClass)
-//const check=[ { subTopic: { subTopicName: 'rational shvarim' },topicName: 'shvarim' },{ topicName: 'multiple' } ]
-//const addMaterialsTree=[{topicName:"kinematics",subTopic1:{subTopicName:"accelerate"},subTopic2:{subTopicName:"vectors"}},{topicName:"force",subTopic1:{subTopicName:"newton rule 1"},subTopic2:{subTopicName:"newton rule 2"}}]
+
+//example for addMaterials
+// getMaterials("tamar123","english","cita b").then(val=>{
+//     addMaterials({professionName:"english",className:"cita b",materialTree:val});
+// });
 
 
-
-
-//[ { subTopic: { subTopicName: 'rational shvarim' },topicName: 'shvarim' },{ topicName: 'multiple' } ]
-
-
-
-module.exports = {getMaterials, getProfession, addStudentToClassroom, getStudentsNamesAsObject, getClassrooms, existInDB, checkUsernamePassword, addUsers, addClassrooms };
+module.exports = { addMaterials, getMaterials, getProfession, addStudentToClassroom, getStudentsNamesAsObject, getClassrooms, existInDB, checkUsernamePassword, addUsers, addClassrooms };
 
