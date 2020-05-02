@@ -54,12 +54,12 @@ export const createClassroom = (details) => (dispatch, getState) => {
         }, (error) => {
             alert("This Classroom is exists in your list!");
         })
-
 }
-export const getMaterials = () => async (dispatch, getState) => {
+
+export const getMaterials = ({ profession, className }) => async (dispatch, getState) => {
     const { userID } = getState().whoIsOnline;
-    const response = await server.get(`/getClasses/${userID}/${professionName}`);
-    dispatch({ type: 'GET_CLASSES', payload: response.data });
+    const response = await server.get(`/getMaterials?professionName=${profession}&className=${className}&username=${userID}`);
+    dispatch({ type: 'GET_MATERIALS', payload: response.data });
 };
 
 export const createNewMaterial = (material) => async (dispatch, getState) => {

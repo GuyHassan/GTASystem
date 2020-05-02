@@ -1,11 +1,12 @@
-import React, { Fragment } from 'react';
-
-const MaterialView = () => {
-    const materials = [{ subTopic: [{ subTopicName: 'rational shvarim' }, { subTopicName: 'not rational shvarim' }], topicName: 'shvarim' }, { topicName: 'multiple' }]
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { getMaterials } from '../../../Redux/actions';
+const MaterialView = ({ getMaterials, match: { params }, materials }) => {
+    // const materials = [{ subTopic: [{ subTopicName: 'rational shvarim' }, { subTopicName: 'not rational shvarim' }], topicName: 'shvarim' }, { topicName: 'multiple' }]
     const subTopicRender = (subTopic) => {
         return subTopic.map((topic, idTopic) => {
             return (
-                <ul style={{ marginTop: '20px', fontSize: '20px'}}>
+                <ul style={{ marginTop: '20px', fontSize: '20px' }} key={idTopic}>
                     <li>
                         {topic.subTopicName}
                     </li>
@@ -23,7 +24,7 @@ const MaterialView = () => {
                             <ul>
                                 <li>
                                     {material.topicName}
-                                    {material.subTopic ? subTopicRender(material.subTopic) : null}
+                                    {material.subTopics ? subTopicRender(material.subTopics) : null}
                                 </li>
                             </ul>
 
@@ -33,6 +34,10 @@ const MaterialView = () => {
             )
         })
     }
+    useEffect(() => {
+        getMaterials(params)
+        return () => getMaterials({})
+    }, [getMaterials])
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">
@@ -43,4 +48,7 @@ const MaterialView = () => {
         </div>
     )
 }
-export default MaterialView;
+const mapStateToProps = (state) => {
+    return { materials: Object.values(state.materials) }
+}
+export default connect(mapStateToProps, { getMaterials })(MaterialView);
