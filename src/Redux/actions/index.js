@@ -28,13 +28,6 @@ export const SignOut = () => {
 //     history.push('/LecturerView');
 // }
 
-export const getMaterials = () => async (dispatch, getState) => {
-    console.log(getState)
-    // const lecturerName = getState
-    //formValues is the value from the form and the server get him and update the database
-    // const response = await server.get("LecturerView/getClasses");
-    // dispatch({ type: 'GET_CLASSES', payload: response.data });
-};
 export const getClasses = (professionName) => async (dispatch, getState) => {
     const { userID } = getState().whoIsOnline;
     const response = await server.get(`/getClasses/${userID}/${professionName}`);
@@ -61,8 +54,14 @@ export const createClassroom = (details) => (dispatch, getState) => {
         }, (error) => {
             alert("This Classroom is exists in your list!");
         })
-
 }
+
+export const getMaterials = ({ profession, className }) => async (dispatch, getState) => {
+    const { userID } = getState().whoIsOnline;
+    const response = await server.get(`/getMaterials?professionName=${profession}&className=${className}&username=${userID}`);
+    dispatch({ type: 'GET_MATERIALS', payload: response.data });
+};
+
 export const createNewMaterial = (material) => async (dispatch, getState) => {
     const { loggedInUser } = getState();
     const response = await server.post('/studyMaterials', { ...material, ...loggedInUser });

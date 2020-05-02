@@ -1,5 +1,5 @@
 
-const { addMaterials,getMaterials,getProfession, addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword, addUsers, existInDB, getClassrooms, addClassrooms } = require("./firebaseDefinition");
+const { addMaterials, getMaterials, getProfession, addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword, addUsers, existInDB, getClassrooms, addClassrooms } = require("./firebaseDefinition");
 const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
@@ -122,11 +122,12 @@ app.get("/getStudentsClass", (req, res) => {
 
 
 //get Materials Tree : NEED {username,professionName,className} RETURN materials tree .
-app.get("/getMaterials",(req,res)=>{
-  const {username,professionName,className}=req.params;
-  getMaterials(username).then(materialTree=>{
-    if(materialTree===null){
-      res.status("404").send("you don't have materials for this class");
+app.get("/getMaterials", (req, res) => {
+  const { username, professionName, className } = req.query;
+  getMaterials(username, professionName, className).then(materialTree => {
+    if (materialTree === null) {
+      // res.status("404").send("you don't have materials for this class");
+      res.send([])
       return;
     }
     res.send(materialTree);
@@ -135,7 +136,7 @@ app.get("/getMaterials",(req,res)=>{
 
 
 //function for add materials NEED : {lecturerName, professionName, className, materialsTree}
-app.post("/addMaterials",(req,res)=>{
+app.post("/addMaterials", (req, res) => {
   addMaterials(req.body);
   res.send("the material's added to this class");;
 });
