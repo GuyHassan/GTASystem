@@ -17,7 +17,7 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
             <Navbar collapseOnSelect expand="lg" className="color-nav" variant="dark" sticky="top">
                 <Navbar.Brand as={Link} to="/">
                     < Logo alt="" width="40" height="30" className="d-inline-block align-top mr-2 " />
-                    <span>GTA - System</span>
+                    <span id="titleHeader">GTA - System</span>
                 </Navbar.Brand>
                 <Navbar.Toggle aria-controls="responsive-navbar-nav" />
                 <Navbar.Collapse id="responsive-navbar-nav">

@@ -65,26 +65,19 @@ const addUsers = (userDetails) => {
     return true;
 }
 
-//******************************************** NEED TO ADD ***********************************************/
-
-
-
-
-/// FIXED !!! inside method to get student tree FOR getStudentsAsObject getStudentClasses!!!
+//inside method to get student tree FOR getStudentsAsObject getStudentClasses!!!
 const getStudentsTree = async () => {
     const students = await (database.ref("students").once("value"));
     return students.val();
 }
 
 
-/// FIXED!!! 
 /* 
 manage by needForSpecificClass boolean option , have 2 option!!! : 
     1.false - get all the student that not exist in specific class!! FOR know which one to get .
     2.true -  get the students that inside the class we send FOR view the students we have inside this class.
 */
 const getStudentsNamesAsObject = (professionName, className, isForSpecificClass) => {
-    // [{id:'guy123',name:"guy hassan"},{id:'yinon123',name:"yinon hassan"}]
     return getStudentsTree().then(key => {
         const studentsNames = [];
         Object.values(key).forEach((item, index) => {
@@ -103,15 +96,12 @@ const getStudentsNamesAsObject = (professionName, className, isForSpecificClass)
     });
 }
 
-
-/// WORKING!!!
 const getSizeOfChilds = async (root) => {
     const sizeOfChilds = await (database.ref(`${root}`).once("value"));
     return sizeOfChilds.numChildren();
 }
 
-//################################################
-/// FIXED!!!  NEED :: lecturerName,professionName,className,description
+//function for adding classrooms !!  NEED :: lecturerName,professionName,className,description
 const addClassrooms = (classroomDetails) => {
     const classroomDetailsTree = { description: classroomDetails.description };
     getSizeOfChilds(`lecturers/${classroomDetails.lecturerName}/classes/${classroomDetails.professionName}`).then(response => {
@@ -122,7 +112,7 @@ const addClassrooms = (classroomDetails) => {
     });
 }
 
-//WORKING!!! inside method to get student list FOR addStudentToClassroom !!!
+// inside method to get student list FOR addStudentToClassroom !!!
 const getStudentFromSpecificClassroom = async (lecturerName, professionName, className) => {
     const students = await (database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).once("value"));
     return students.val();
@@ -136,19 +126,43 @@ const addClassForSpecificStudent = (username, professionName) => {
     });
 }
 
+//inside method FOR buildGradeAndHelpTree  !!!
+const initialArrayOfObj = (materialTree, type) => {
+    let objArray = []
+    for (let i = 0; i < materialTree.length; i++) {
+        objArray.push({ [type]: -1 });
+        if (materialTree[i].hasOwnProperty("subTopics")) {
+            objArray[i]["sub" + (type.charAt(0).toUpperCase() + type.slice(1)) + "s"] = initialArrayOfObj(materialTree[i].subTopics, type);
+        }
+    }
+    return objArray;
+}
+
+//inside method FOR addStudentToClassroom AND addMaterials
+const buildGradeAndHelpTree=(student,professionName,materialTree)=>{
+    const gradeTree = initialArrayOfObj(materialTree, "grade");
+    const needHelpTree = initialArrayOfObj(materialTree, "needHelp");
+    database.ref(`students/${student}/materials/${professionName}/grades`).set(gradeTree);
+    database.ref(`students/${student}/materials/${professionName}/needHelpScale`).set(needHelpTree);
+}
+
+
 ///FIXED!!!!     need to give [studentsUsername],LecturerName,professionName,className
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //NEED add option to add to all users the specific materials
 //NEED to use get materials and to check !!
-const addStudentToClassroom = ({ lecturerName, professionName, className, students }) => {
+const addStudentToClassroom  = async ({ lecturerName, professionName, className, students }) => {
     getStudentFromSpecificClassroom(lecturerName, professionName, className).then(response => {
         response
             ? database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).set(response.concat(students))
             : database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).set(students);
     });
+    const materialTree =await getMaterials(lecturerName,professionName,className);
     students.forEach(student => {
-        addClassForSpecificStudent(student, professionName)
-
+        addClassForSpecificStudent(student, professionName);
+        if(materialTree){
+            buildGradeAndHelpTree(student,professionName,materialTree);
+        }
     });
 }
 
@@ -165,63 +179,30 @@ const getClassrooms = async (username, professionName) => {
     return await (await (database.ref(`lecturers/${username}/classes/${professionName}`).once("value"))).val();
 }
 
-//******************************************** END NEED TO ADD ***********************************************/
-
-
 const deleteTree = (root) => {
     database.ref(`${root}`).remove();
 }
 
-//delete student from class : NEED {studentName,LecturerNama,professionName,className}
-const deleteStudentFromClass = (studentDetails) => {
-    deleteTree(`classrooms/${studentDetails.lecturerName}/${studentDetials.professionName}/${studentDetails.className}/studnets/${studentDetails.studentName}`);
-    deleteTree(`students/${studentDetails.studentName}/materials/${studentDetials.professionName}/`);
-}
-
-/*
-control by getSizeChilds and build enter rootTree inside Method 
-topics
-    -> 1:
-        -> name:
-        (-> finishTopic(boolean):Backend initial FALSE)
-        -> subTopics:(if needed)
-            ->subTopicName:
-            (->finishTopic(boolean):Backend initial FALSE)
-    -> 2: 
- 
-    [false,[false,false],false]
-*/
-const initialArrayOfObj = (materialTree, type) => {
-    let objArray = []
-    for (let i = 0; i < materialTree.length; i++) {
-        objArray.push({ [type]: -1 });
-        if (materialTree[i].hasOwnProperty("subTopics")) {
-            objArray[i]["sub" + (type.charAt(0).toUpperCase() + type.slice(1)) + "s"] = initialArrayOfObj(materialTree[i].subTopics, type);
-        }
-    }
-    return objArray;
-}
 
 
-//function for initial materials NEED {lecturerName, professionName, className, materialsTree}
-const addMaterials = (materialsDetails) => {
-    database.ref(`classrooms/${materialsDetails.lecturerName}/${materialsDetails.professionName}/${materialsDetails.className}/topics`).set(response)
-    getStudentsNamesAsObject(materialsDetails.professionName, materialsDetails.className, true).then(students => {
+
+//function for initial materials NEED {lecturerName, professionName, className, materialTree}
+const addMaterials = ({lecturerName,professionName,className,materialTree}) => {
+    database.ref(`classrooms/${lecturerName}/${professionName}/${className}/topics`).set(materialTree);
+    getStudentsNamesAsObject(professionName, className, true).then(students => {
         students.forEach(student => {
-            const gradeTree = initialArrayOfObj(materialsDetails.materialTree, "grade");
-            const needHelpTree = initialArrayOfObj(materialsDetails.materialTree, "needHelp");
-            database.ref(`students/${student.id}/materials/${materialsDetails.professionName}/grades`).set(gradeTree);
-            database.ref(`students/${student.id}/materials/${materialsDetails.professionName}/needHelpScale`).set(needHelpTree);
+            buildGradeAndHelpTree(student.id,professionName,materialTree)
         });
-        //need to pass on every student and add topics to his materials
     });
 }
 
+
+
 //function for students and lecturers!!!
-//need to get username,isLecturer 
+//need to get username, professionName, className
 //also need a root to get to the inside DB
 
-const getMaterials = async (username, professionName, className, isLecturer = false) => {
+const getMaterials = async (username, professionName, className) => {
     const materialTree = await (database.ref(`classrooms/${username}/${professionName}/${className}/topics`).once("value"));
     return materialTree.val();
 }
@@ -233,7 +214,11 @@ const addTopics = (lecturerName, professionName, className, ) => {
 
 
 
-
+//delete student from class : NEED {studentName,LecturerNama,professionName,className}
+const deleteStudentFromClass = (studentDetails) => {
+    deleteTree(`classrooms/${studentDetails.lecturerName}/${studentDetials.professionName}/${studentDetails.className}/studnets/${studentDetails.studentName}`);
+    deleteTree(`students/${studentDetails.studentName}/materials/${studentDetials.professionName}/`);
+}
 
 
 
@@ -252,7 +237,7 @@ let addClass = { lecturerName: "tamar123", professionName: "physics", className:
 
 //addClassrooms(addClass)
 
-//example for addMaterials
+////example for addMaterials
 // getMaterials("tamar123","english","cita b").then(val=>{
 //     addMaterials({professionName:"english",className:"cita b",materialTree:val});
 // });
