@@ -19,7 +19,7 @@ const Professions = ({ children, getProfessions, professions }) => {
                                 style={{ fontSize: '30px', fontWeight: '600' }} >
                                 {currProfession}
                             </Link>)
-                            : (<Link to='/StudentView/StudyMaterial'
+                            : (<Link to={`/MaterialView/${currProfession}`}
                                 style={{ fontSize: '30px', fontWeight: '600' }} >
                                 {currProfession}
                             </Link>)}

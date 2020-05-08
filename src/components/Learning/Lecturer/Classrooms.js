@@ -15,7 +15,6 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
                     <Link to={`/LecturerView/ViewStudents/${params.profession}/${idClass}`} className="ui blue basic button small">View Students</Link>
                     <Link to={`/MaterialView/${params.profession}/${idClass}`} className="ui blue basic button small">View Materials</Link>
                     <Link to={`/LecturerView/AddingStudentToClass/${params.profession}/${idClass}`} className="ui black basic button small">Add Student</Link>
-                    <Link to={`/LecturerView/CreateMaterial/${params.profession}/${idClass}`} className="ui black basic button small">Add Material</Link>
                 </div>
             ) : null;
     }
