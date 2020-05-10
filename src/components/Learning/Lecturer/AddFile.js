@@ -8,6 +8,7 @@ const AddFile = () => {
         <div>
             <h1>Add File</h1>
             <input type="file" onChange={fileUploadHandler} />
+            <textarea name="free" cols="50" rows="5"></textarea>
         </div>
     )
 }

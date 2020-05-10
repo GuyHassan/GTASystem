@@ -138,7 +138,7 @@ app.get("/getMaterials", (req, res) => {
 //function for add materials NEED : {lecturerName, professionName, className, materialsTree}
 app.post("/addMaterials", (req, res) => {
   addMaterials(req.body);
-  res.send("the material's added to this class");;
+  res.send("the material's added to this class");
 });
 
 
