@@ -1,5 +1,15 @@
 
-const { addMaterials, getMaterials, getProfession, addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword, addUsers, existInDB, getClassrooms, addClassrooms } = require("./firebaseDefinition");
+//for firebaseDefinition!!
+const { addMaterials, getMaterials, getProfession,
+  addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
+  addUsers, existInDB, getClassrooms, addClassrooms } = require("./databaseDefinition");
+
+const {uploadFile} = require("./storageDefinition");
+
+//for storageDefinition!!
+//const {uploadFile} =require("./storeageDefinition");
+
+
 const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
@@ -120,7 +130,6 @@ app.get("/getStudentsClass", (req, res) => {
   });
 });
 
-
 //get Materials Tree : NEED {username,professionName,className} RETURN materials tree .
 app.get("/getMaterials", (req, res) => {
   const { username, professionName, className } = req.query;
@@ -143,9 +152,12 @@ app.post("/addMaterials", (req, res) => {
 
 
 
+//////////////////////////////////////////////////////// STORAGE ////////////////////////////////////
 
-//IMPROTENT add the option to add materials inside addStudentToClassroom
-
+app.post("/uploadFile",(req,res)=>{
+  console.log(req);
+  // uploadFile(req.body.file);
+});
 
 // inital the server in default PORT (3005)
 app.listen(PORT, () =>
