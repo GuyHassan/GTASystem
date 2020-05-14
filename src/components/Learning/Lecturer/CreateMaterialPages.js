@@ -45,8 +45,6 @@ const CreateMaterialPages = ({ currentPage }) => {
             <button onClick={onNextPage} className="ui button primary"> Next Page </button>
             <button onClick={onFinish} className="ui button black"> Finish </button>
             <br /><br />
-            <iframe width="560" height="315" src={detailsPage.streamLink} frameborder="0" allowfullscreen></iframe>
-
         </div>
     )
 }
