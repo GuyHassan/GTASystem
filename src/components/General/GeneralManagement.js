@@ -5,7 +5,6 @@ import Login from "../UserManagement/Login";
 import AboutUs from "./AboutUs";
 import FailedLocation from '../ReuseableComponents/FailedLocation';
 import AdminPermission from "./AdminPermission";
-import AddFile from "../Learning/Lecturer/AddFile";
 
 const GeneralManagement = () => {
     const loginPermission = () => {
@@ -22,7 +21,6 @@ const GeneralManagement = () => {
             <Route path="/AboutUs" exact component={AboutUs} />
             <Route path="/Login" exact render={props => { return loginPermission() }} />
             <Route path="/AdminPermission" exact render={props => { return adminPermission() }} />
-            <Route path="/AddFile" exact component={AddFile} />
         </Switch>
     );
 }

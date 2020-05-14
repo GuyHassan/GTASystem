@@ -8,20 +8,20 @@ import { server } from '../../Apis/server';
 
 const Login = ({ SignIn }) => {
     const propertiesName = {
+
         firstLabel: 'User Name', secondLabel: 'Password',
         firstField: 'Username', secondField: 'Password', buttonName: 'LOGIN'
     }
-    const setLocalStorage = (username, isLecturer) => {
-        const user = { 'user': username, 'isLecturer': isLecturer }
+    const setLocalStorage = (username, isLecturer, className) => {
+        const user = { user: username, isLecturer, className }
         localStorage.setItem('userCredential', JSON.stringify(user))
     }
-    const userType = ({ username, isLecturer }) => {
-        SignIn({ userID: username, isLecturer: isLecturer })
-        setLocalStorage(username, isLecturer)
-        if (isLecturer)
-            history.push("/LecturerView/Profession");
-        else
-            history.push("/StudentView/Profession");
+    const userType = ({ username, isLecturer, className }) => {
+        SignIn({ userID: username, isLecturer, className })
+        setLocalStorage(username, isLecturer, className)
+        isLecturer
+            ? history.push("/LecturerView/Profession")
+            : history.push("/StudentView/Profession")
     }
 
     // when the user click on the button this function called

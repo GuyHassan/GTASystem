@@ -1,14 +1,18 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { connect } from 'react-redux';
 import { getMaterials } from '../../../Redux/actions';
+import { server } from '../../../Apis/server';
+import { Link } from "react-router-dom";
 import { Icon } from 'semantic-ui-react'
+import history from '../../../history';
 import '../../Style/MaterialView.css';
 // const materials = [{ subTopic: [{ subTopicName: 'rational shvarim' }, { subTopicName: 'not rational shvarim' }], topicName: 'shvarim' }, { topicName: 'multiple' }]
 const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const [stateMaterial, setStateMaterial] = useState([]);
     const [editMode, setEditMode] = useState(false);
-    const { isLecturer } = JSON.parse(localStorage.getItem('userCredential'))
-    console.log(isLecturer)
+    const { isLecturer, user } = JSON.parse(localStorage.getItem('userCredential'))
+    console.log(materials);
+    // this function updates the state that hold the material section.
     const updateMaterials = (parentIndex = null, newValue = null, childIndex = null) => {
         const newMaterial = [...stateMaterial]
         if (parentIndex !== null && childIndex !== null && newValue !== null)
@@ -22,24 +26,13 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         }
         setStateMaterial(newMaterial)
     }
-    const onFinishEdit = (event) => {
-        event.preventDefault()
-
+    const onFinishEdit = () => {
         console.log(stateMaterial)
-        // const newListMaterial = []
-        // for (let i = 0; i < event.target.length - 1; i++) {
-        //     console.log(event.target)
-        //     const currentMaterial = {}
-        //     if (event.target[i].name === 'topicName')
-        //         currentMaterial[event.target[i].name] = event.target[i].value
-        //     if (event.target[i + 1].name === 'subTopicName') {
-        //         currentMaterial.subTopic = []
-        //         for (let subTopicName = 'subTopicName'; subTopicName === event.target[i + 1].name; i++) {
-        //             currentMaterial.subTopic.push({ subTopicName: event.target[i + 1].value })
-        //         }
-        //     }
-        //     newListMaterial.push(currentMaterial)
-        // }
+        server.post("/addMaterials", { professionName: params.profession, className: params.className, lecturerName: user, materialTree: stateMaterial }).then((res) => {
+            // console.log(res)
+            history.push(`/LecturerView/Classrooms/${params.profession}`);
+        })
+
     }
     const subTopicRender = (subTopic, parentIndex) => {
         return subTopic.map((topic, idTopic) => {
@@ -59,7 +52,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                 :
                 <ul style={{ marginTop: '20px', fontSize: '20px' }} key={idTopic}>
                     <li >
-                        {topic.subTopicName}
+                        <Link to={``}>{topic.subTopicName}</Link>
                     </li>
                 </ul>
         })
@@ -94,7 +87,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                         <ul>
                             <li >
                                 <h2>
-                                    {material.topicName}
+                                    {material.subTopics ? material.topicName : <Link to={``}>{material.topicName}</Link>}
                                 </h2>
                                 {material.subTopics ? subTopicRender(material.subTopics, idMaterial) : null}
                             </li>

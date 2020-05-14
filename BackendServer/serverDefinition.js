@@ -4,7 +4,7 @@ const { addMaterials, getMaterials, getProfession,
   addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
   addUsers, existInDB, getClassrooms, addClassrooms } = require("./databaseDefinition");
 
-const {uploadFile} =require("./storageDefinition");
+const {uploadFile} = require("./storageDefinition");
 
 //for storageDefinition!!
 //const {uploadFile} =require("./storeageDefinition");
@@ -146,8 +146,9 @@ app.get("/getMaterials", (req, res) => {
 
 //function for add materials NEED : {lecturerName, professionName, className, materialsTree}
 app.post("/addMaterials", (req, res) => {
-  addMaterials(req.body);
-  res.send("the material's added to this class");
+  addMaterials(req.body).then(response =>{
+    res.send(response);
+  });
 });
 
 

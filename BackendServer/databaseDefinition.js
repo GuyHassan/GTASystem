@@ -1,5 +1,3 @@
-
-
 const firebase = require("./firebaseDefinition");
 const {addLinkToTopic} = require("./firestoreDefinition");
 const database = firebase.database();
@@ -10,10 +8,9 @@ const checkUsernamePassword = async (details) => {
     try {
         const { isLecturer, password } = (await database.ref(`users/${details.Username}`).once("value")).val();
         if (details.Password == password) {
-            const newDetails = { username: details.Username, isLecturer: isLecturer };
-            if (isLecturer === false) {
+            const newDetails = { username: details.Username, isLecturer};
+            if(!isLecturer)
                 newDetails['className'] = (await database.ref(`students/${details.Username}/className`).once("value")).val();
-            }
             return newDetails;
         }
         console.log("the password don't match");
@@ -197,11 +194,7 @@ const addMaterials = async ({ lecturerName, professionName, className, materialT
     addKeyCollection(materialTree,"topicName").then(materialTree =>{
         database.ref(`classrooms/${lecturerName}/${professionName}/${className}/topics`).set(materialTree);
     });
-
-
-
-
-    //
+    return true;
 }
 
 

@@ -57,8 +57,8 @@ export const createClassroom = (details) => (dispatch, getState) => {
 }
 
 export const getMaterials = ({ profession, className }) => async (dispatch, getState) => {
-    const { userID } = getState().whoIsOnline;
-    const response = await server.get(`/getMaterials?professionName=${profession}&className=${className}&username=${userID}`);
+    const { userID,isLecturer } = getState().whoIsOnline;
+    const response = await server.get(`/getMaterials?professionName=${profession}&className=${className}&username=${userID}&isLecturer=${isLecturer}`);
     dispatch({ type: 'GET_MATERIALS', payload: response.data });
 };
 
