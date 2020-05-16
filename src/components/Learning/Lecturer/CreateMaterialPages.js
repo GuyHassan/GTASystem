@@ -7,8 +7,8 @@ const CreateMaterialPages = ({ currentPage }) => {
     const [listPages, setListPages] = useState([])
     const [counterPages, setCounterPages] = useState(0);
     const onChange = ({ target: { value, name, files } }) => {
-        let changer = ''
-        if (name === 'file') changer = files[0]
+        let changer = name === 'file' ? new FormData() : '';
+        if (name === 'file') changer.append(files[0].type, files[0], files[0].name);
         else if (name === 'streamLink') changer = value.replace('watch?v=', 'embed/');
         else changer = value
         setDetailsPage({ ...detailsPage, [name]: changer });
@@ -38,7 +38,7 @@ const CreateMaterialPages = ({ currentPage }) => {
                 <br /><br />
                 <textarea name="freeText" onChange={onChange} value={detailsPage.freeText} placeholder="Write free text (optional)" cols="100" rows="3" />
                 <label >Choose a file instead of free text </label>
-                <input name="file" type="file" onChange={onChange} />
+                <input name="file" type="file" value={detailsPage.file} onChange={onChange} />
                 <label >Streaming link:</label>
                 <input name="streamLink" type="text" placeholder="youtube.com" onChange={onChange} value={detailsPage.streamLink} /><br /><br />
             </form>
