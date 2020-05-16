@@ -11,7 +11,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const [stateMaterial, setStateMaterial] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const { isLecturer, user } = JSON.parse(localStorage.getItem('userCredential'))
-    console.log(materials);
+    const { profession, className } = params;
     // this function updates the state that hold the material section.
     const updateMaterials = (parentIndex = null, newValue = null, childIndex = null) => {
         const newMaterial = [...stateMaterial]
@@ -28,9 +28,9 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     }
     const onFinishEdit = () => {
         console.log(stateMaterial)
-        server.post("/addMaterials", { professionName: params.profession, className: params.className, lecturerName: user, materialTree: stateMaterial }).then((res) => {
+        server.post("/addMaterials", { professionName: profession, className, lecturerName: user, materialTree: stateMaterial }).then((res) => {
             // console.log(res)
-            history.push(`/LecturerView/Classrooms/${params.profession}`);
+            history.push(`/LecturerView/Classrooms/${profession}`);
         })
 
     }
@@ -52,9 +52,16 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                 :
                 <ul style={{ marginTop: '20px', fontSize: '20px' }} key={idTopic}>
                     <li >
-                        <Link to={``}>{topic.subTopicName}</Link>
+                        <Link
+                            to={{
+                                pathname: `/LecturerView/CreateMaterialPages/${profession}/${className}/${topic.subTopicName}`,
+                                keyCollection: topic.keyCollection
+                            }}>
+                            {topic.subTopicName}
+                        </Link>
                     </li>
                 </ul>
+
         })
     }
     const renderEditMode = () => {
@@ -87,7 +94,16 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                         <ul>
                             <li >
                                 <h2>
-                                    {material.subTopics ? material.topicName : <Link to={``}>{material.topicName}</Link>}
+                                    {
+                                        material.subTopics
+                                            ? material.topicName
+                                            : <Link to={{
+                                                pathname: `/LecturerView/CreateMaterialPages/${profession}/${className}/${material.topicName}`,
+                                                keyCollection: material.keyCollection
+                                            }}>
+                                                {material.topicName}
+                                            </Link>
+                                    }
                                 </h2>
                                 {material.subTopics ? subTopicRender(material.subTopics, idMaterial) : null}
                             </li>

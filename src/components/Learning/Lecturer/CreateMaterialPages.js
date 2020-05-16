@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { server } from '../../../Apis/server';
 const details = { title: '', freeText: '', file: '', streamLink: '' }
 // i need get from the backend the amount of pages that have in this material !! (length of  array) for updates
-const CreateMaterialPages = ({ currentPage }) => {
+const CreateMaterialPages = ({ currentPage, location: { keyCollection } }) => {
     const [detailsPage, setDetailsPage] = useState(details);
     const [listPages, setListPages] = useState([])
     const [counterPages, setCounterPages] = useState(0);
     const onChange = ({ target: { value, name, files } }) => {
-        let changer = ''
-        if (name === 'file') changer = files[0]
-        else if (name === 'streamLink') changer = value.replace('watch?v=', 'embed/');
-        else changer = value
-        setDetailsPage({ ...detailsPage, [name]: changer });
+        let changer = name === 'file' ? new FormData() : '';
+        if (name === 'file') changer.append('file', files[0]);
+        server.post('/uploadFile', changer)
+        // else if (name === 'streamLink') changer = value.replace('watch?v=', 'embed/');
+        // else changer = value
+        // setDetailsPage({ ...detailsPage, [name]: changer });
     }
     const onNextPage = () => {
         setCounterPages(counterPages + 1)
@@ -25,10 +26,16 @@ const CreateMaterialPages = ({ currentPage }) => {
     }
     const onFinish = () => {
         //need check if the userClick on finish beforoe next page and check the object if is include some properties
-        console.log(detailsPage)
-        console.log(listPages)
+
         //implement method from backend !!
     }
+    const getAmountOfPages = async () => {
+        const response = await server.get(`/getTopicMaterials?keyCollection=${keyCollection}&type=pages`);
+        setCounterPages(response.data.length)
+    }
+    useEffect(() => {
+        getAmountOfPages()
+    }, [getAmountOfPages])
     return (
         <div >
             <h1 style={{ textAlign: 'center', textDecoration: 'underline' }}>{`Page ${counterPages}`}</h1>
