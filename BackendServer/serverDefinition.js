@@ -1,10 +1,16 @@
 
-//for firebaseDefinition!!
+//for databaseDefinition!!
 const { addMaterials, getMaterials, getProfession,
   addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
   addUsers, existInDB, getClassrooms, addClassrooms } = require("./databaseDefinition");
 
-const {uploadFile} = require("./storageDefinition");
+const { getArrayFromFirestore, addTopicMaterial } = require("./firestoreDefinition");
+
+
+const { uploadFile } = require("./storageDefinition");
+
+
+
 
 //for storageDefinition!!
 //const {uploadFile} =require("./storeageDefinition");
@@ -14,6 +20,8 @@ const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const multer = require('multer');
+const upload = multer({ dest: 'uploads/' });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -132,8 +140,8 @@ app.get("/getStudentsClass", (req, res) => {
 
 //get Materials Tree : NEED {username,professionName,className} RETURN materials tree .
 app.get("/getMaterials", (req, res) => {
-  const { username, professionName, className,isLecturer } = req.query;
-  getMaterials(username, professionName, className,isLecturer).then(materialTree => {
+  const { username, professionName, className, isLecturer } = req.query;
+  getMaterials(username, professionName, className, isLecturer).then(materialTree => {
     if (materialTree === null) {
       // res.status("404").send("you don't have materials for this class");
       res.send([])
@@ -146,21 +154,35 @@ app.get("/getMaterials", (req, res) => {
 
 //function for add materials NEED : {lecturerName, professionName, className, materialsTree}
 app.post("/addMaterials", (req, res) => {
-  addMaterials(req.body).then(response =>{
+  addMaterials(req.body).then(response => {
     res.send(response);
   });
 });
 
+//NEED {keyCollection,type}=> type is pages or questions
+app.get("/getTopicMaterials", (req, res) => {
+  const { keyCollection, type } = req.query;
+  getArrayFromFirestore(keyCollection, type).then(materialArray => {
+    res.send(materialArray);
+  });
+});
+
+//NEED {keyCollection,type}=> type is pages or questions
+app.post("/addTopicMatrials", (req, res) => {
+  const { keyCollection, newArr, type } = req.body;
+  addTopicMaterial(keyCollection, newArr, type);
+});
 
 
 //////////////////////////////////////////////////////// STORAGE ////////////////////////////////////
 
-app.post("/uploadFile",(req,res)=>{
-  console.log(req);
+app.post("/uploadFile", upload.single('file'), (req, res) => {
+  console.log(req.file)
+  res.send(req.file)
   // uploadFile(req.body.file);
 });
 
 // inital the server in default PORT (3005)
-app.listen(PORT, () =>
+app.listen(PORT, () => 
   console.log(`App listening on port ${PORT}!`)
 );

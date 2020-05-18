@@ -1,46 +1,83 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { server } from '../../../Apis/server';
+import ReactFilestack from 'filestack-react';
 const details = { title: '', freeText: '', file: '', streamLink: '' }
 // i need get from the backend the amount of pages that have in this material !! (length of  array) for updates
-const CreateMaterialPages = ({ currentPage }) => {
+const CreateMaterialPages = ({ /* location: { keyCollection }, */ match: { params: { keyCollection } } }) => {
+    console.log(keyCollection)
     const [detailsPage, setDetailsPage] = useState(details);
     const [listPages, setListPages] = useState([])
     const [counterPages, setCounterPages] = useState(0);
-    const onChange = ({ target: { value, name, files } }) => {
-        let changer = name === 'file' ? new FormData() : '';
-        if (name === 'file') changer.append(files[0].type, files[0], files[0].name);
-        else if (name === 'streamLink') changer = value.replace('watch?v=', 'embed/');
+    const [errorMessage, setErrorMessage] = useState('');
+    const [fileUploadName, setFileUploadName] = useState('');
+
+    const onChange = ({ target: { value, name } }) => {
+        let changer = '';
+        if (name === 'streamLink') changer = value.includes('youtube') ? value.replace('watch?v=', 'embed/') : value;
         else changer = value
         setDetailsPage({ ...detailsPage, [name]: changer });
     }
+
     const onNextPage = () => {
-        setCounterPages(counterPages + 1)
-        setListPages([...listPages, detailsPage])
-        setDetailsPage(details)
-        // const fd = new FormData();
-        // fd.append("pdf", detailsPage.file, detailsPage.file.name);
-        // server.post('/uploadFile', fd).then((res) => {
-        //     console.log(res);
-        // })
+        if (!Object.values(detailsPage).some(value => { return value !== ''; }))
+            setErrorMessage("Must Enter one of fields")
+        else {
+            setCounterPages(counterPages + 1)
+            setListPages([...listPages, detailsPage])
+            setDetailsPage(details)
+            setErrorMessage('')
+        }
+    }
+    const handleFileUpload = ({ filesUploaded }) => {
+        if (filesUploaded.length) {
+            setDetailsPage({ ...detailsPage, file: filesUploaded[0].url })
+            setFileUploadName(filesUploaded[0].filename)
+            return true;
+        }
+
+        // filesFailed: []
+        // filesUploaded:
     }
     const onFinish = () => {
-        //need check if the userClick on finish beforoe next page and check the object if is include some properties
-        console.log(detailsPage)
+        if (Object.values(detailsPage).some(value => { return value !== ''; }))
+            setErrorMessage("Must Click Next Page Button Before Finish")
         console.log(listPages)
         //implement method from backend !!
     }
+    useEffect(() => {
+        const getAmountOfPages = () => {
+            return server.get(`/getTopicMaterials?keyCollection=${keyCollection}&type=pages`)
+                .then(response => setCounterPages(response.data.length))
+        }
+        getAmountOfPages();
+    }, [keyCollection])
     return (
-        <div >
-            <h1 style={{ textAlign: 'center', textDecoration: 'underline' }}>{`Page ${counterPages}`}</h1>
+        <div>
+            <h1 style={{ textDecoration: 'underline' }}>{`Page ${counterPages}`}</h1>
             <form className="ui error form">
                 <label >Title Page (optional)</label>
                 <input name="title" type="text" onChange={onChange} value={detailsPage.title} />
                 <br /><br />
                 <textarea name="freeText" onChange={onChange} value={detailsPage.freeText} placeholder="Write free text (optional)" cols="100" rows="3" />
                 <label >Choose a file instead of free text </label>
-                <input name="file" type="file" value={detailsPage.file} onChange={onChange} />
+                <br />
+                <ReactFilestack
+                    apikey={'AUHgQzKrtS3iZmAm17VZtz'}
+                    componentDisplayMode={{
+                        type: 'button',
+                        customText: 'Upload File',
+                        customClass: 'ui basic black button'
+                    }}
+                    onSuccess={handleFileUpload}
+                    onError={(err) => alert(err)}
+                />
+                <br />
+                <h3 style={{ color: 'green' }}>{fileUploadName}</h3>
                 <label >Streaming link:</label>
                 <input name="streamLink" type="text" placeholder="youtube.com" onChange={onChange} value={detailsPage.streamLink} /><br /><br />
+                <div className='ui error message header' style={{ fontSize: '1em', marginBottom: '10px', marginTop: '-15px' }}>
+                    {errorMessage}
+                </div>
             </form>
             <button onClick={onNextPage} className="ui button primary"> Next Page </button>
             <button onClick={onFinish} className="ui button black"> Finish </button>

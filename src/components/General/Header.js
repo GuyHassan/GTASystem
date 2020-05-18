@@ -1,14 +1,13 @@
-import React, { useEffect, Fragment, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from "react-router-dom";
 import JumbotronMain from './JumbotronMain';
-import { Nav, Navbar, NavItem } from "react-bootstrap";
+import { Nav, Navbar } from "react-bootstrap";
 import { ReactComponent as Logo } from "../../assets/img/LogoNavbar.svg";
 import { connect } from 'react-redux';
 import { SignIn, SignOut } from '../../Redux/actions';
 import '../Style/Header.css';
 
 const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
-    const [userExists, setUserExists] = useState('');
     // pass a user id and return uppercase first character
     const prettyUserName = user => { return user.substring(0, 1).toUpperCase() + user.substring(1) }
 
@@ -53,7 +52,6 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
     }
 
     const logOut = () => {
-        setUserExists('')
         SignOut();
         localStorage.clear();
     }
@@ -61,10 +59,8 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
         // let mounted = true;
         const setStorage = () => {
             const currUser = JSON.parse(localStorage.getItem('userCredential'));
-            if (currUser) {
-                setUserExists(currUser.user)
+            if (currUser)
                 SignIn({ userID: currUser.user, isLecturer: currUser.isLecturer });
-            }
         }
         setStorage();
 

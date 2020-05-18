@@ -1,4 +1,4 @@
-const firebase=require("./firebaseDefinition");
+const firebase = require("./firebaseDefinition");
 
 //IMPORTANT !!!!!
 /*
@@ -22,38 +22,39 @@ OPTION:
 const firestore = firebase.firestore();
 
 
-const addLinkToTopic=async (topicName) => {
-    const key= await(firestore.collection("topics").add({topicName:topicName,pages:[],questions:[]}));
+const addLinkToTopic = async (topicName) => {
+    const key = await (firestore.collection("topics").add({ topicName: topicName, pages: [], questions: [] }));
     return key.id;
 }
 
-const getArrayFromFirestore=(string,type)=>{
-    firestore.collection("topics").doc(string).get().then(details=>{
-        if(type==="pages"){
-            return details.data().pages;
-        }
-        return details.data().questions;
+const getArrayFromFirestore =async (string, type = null) => {
+    return await firestore.collection("topics").doc(string).get().then(details => {
+       return type === "pages"
+            ? details.data().pages
+            : details.data().questions;
     });
 }
+
 
 //getArrayFromFirestore("LsW9LCsDRrp4uKsHEOkn","pages")
 
 
-const deleteArrayFromFirestore= (string,type)=>{
+const deleteArrayFromFirestore = (string, type) => {
 
 }
 
 //WORKED!!!!
-const addPagesOrQuestionsForSpecificTopic=(string,newArr,type) =>{
-    firestore.collection("topics").doc(string).get().then(details=>{
-        if(type=="pages"){
-            const existPage=details.data().pages;
-            firestore.collection("topics").doc(string).update({pages:existPage.concat(newArr)});
+const addTopicMaterial = (string, newArr, type) => {
+    firestore.collection("topics").doc(string).get().then(details => {
+        if (type == "pages") {
+            const existPage = details.data().pages;
+            firestore.collection("topics").doc(string).update({ pages: existPage.concat(newArr) });
         }
-        else{
-            const existQuestions=details.data().questions;
-            firestore.collection("topics").doc(string).update({questions:existQuestions.concat(newArr)});
-        }});
+        else {
+            const existQuestions = details.data().questions;
+            firestore.collection("topics").doc(string).update({ questions: existQuestions.concat(newArr) });
+        }
+    });
 }
 
 //firestore.collection("topics").add({"s":"a"}).then(val=>{console.log(val.id)});
@@ -87,4 +88,4 @@ const addPagesOrQuestionsForSpecificTopic=(string,newArr,type) =>{
 
 
 
-module.exports={addLinkToTopic};
+module.exports = { addLinkToTopic, getArrayFromFirestore,addTopicMaterial };

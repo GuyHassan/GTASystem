@@ -11,6 +11,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.0",
-    "firebase": "^7.14.0"
+    "firebase": "^7.14.0",
+    "multer": "^1.4.2"
   }
 }

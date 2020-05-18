@@ -1,5 +1,4 @@
 import React from 'react';
-import StudyMaterials from '../LecturerAndStudent/StudyMaterials';
 import Professions from '../LecturerAndStudent/Professions';
 
 const StudentView = () => {
