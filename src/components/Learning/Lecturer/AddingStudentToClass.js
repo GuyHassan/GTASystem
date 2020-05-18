@@ -37,14 +37,20 @@ const AddingStudentToClass = ({ match: { params } }) => {
         }
         else alert("Must Enter Some Student");
     }
-    const getStudentCanAdded = async () => {
-        return await server.get(`/getStudentsForAddToClass/${params.profession}/${params.className}`);
-    }
+    // const getStudentCanAdded = async () => {
+    //     return await server.get(`/getStudentsForAddToClass/${params.profession}/${params.className}`);
+    // }
     useEffect(() => {
-        getStudentCanAdded().then(students => { setStudentExists(students.data) })
-    }, [])
+        const getStudentCanAdded = () => {
+            return server.get(`/getStudentsForAddToClass/${params.profession}/${params.className}`
+            )
+                .then(students => { setStudentExists(students.data) })
+                .catch(err => { alert("No Student to add..") })
+        }
+        // getStudentCanAdded().then(students => { setStudentExists(students.data) })
+        getStudentCanAdded();
+    }, [params]);
     return (
-
         <div className="ui container" style={{ marginTop: '20px' }}>
             <h1 style={{ textDecoration: 'underline' }}>Choose student to - {params.className}</h1><br />
             {renderStudents()}

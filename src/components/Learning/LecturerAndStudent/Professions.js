@@ -5,7 +5,6 @@ import { getProfessions } from '../../../Redux/actions/index';
 
 const Professions = ({ children, getProfessions, professions }) => {
     const { isLecturer, className } = JSON.parse(localStorage.getItem('userCredential'));
-    const typeUser = isLecturer ? '/LecturerView' : '/StudentView';
 
     const renderProfessions = () => {
         return professions.map((currProfession, idProfession) => {

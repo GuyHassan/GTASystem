@@ -9,15 +9,12 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
     // const typeUser = isLecturer ? '/LecturerView' : '/StudentView';
     // to={`/LecturerView/ViewStudents/${params.id}/${classroom}`}
     const Buttons = ({ idClass }) => {
-        return showButtonsID === idClass ?
-            (
-                <div>
-                    
-                    {isLecturer&&<Link to={`/LecturerView/ViewStudents/${params.profession}/${idClass}`} className="ui green basic button small">View Students</Link>}
-                    <Link to={`/MaterialView/${params.profession}/${idClass}`} className="ui brown basic button small">View Materials</Link>
-                    {isLecturer&&<Link to={`/LecturerView/AddingStudentToClass/${params.profession}/${idClass}`} className="ui blue basic button small">Add Student</Link>}
-                </div>
-            ) : null;
+        return showButtonsID === idClass
+            && <div>
+                {isLecturer && <Link to={`/LecturerView/ViewStudents/${params.profession}/${idClass}`} className="ui green basic button small">View Students</Link>}
+                <Link to={`/MaterialView/${params.profession}/${idClass}`} className="ui brown basic button small">View Materials</Link>
+                {isLecturer && <Link to={`/LecturerView/AddingStudentToClass/${params.profession}/${idClass}`} className="ui blue basic button small">Add Student</Link>}
+            </div>
     }
     const renderClasses = () => {
         return classes.map((classroom, idClassroom) => {
