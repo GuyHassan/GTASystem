@@ -21,71 +21,71 @@ OPTION:
 // enter to firestore 
 const firestore = firebase.firestore();
 
-
+//function to ADD Link for specific topic FOR USE TO DATABASE.JS
+//NEED topicname
 const addLinkToTopic = async (topicName) => {
-    const key = await (firestore.collection("topics").add({ topicName: topicName, pages: [], questions: [] }));
+    const key = await (firestore.collection("topics").add({ topicName: topicName, pages: [], questions: [],testQuestions:[] }));
     return key.id;
 }
 
-const getArrayFromFirestore =async (string, type = null) => {
-    return await firestore.collection("topics").doc(string).get().then(details => {
+//function for get array of pages or question depending on the type 
+//NEED (keyCollection,type)
+//RETURN Array of pages or questions depending on the inserted type
+const getArrayFromFirestore =async (keyCollection, type = null) => {
+    return await firestore.collection("topics").doc(keyCollection).get().then(details => {
        return type === "pages"
             ? details.data().pages
             : details.data().questions;
     });
 }
 
-
-//getArrayFromFirestore("LsW9LCsDRrp4uKsHEOkn","pages")
-
-
-const deleteArrayFromFirestore = (string, type) => {
+const deleteArrayFromFirestore = (keyCollection, type) => {
 
 }
 
 //WORKED!!!!
-const addTopicMaterial = (string, newArr, type) => {
-    firestore.collection("topics").doc(string).get().then(details => {
+//addTopicMaterial worked with the arrays : 1. questions    2. pages     3. testQuestion
+//NEED (keyCollection , newArr , type) 
+//NO RETURN!!!
+const addTopicMaterial = (keyCollection, newArr, type) => {
+    firestore.collection("topics").doc(keyCollection).get().then(details => {
         if (type == "pages") {
             const existPage = details.data().pages;
-            firestore.collection("topics").doc(string).update({ pages: existPage.concat(newArr) });
+            firestore.collection("topics").doc(keyCollection).update({ pages: existPage.concat(newArr) });
+        }
+        else if(type=="questions") {
+            const existQuestions = details.data().questions;
+            firestore.collection("topics").doc(keyCollection).update({ questions: existQuestions.concat(newArr) });
         }
         else {
-            const existQuestions = details.data().questions;
-            firestore.collection("topics").doc(string).update({ questions: existQuestions.concat(newArr) });
+            const existTestQuestions = details.data().testQuestions;
+            firestore.collection("topics").doc(keyCollection).set({ testQuestions: existTestQuestions.concat(newArr) });
         }
     });
 }
 
-//firestore.collection("topics").add({"s":"a"}).then(val=>{console.log(val.id)});
-// let setAda = docRef.set({first: 'Ada',last: 'Lovelace',born: 1815});
+//inside method !! to get Questions for specific keyCollection
+// RETURN obj : {keyCollection string,testQuestion array}
+const getSpecificTestQuestion=async(keyCollection)=>{
+    return await firestore.collection("topics").doc(keyCollection).get().then(details=>{
+        const routeDict={"keyCollection":keyCollection,"testQuestions":details.data().testQuestions};
+        return routeDict;
+    })
+}
+
+//פונקציה בשביל החזרת מבחן 
+//function to get all the question for specific topic !!
+//NEED (keyCollection Array) !!
+//RETURN an array like this : [{keyCollection,testQuestion},{keyCollection,testQuestion}]
+const getTestQuestionsFromFirestore =async (keyCollectionArray)=>{
+    let testQuestions=[];
+    keyCollectionArray.forEach((keyCollection) =>{
+        testQuestions.push(getSpecificTestQuestion(keyCollection));
+    });
+    testQuestions = await Promise.all(testQuestions);
+    return testQuestions;
+}
 
 
 
-
-
-// let setTopic = topics.set({TopicName:"shvarim", subTopics:[ { subTopicName: 'rational shvarim' },{ subTopicName: 'regular shvarim' } ]});
-
-
-// firestore.collection('tamar').doc('english/cita b/topics').get()
-//   .then((snapshot) => {
-//       console.log(snapshot.data());
-//   })
-//   .catch((err) => {
-//     console.log('Error getting documents', err);
-//   });
-
-
-// //add function is add a new hash string as a doc !!!
-//   let addDoc = firestore.collection('cities').add({
-//     name: 'Tokyo',
-//     country: 'Japan'
-//   }).then(ref => {
-//     console.log('Added document with ID: ', ref.id);
-//   });
-
-
-
-
-
-module.exports = { addLinkToTopic, getArrayFromFirestore,addTopicMaterial };
+module.exports = { addLinkToTopic, getArrayFromFirestore,addTopicMaterial,getTestQuestionsFromFirestore };

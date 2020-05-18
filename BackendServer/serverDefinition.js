@@ -21,7 +21,8 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
+const  fs = require('fs');
+const upload = multer({ dest: 'upload' });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -177,8 +178,10 @@ app.post("/addTopicMatrials", (req, res) => {
 //////////////////////////////////////////////////////// STORAGE ////////////////////////////////////
 
 app.post("/uploadFile", upload.single('file'), (req, res) => {
-  console.log(req.file)
-  res.send(req.file)
+  // const files = fs.createReadStream(req.file,'utf8');
+  // console.log(req.file)
+  uploadFile("DSFSD","3",req.file)
+  // res.send(req.file)
   // uploadFile(req.body.file);
 });
 

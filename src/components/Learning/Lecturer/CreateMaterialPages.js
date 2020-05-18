@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { server } from '../../../Apis/server';
 const details = { title: '', freeText: '', file: '', streamLink: '' }
-// i need get from the backend the amount of pages that have in this material !! (length of  array) for updates
+
 const CreateMaterialPages = ({ currentPage, location: { keyCollection } }) => {
     const [detailsPage, setDetailsPage] = useState(details);
     const [listPages, setListPages] = useState([])

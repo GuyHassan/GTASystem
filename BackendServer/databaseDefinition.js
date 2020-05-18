@@ -1,5 +1,5 @@
 const firebase = require("./firebaseDefinition");
-const {addLinkToTopic} = require("./firestoreDefinition");
+const { addLinkToTopic, getTestQuestionsFromFirestore } = require("./firestoreDefinition");
 const database = firebase.database();
 
 
@@ -8,8 +8,8 @@ const checkUsernamePassword = async (details) => {
     try {
         const { isLecturer, password } = (await database.ref(`users/${details.Username}`).once("value")).val();
         if (details.Password == password) {
-            const newDetails = { username: details.Username, isLecturer};
-            if(!isLecturer)
+            const newDetails = { username: details.Username, isLecturer };
+            if (!isLecturer)
                 newDetails['className'] = (await database.ref(`students/${details.Username}/className`).once("value")).val();
             return newDetails;
         }
@@ -125,16 +125,16 @@ const initialArrayOfObj = (materialTree, type) => {
 
 //WORKING!!! 
 //inside method, add keyCollection for the firestore
-const addKeyCollection =async (materialTree,type) =>{
-    let keyCollection ;
+const addKeyCollection = async (materialTree, type) => {
+    let keyCollection;
     for (let i = 0; i < materialTree.length; i++) {
         if (materialTree[i].hasOwnProperty("subTopics")) {
             await addKeyCollection(materialTree[i].subTopics, "subTopicName");
         }
-        else{
-            if(!(materialTree[i].hasOwnProperty("keyCollection"))){
+        else {
+            if (!(materialTree[i].hasOwnProperty("keyCollection"))) {
                 keyCollection = (await addLinkToTopic(materialTree[i][type]));
-                materialTree[i]['keyCollection']=keyCollection;
+                materialTree[i]['keyCollection'] = keyCollection;
             }
         }
     }
@@ -187,11 +187,12 @@ const deleteTree = (root) => {
 //function for initial materials NEED {lecturerName, professionName, className, materialTree}
 const addMaterials = async ({ lecturerName, professionName, className, materialTree }) => {
     getStudentsNamesAsObject(professionName, className, true).then(students => {
-        students.forEach(student => {buildGradeAndHelpTree(student.id, professionName, materialTree)
+        students.forEach(student => {
+            buildGradeAndHelpTree(student.id, professionName, materialTree)
         });
     });
     //send to addKeyColletion and add key val 
-    addKeyCollection(materialTree,"topicName").then(materialTree =>{
+    addKeyCollection(materialTree, "topicName").then(materialTree => {
         database.ref(`classrooms/${lecturerName}/${professionName}/${className}/topics`).set(materialTree);
     });
     return true;
@@ -202,14 +203,28 @@ const addMaterials = async ({ lecturerName, professionName, className, materialT
 //need to get username, professionName, className,isLecturer
 //also need a root to get to the inside DB
 
-const getMaterials = async (username, professionName, className,isLecturer) => {
-    if(isLecturer){
+const getMaterials = async (username, professionName, className, isLecturer) => {
+    if (isLecturer) {
         return (await (database.ref(`classrooms/${username}/${professionName}/${className}/topics`).once("value"))).val();
     }
     return (await (database.ref(`students/${username}/materials/${professionName}/needHelpAndGrades`).once("value"))).val();
 
 }
 
+
+//function that give the testQuestion for the specific topic 
+//NEED (lecturerName,professionName,className,index)=>the index is the topicName
+//RETURN array => [{keyCollection,testQuestions},{keyCollection,testQuestions}]
+const getTestQuestions = async (lecturerName, professionName, className, index) => {
+
+    const topicTree = (await (database.ref(`classrooms/${lecturerName}/${professionName}/${className}/topics/${index}`).once("value"))).val();
+    const keyCollectionArray = topicTree.hasOwnProperty("subTopics")
+        ? await topicTree.subTopics.map(topic => topic.keyCollection)
+        : [topicTree.keyCollection];
+    return getTestQuestionsFromFirestore(keyCollectionArray);
+}
+
+getTestQuestions("tamar123", "english", "cita b", 0).then(val => { console.log(val) });
 
 //delete student from class : NEED {studentName,LecturerNama,professionName,className}
 const deleteStudentFromClass = (studentDetails) => {
@@ -221,7 +236,10 @@ const deleteStudentFromClass = (studentDetails) => {
 
 
 //DELETE TOPIC/SUBTOPIC
-const deleteMaterialTopic =(lecturerName,professionName,className,topicDetails)=>{
+//NEED (lecturerName,professionName,className,topicDetails)
+//topicDetails
+// IMPORTENT!!! the topicDetails contain string as the topicName if we need to delete topic and NUMBER/topicName/NUMBER/subTopicName to delete subTopicName
+const deleteMaterialTopic = (lecturerName, professionName, className, topicDetails) => {
 
 }
 
@@ -252,9 +270,7 @@ const deleteMaterialTopic =(lecturerName,professionName,className,topicDetails)=
 
 
 
-// database.ref(`students/guy123/materials/english/needHelpAndGrades`).once("value").then(val => {
-//     console.log(val.val());
-// });
+
 
 
 
