@@ -172,17 +172,14 @@ app.get("/getTopicMaterials", (req, res) => {
 app.post("/addTopicMatrials", (req, res) => {
   const { keyCollection, newArr, type } = req.body;
   addTopicMaterial(keyCollection, newArr, type);
+  res.send(true);
 });
 
 
-//////////////////////////////////////////////////////// STORAGE ////////////////////////////////////
+//////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
 
-app.post("/uploadFile", upload.single('file'), (req, res) => {
-  // const files = fs.createReadStream(req.file,'utf8');
-  // console.log(req.file)
-  uploadFile("DSFSD","3",req.file)
-  // res.send(req.file)
-  // uploadFile(req.body.file);
+app.post("/createMaterialPages",(req,res)=>{
+
 });
 
 // inital the server in default PORT (3005)

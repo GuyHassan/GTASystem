@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { server } from '../../../Apis/server';
 import ReactFilestack from 'filestack-react';
-const details = { title: '', freeText: '', file: '', streamLink: '' }
-<<<<<<< HEAD
 
-const CreateMaterialPages = ({ currentPage, location: { keyCollection } }) => {
-=======
+const details = { title: '', freeText: '', file: '', streamLink: '' }
 // i need get from the backend the amount of pages that have in this material !! (length of  array) for updates
-const CreateMaterialPages = ({ /* location: { keyCollection }, */ match: { params: { keyCollection } } }) => {
-    console.log(keyCollection)
->>>>>>> 0b8df710471ebae6212968678595c6c1b060de16
+const CreateMaterialPages = ({ match: { params: { keyCollection } } }) => {
     const [detailsPage, setDetailsPage] = useState(details);
     const [listPages, setListPages] = useState([])
-    const [counterPages, setCounterPages] = useState(0);
+    const [counterPages, setCounterPages] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [fileUploadName, setFileUploadName] = useState('');
 
@@ -46,8 +41,9 @@ const CreateMaterialPages = ({ /* location: { keyCollection }, */ match: { param
     const onFinish = () => {
         if (Object.values(detailsPage).some(value => { return value !== ''; }))
             setErrorMessage("Must Click Next Page Button Before Finish")
-        console.log(listPages)
+
         //implement method from backend !!
+        server.post('/addTopicMatrials', { newArr: listPages, keyCollection, type: 'pages' })
     }
     useEffect(() => {
         const getAmountOfPages = () => {
