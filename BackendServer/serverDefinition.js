@@ -6,22 +6,12 @@ const { addMaterials, getMaterials, getProfession,
 
 const { getArrayFromFirestore, addTopicMaterial } = require("./firestoreDefinition");
 
-
-const { uploadFile } = require("./storageDefinition");
-
-
-
-
-//for storageDefinition!!
-//const {uploadFile} =require("./storeageDefinition");
-
-
 const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const multer = require('multer');
-const  fs = require('fs');
+const fs = require('fs');
 const upload = multer({ dest: 'upload' });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -120,7 +110,6 @@ app.get("/getStudentsForAddToClass/:professionName/:className", (req, res) => {
 });
 
 //add list of students to given class : NEED {lecturerName,professionName,className,{studentsUsername}} ,RETURN None
-//choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 app.post("/LecturerView/addStudentsToClass", (req, res) => {
   addStudentToClassroom(req.body);
   res.send("the student's are added to the class");
@@ -142,7 +131,7 @@ app.get("/getStudentsClass", (req, res) => {
 //get Materials Tree : NEED {username,professionName,className} RETURN materials tree .
 app.get("/getMaterials", (req, res) => {
   const { username, professionName, className, isLecturer } = req.query;
-  getMaterials(username, professionName, className, isLecturer).then(materialTree => {
+  getMaterials(username, professionName, className, isLecturer==='true').then(materialTree => {
     if (materialTree === null) {
       // res.status("404").send("you don't have materials for this class");
       res.send([])
@@ -178,11 +167,14 @@ app.post("/addTopicMatrials", (req, res) => {
 
 //////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
 
-app.post("/createMaterialPages",(req,res)=>{
+app.post("/createMaterialPages", (req, res) => {
 
 });
 
 // inital the server in default PORT (3005)
-app.listen(PORT, () => 
+app.listen(PORT, () =>
   console.log(`App listening on port ${PORT}!`)
 );
+
+
+//module.exports = app;

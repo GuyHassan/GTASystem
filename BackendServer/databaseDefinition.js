@@ -214,8 +214,8 @@ const getMaterials = async (username, professionName, className, isLecturer) => 
         return (await (database.ref(`classrooms/${username}/${professionName}/${className}/topics`).once("value"))).val();
     }
     return (await (database.ref(`students/${username}/materials/${professionName}/needHelpAndGrades`).once("value"))).val();
-
 }
+
 
 
 //function that give the testQuestion for the specific topic 
