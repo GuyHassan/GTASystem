@@ -37,6 +37,7 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
             setCounterPages(counterPages + 1)
             setListPages([...listPages, detailsPage])
             setDetailsPage(details)
+            setFileUploadName('')
             setErrorMessage('')
         }
     }
