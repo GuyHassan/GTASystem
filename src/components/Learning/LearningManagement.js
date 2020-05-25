@@ -11,12 +11,13 @@ import ViewStudents from "./Lecturer/ViewStudents";
 import AddingStudentToClass from "./Lecturer/AddingStudentToClass";
 import MaterialView from "./LecturerAndStudent/MaterialView";
 import CreateMaterialPages from "./Lecturer/CreateMaterialPages";
-import CreateMaterialPractice from "./Lecturer/CreateMaterialPractice";
+import CreateMaterialQuestions from "./Lecturer/CreateMaterialQuestions";
+import DisplayPagesAndTests from "./LecturerAndStudent/DisplayPagesAndTests";
 const LearningManagement = () => {
     return (
         <Switch>
             {/* <ProtectedRoute path={`/${('LecturerView', 'StudentView')}/StudyMaterial`} exact component={StudyMaterials} /> */}
-            <ProtectedRoute path="/LecturerView/CreateMaterialPractice/:profession/:className/:keyCollection" exact component={CreateMaterialPractice} />
+            <ProtectedRoute path="/LecturerView/CreateMaterialQuestions/:profession/:className/:keyCollection" exact component={CreateMaterialQuestions} />
             <ProtectedRoute path="/LecturerView/CreateMaterialPages/:profession/:className/:keyCollection" exact component={CreateMaterialPages} />
             <ProtectedRoute path="/LecturerView/Profession" exact component={LecturerView} />
             <ProtectedRoute path="/LecturerView/ViewStudents/:profession/:className" exact component={ViewStudents} />
@@ -26,6 +27,7 @@ const LearningManagement = () => {
             <ProtectedRoute path="/LecturerView/CreateClassroom" exact component={CreateClassroom} />
             <ProtectedRoute path="/LecturerView/StudentPermissions" exact component={StudentPermission} />
             <ProtectedRoute path="/StudentView/Profession" exact component={StudentView} />
+            <ProtectedRoute path="/StudentView/DisplayMaterials/:profession/:className/:keyCollection/:type" exact component={DisplayPagesAndTests} />
             <ProtectedRoute path="/LecturerView/Classrooms/:profession" exact component={Classrooms} />
         </Switch>
     )

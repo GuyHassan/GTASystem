@@ -13,25 +13,27 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const [showButtonsID, setShowButtonsID] = useState('');
     const { isLecturer, user } = JSON.parse(localStorage.getItem('userCredential'))
     const { profession, className } = params;
-    const linkTo = (topic) => {
-        const topicName = topic.topicName ? topic.topicName : topic.subTopicName;
-        return (
-            <Link
-                to={{
-                    pathname: `/LecturerView/CreateMaterialPages/${profession}/${className}/${topic.keyCollection}`,
-                }}>
-                {topicName}
-            </Link>
-        )
-    }
-    const Buttons = ({ topic: { keyCollection, subTopicName } }) => {
-        return showButtonsID === subTopicName
-            && <div style={{ margin: '10px' }}>
-                <Link to={`/LecturerView/CreateMaterialPages/${profession}/${className}/${keyCollection}`}
-                    className='ui basic red button'>Learn Topic</Link>
-                <Link to={`/LecturerView/CreateMaterialPractice/${profession}/${className}/${keyCollection}`}
-                    className='ui basic purple button'>Practice Topic</Link>
-            </div >
+
+    const Buttons = ({ topic: { subTopicName, keyCollection, topicName } }) => {
+        const name = subTopicName ? subTopicName : topicName;
+        if (showButtonsID === name) {
+            return isLecturer
+                ? <div style={{ margin: '10px' }}>
+                    <Link to={`/LecturerView/CreateMaterialPages/${profession}/${className}/${keyCollection}`}
+                        className='ui basic red button small'>Add Pages</Link>
+                    <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}`}
+                        className='ui basic purple button small'>Add Question</Link>
+                </div>
+                : <div style={{ margin: '10px' }}>
+                    <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/MaterialPages`}
+                        className='ui basic red button small'>Learn Topic</Link>
+                    <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/MaterialQuestions`}
+                        className='ui basic purple button small'>Practice Topic</Link>
+                </div >
+
+        }
+        return null;
+
     }
     // this function updates the state that hold the material section.
     const updateMaterials = (parentIndex = null, newValue = null, childIndex = null) => {
@@ -50,7 +52,6 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const onFinishEdit = () => {
         console.log(stateMaterial)
         server.post("/addMaterials", { professionName: profession, className, lecturerName: user, materialTree: stateMaterial }).then((res) => {
-            // console.log(res)
             history.push(`/LecturerView/Classrooms/${profession}`);
         })
     }
@@ -108,8 +109,8 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                 <div className="item" key={idMaterial}>
                     <div className="content" style={{ color: '#1a75ff' }}>
                         <ul>
-                            <li onClick={material.subTopic ? setShowButtonsID(material.topicName) : null}>
-                                <h2 >
+                            <li >
+                                <h2 onClick={!material.subTopics ? () => setShowButtonsID(material.topicName) : null}>
                                     {material.topicName}
                                     <Buttons topic={material} />
                                 </h2>

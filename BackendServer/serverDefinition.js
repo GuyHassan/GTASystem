@@ -21,7 +21,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const multer = require('multer');
-const  fs = require('fs');
+const fs = require('fs');
 const upload = multer({ dest: 'upload' });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
@@ -171,6 +171,7 @@ app.get("/getTopicMaterials", (req, res) => {
 //NEED {keyCollection,type}=> type is pages or questions
 app.post("/addTopicMatrials", (req, res) => {
   const { keyCollection, newArr, type } = req.body;
+  console.log(req.body)
   addTopicMaterial(keyCollection, newArr, type);
   res.send(true);
 });
@@ -178,11 +179,11 @@ app.post("/addTopicMatrials", (req, res) => {
 
 //////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
 
-app.post("/createMaterialPages",(req,res)=>{
+app.post("/createMaterialPages", (req, res) => {
 
 });
 
 // inital the server in default PORT (3005)
-app.listen(PORT, () => 
+app.listen(PORT, () =>
   console.log(`App listening on port ${PORT}!`)
 );
