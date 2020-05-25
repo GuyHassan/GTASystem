@@ -1,0 +1,6 @@
+@media only screen and (max-width: 600px) {
+    .frameStream {
+      width:220px;
+      height:220px;
+    }
+  }
