@@ -113,7 +113,13 @@ const addClassForSpecificStudent = (username, professionName, lecturerName) => {
 const initialArrayOfObj = (materialTree, type) => {
     let objArray = [];
     for (let i = 0; i < materialTree.length; i++) {
-        objArray.push({ [type]: materialTree[i][type], details: { grade: -1, needHelp: -1 } });
+        if(type=="subTopicName"||(!(materialTree[i].hasOwnProperty("subTopics")))){
+            console.log(materialTree[i]);
+            objArray.push({ [type]: materialTree[i][type],keyCollection:materialTree[i].keyCollection ,details: { grade: -1, needHelp: -1,isFinish:-1 } });
+        }
+        else{
+            objArray.push({ [type]: materialTree[i][type] ,details: { grade: -1, needHelp: -1,isFinish:-1 } });
+        }
         if (materialTree[i].hasOwnProperty("subTopics")) {
             objArray[i]["subTopics"] = initialArrayOfObj(materialTree[i].subTopics, "subTopicName");
         }
@@ -149,13 +155,13 @@ const buildGradeAndHelpTree = (student, professionName, materialTree) => {
 }
 
 
-const addStudentToClassroom = async ({ lecturerName, professionName, className, students }) => {
+const addStudentToClassroom =async ({ lecturerName, professionName, className, students }) => {
     getStudentFromSpecificClassroom(lecturerName, professionName, className).then(response => {
         response
             ? database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).set(response.concat(students))
             : database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).set(students);
     });
-    const materialTree = await getMaterials(lecturerName, professionName, className);
+    const materialTree = await (getMaterials(lecturerName, professionName, className,true));
     students.forEach(student => {
         addClassForSpecificStudent(student, professionName, lecturerName);
         if (materialTree) {
@@ -216,15 +222,12 @@ const getMaterials = async (username, professionName, className, isLecturer) => 
 //NEED (lecturerName,professionName,className,index)=>the index is the topicName
 //RETURN array => [{keyCollection,testQuestions},{keyCollection,testQuestions}]
 const getTestQuestions = async (lecturerName, professionName, className, index) => {
-
     const topicTree = (await (database.ref(`classrooms/${lecturerName}/${professionName}/${className}/topics/${index}`).once("value"))).val();
     const keyCollectionArray = topicTree.hasOwnProperty("subTopics")
         ? await topicTree.subTopics.map(topic => topic.keyCollection)
         : [topicTree.keyCollection];
     return getTestQuestionsFromFirestore(keyCollectionArray);
 }
-
-getTestQuestions("tamar123", "english", "cita b", 0).then(val => { console.log(val) });
 
 //delete student from class : NEED {studentName,LecturerNama,professionName,className}
 const deleteStudentFromClass = (studentDetails) => {
