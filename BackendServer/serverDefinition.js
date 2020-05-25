@@ -142,7 +142,7 @@ app.get("/getStudentsClass", (req, res) => {
 //get Materials Tree : NEED {username,professionName,className} RETURN materials tree .
 app.get("/getMaterials", (req, res) => {
   const { username, professionName, className, isLecturer } = req.query;
-  getMaterials(username, professionName, className, isLecturer).then(materialTree => {
+  getMaterials(username, professionName, className, isLecturer === 'true').then(materialTree => {
     if (materialTree === null) {
       // res.status("404").send("you don't have materials for this class");
       res.send([])
