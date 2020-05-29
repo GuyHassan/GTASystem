@@ -92,7 +92,7 @@ const AddNewUser = ({ titleMessage, classNameJsx }) => {
         <form
             className="ui error form"
             onSubmit={handleSubmit}>
-            <h1>{titleMessage}</h1>
+            <h1 className="titleComp">{titleMessage}</h1>
             <div>
                 <label>First Name:</label>
                 <input placeholder="First Name" name="firstName" type="text" value={state.firstName} onChange={handleChange} />

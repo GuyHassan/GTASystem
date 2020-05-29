@@ -16,10 +16,12 @@ const AddingStudentToClass = ({ match: { params } }) => {
             return (
                 <div className="item" key={student.id}>
                     <ul>
-                        <li onClick={() => listNewStudent(student.id)}
-                            style={{ color: newStudent.includes(student.id) ? "red" : "blue", fontSize: '20px' }}>
-                            {student.name} - {student.id}
-                        </li>
+                        <a >
+                            <li className="renderText" onClick={() => listNewStudent(student.id)}
+                                style={{ color: newStudent.includes(student.id) ? "red" : "green", fontSize: '20px' }}>
+                                {student.name} - {student.id}
+                            </li>
+                        </a>
                     </ul >
                 </div>
             )
@@ -37,9 +39,6 @@ const AddingStudentToClass = ({ match: { params } }) => {
         }
         else alert("Must Enter Some Student");
     }
-    // const getStudentCanAdded = async () => {
-    //     return await server.get(`/getStudentsForAddToClass/${params.profession}/${params.className}`);
-    // }
     useEffect(() => {
         const getStudentCanAdded = () => {
             return server.get(`/getStudentsForAddToClass/${params.profession}/${params.className}`
@@ -47,12 +46,11 @@ const AddingStudentToClass = ({ match: { params } }) => {
                 .then(students => { setStudentExists(students.data) })
                 .catch(err => { alert("No Student to add..") })
         }
-        // getStudentCanAdded().then(students => { setStudentExists(students.data) })
         getStudentCanAdded();
     }, [params]);
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
-            <h1 style={{ textDecoration: 'underline' }}>Choose student to - {params.className}</h1><br />
+            <h1 className="titleComp">Choose student to - {params.className}</h1><br />
             {renderStudents()}
 
             <button className="ui right floated black button" onClick={addNewStudent}>Add To Class</button>

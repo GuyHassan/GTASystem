@@ -14,21 +14,26 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const { isLecturer, user } = JSON.parse(localStorage.getItem('userCredential'))
     const { profession, className } = params;
 
+    const onClickFinalTest = () => {
+        alert("Final Test !!");
+    }
+
     const Buttons = ({ topic: { subTopicName, keyCollection, topicName } }) => {
         const name = subTopicName ? subTopicName : topicName;
         if (showButtonsID === name) {
             return isLecturer
                 ? <div style={{ margin: '10px' }}>
                     <Link to={`/LecturerView/CreateMaterialPages/${profession}/${className}/${keyCollection}`}
-                        className='ui basic red button small'>Add Pages</Link>
+                        className='ui basic black button small'>Add Pages</Link>
                     <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}`}
-                        className='ui basic purple button small'>Add Question</Link>
+                        className='ui basic black button small'>Add Question</Link>
                 </div>
                 : <div style={{ margin: '10px' }}>
                     <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/MaterialPages`}
                         className='ui basic red button small'>Learn Topic</Link>
-                    <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/MaterialQuestions`}
-                        className='ui basic purple button small'>Practice Topic</Link>
+                    {'Here i need to check if the student finish to learn the topic' ?
+                        <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/MaterialQuestions`}
+                            className='ui basic green button small'>Practice Topic</Link> : null}
                 </div >
 
         }
@@ -71,8 +76,8 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                 </ul >
             )
                 :
-                <ul style={{ marginTop: '20px', fontSize: '20px' }} key={idTopic}>
-                    <li onClick={() => setShowButtonsID(topic.subTopicName)}>
+                <ul style={{ marginTop: '10px', fontSize: '20px' }} key={idTopic}>
+                    <li className="subTopics" onClick={() => setShowButtonsID(topic.subTopicName)}>
                         {topic.subTopicName}
                         <Buttons topic={topic} />
                     </li>
@@ -92,8 +97,9 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                 defaultValue={material.topicName}
                                 onChange={e => { updateMaterials(idMaterial, e.target.value) }}
                             />
-                            <Icon onClick={() => { updateMaterials(idMaterial) }}
-                                name='plus circle' size='large' style={{ margin: '10px' }} />
+
+                            {material.subTopics && <Icon onClick={() => { updateMaterials(idMaterial) }}
+                                name='plus circle' size='large' style={{ margin: '10px' }} />}
                         </div>
                         {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
                     </li>
@@ -109,13 +115,18 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                 <div className="item" key={idMaterial}>
                     <div className="content" style={{ color: '#1a75ff' }}>
                         <ul>
-                            <li >
-                                <h2 onClick={!material.subTopics ? () => setShowButtonsID(material.topicName) : null}>
+                            <li style={{ color: 'green' }}>
+                                <h2 className="renderText" style={{ opacity: material.subTopics && '1' }} onClick={!material.subTopics ? () => setShowButtonsID(material.topicName) : null}>
                                     {material.topicName}
-                                    <Buttons topic={material} />
                                 </h2>
-
                                 {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
+                                <Buttons topic={material} />
+                                <Link to='/' className="iconExam">
+                                    Final Exam
+                                    <Icon name='file outline' size='big' ></Icon>
+                                </Link>
+
+
                             </li>
                         </ul>
                     </div>
@@ -133,7 +144,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">
-                <h1 style={{ textDecoration: 'underline' }}>Material View</h1><br />
+                <h1 className="titleComp">Material View</h1><br />
                 {editMode ? renderEditMode() : renderMaterials()}
             </div>
             {editMode
