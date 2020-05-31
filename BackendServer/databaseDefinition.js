@@ -236,10 +236,10 @@ const getTestQuestions = async (lecturerName, professionName, className, index) 
 //NO RETURN!! 
 const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
     if (topicIndexes.length > 1) {
-        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details`).update({ isFinish: 1 });
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details`).update({ isFinishQuestions: 1 });
     }
     else {
-        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details`).update({ isFinish: 1 });
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details`).update({ isFinishQuestions: 1 });
     }
 }
 
@@ -249,11 +249,12 @@ const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
 //RETURN TWO OPTION: 1. -1 VALUE NOT RECOMMEND , 2. Array type. 
 const getTopicGrades = async (studentName, professionName, topicIndexes, gradeType) => {
     let gradeArr;
-    if (topicIndexes.length > 1) {
-        gradeArr = await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details/${gradeType}`)).once("value");
+    const topicIndexesArray=topicIndexes.split(',').map(x=>parseInt(x));
+    if (topicIndexesArray.length > 1) {
+        gradeArr = await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/${gradeType}`)).once("value");
         return gradeArr.val();
     }
-    gradeArr = await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details/${gradeType}`)).once("value");
+    gradeArr = await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/${gradeType}`)).once("value");
     return gradeArr.val();
 
 }
@@ -277,13 +278,14 @@ const setTopicGrades = async (studentName, professionName, topicIndexes, gradeTy
 //NEED (studentName,professionName,topicIndexes,gradeType,grade)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
 //RETURN the updated gradeArray!!
 const initialArrayToGrades = async (studentName, professionName, topicIndexes, gradeType, grade) => {
-    return await getTopicGrades(studentName, professionName, topicIndexes, gradeType).then(gradeArray => {
+    const topicIndexesArray=topicIndexes.split(',').map(x=>parseInt(x));
+    return await getTopicGrades(studentName, professionName, topicIndexesArray, gradeType).then(gradeArray => {
         if (Array.isArray(gradeArray)) {
             gradeArray.push(grade);
-            setTopicGrades(studentName, professionName, topicIndexes, gradeType, gradeArray);
+            setTopicGrades(studentName, professionName, topicIndexesArray, gradeType, gradeArray);
         }
         else {
-            setTopicGrades(studentName, professionName, topicIndexes, gradeType, [grade]);
+            setTopicGrades(studentName, professionName, topicIndexesArray, gradeType, [grade]);
         }
     });
 }
@@ -341,3 +343,7 @@ module.exports = {
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
     initialArrayToGrades,setIsFinishQuestions,getTopicGrades
 };
+
+
+let x="1"
+console.log();
