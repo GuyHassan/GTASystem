@@ -16,13 +16,11 @@ const AddingStudentToClass = ({ match: { params } }) => {
             return (
                 <div className="item" key={student.id}>
                     <ul>
-                        <a >
-                            <li className="renderText" onClick={() => listNewStudent(student.id)}
-                                style={{ color: newStudent.includes(student.id) ? "red" : "green", fontSize: '20px' }}>
-                                {student.name} - {student.id}
-                            </li>
-                        </a>
-                    </ul >
+                        <li className="renderText" onClick={() => listNewStudent(student.id)}
+                            style={{ color: newStudent.includes(student.id) ? "red" : "green", fontSize: '20px' }}>
+                            {student.name} - {student.id}
+                        </li>
+                    </ul>
                 </div>
             )
         })
