@@ -37,6 +37,7 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
             setCounterPages(counterPages + 1)
             setListPages([...listPages, detailsPage])
             setDetailsPage(details)
+            setFileUploadName('')
             setErrorMessage('')
         }
     }
@@ -62,7 +63,7 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
     }, [materialPages])
     return (
         <div>
-            <h1 style={{ textDecoration: 'underline' }}>{`Page ${counterPages}`}</h1>
+            <h1 className="titleComp">{`Page ${counterPages}`}</h1>
             <form className="ui error form">
                 <label >Title Page (optional)</label>
                 <input name="title" type="text" value={detailsPage.title} onChange={onChange} />

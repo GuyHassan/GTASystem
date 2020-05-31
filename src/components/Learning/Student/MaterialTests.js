@@ -20,7 +20,7 @@ const MaterialTests = ({ onClickFinish, question: { question, ans1, ans2, ans3, 
     }
     return (
         <div style={{ textAlign: 'center' }}>
-            <h1 style={{ textDecoration: 'underline', marginBottom: '20px' }}>{`Question Page  ${numberPage}`}</h1>
+            <h1 className="titleComp" style={{ marginBottom: '20px' }}>{`Question Page  ${numberPage}`}</h1>
             <h3>{question}</h3>
             <input type="checkbox" name='ans1' checked={checkBoxState.ans1} onChange={onChange} /> {ans1} <br />
             <input type="checkbox" name='ans2' checked={checkBoxState.ans2} onChange={onChange} /> {ans2}<br />

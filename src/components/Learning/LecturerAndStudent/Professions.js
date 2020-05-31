@@ -10,15 +10,13 @@ const Professions = ({ children, getProfessions, professions }) => {
         return professions.map((currProfession, idProfession) => {
             return (
                 <div className="item" key={idProfession}>
-                    <div className="content" style={{ margin: '5px' }}>
+                    <div className="content renderText" style={{ margin: '5px' }}>
                         {isLecturer
-                            ? (<Link
-                                to={`/LecturerView/Classrooms/${currProfession}`}
-                                style={{ fontSize: '30px', fontWeight: '600' }} >
+                            ? (<Link className="renderText"
+                                to={`/LecturerView/Classrooms/${currProfession}`}>
                                 {currProfession}
                             </Link>)
-                            : (<Link to={`/MaterialView/${currProfession}/${className}`}
-                                style={{ fontSize: '30px', fontWeight: '600' }} >
+                            : (<Link className="renderText" to={`/MaterialView/${currProfession}/${className}`} >
                                 {currProfession}
                             </Link>)}
                     </div>
@@ -33,7 +31,7 @@ const Professions = ({ children, getProfessions, professions }) => {
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">
-                <h1 style={{ textDecoration: 'underline' }}>Professions</h1><br />
+                <h1 className="titleComp">Professions</h1><br />
                 {renderProfessions()}
                 <br />
                 {children}

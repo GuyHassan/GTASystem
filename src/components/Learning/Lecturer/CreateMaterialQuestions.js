@@ -55,7 +55,7 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, materialQuestions, matc
     }, [materialQuestions])
     return (
         <div>
-            <h1 style={{ textDecoration: 'underline' }}>{`Page ${counterQuestions}`}</h1>
+            <h1 className="titleComp">{`Page ${counterQuestions}`}</h1>
             <form className="ui error form">
                 <label >Question</label>
                 <textarea name="question" value={detailsQuestion.question} onChange={onChange} placeholder="Write a Question?" cols="100" rows="3" />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getClasses } from '../../../Redux/actions/index';
+// import '../../Style/GeneralComponents.css';
 
 const Professions = ({ children, getClasses, classes, match: { params } }) => {
     const [showButtonsID, setShowButtonsID] = useState('');
@@ -20,8 +21,8 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
         return classes.map((classroom, idClassroom) => {
             return (
                 <div className="item" key={idClassroom}>
-                    <div className="content" style={{ color: '#1a75ff' }}>
-                        <h2 onClick={() => setShowButtonsID(classroom)} >
+                    <div className="content" /* style={{ color: '#1a75ff' }} */>
+                        <h2 className="renderText" onClick={() => setShowButtonsID(classroom)} >
                             {classroom}
                         </h2>
                         <Buttons idClass={classroom} />
@@ -34,7 +35,7 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">
-                <h1 style={{ textDecoration: 'underline' }}>Classrooms</h1><br />
+                <h1 className="titleComp">Classrooms</h1><br />
                 {renderClasses()}
                 {children}
                 <br /><br />

@@ -9,7 +9,7 @@ const ViewStudent = ({ students, match: { params }, getStudents }) => {
                     <div className="content" style={{ color: '#1a75ff' }}>
                         <h2>
                             <ul>
-                                <li>
+                                <li className="renderText" style={{ opacity: '1', cursor: 'default' }}>
                                     {student.name}
                                 </li>
                             </ul>
@@ -25,7 +25,7 @@ const ViewStudent = ({ students, match: { params }, getStudents }) => {
     }, [getStudents, params])
     return (
         <div>
-            <h1>Students </h1>
+            <h1 className="titleComp">Students </h1>
             <div className="ui container" style={{ marginTop: '20px' }}>
                 <div className="ui celled list">
                     {renderStudent()}
