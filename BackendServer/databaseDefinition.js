@@ -243,8 +243,8 @@ const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
     }
 }
 
-//INSIDE METHOD to get grades we have 2 types of grades : 1.testGrades , 2.studyGrades 
-//WORKING FOR initialArrayToGrades!!! 
+//FUNCTION to get grades we have 2 types of grades : 1.testGrades , 2.studyGrades 
+//WORKING FOR initialArrayToGrades AND for server!!! 
 //NEED (studentName,professionName,topicIndexes,gradeType)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
 //RETURN TWO OPTION: 1. -1 VALUE NOT RECOMMEND , 2. Array type. 
 const getTopicGrades = async (studentName, professionName, topicIndexes, gradeType) => {
@@ -281,18 +281,15 @@ const initialArrayToGrades = async (studentName, professionName, topicIndexes, g
         if (Array.isArray(gradeArray)) {
             gradeArray.push(grade);
             setTopicGrades(studentName, professionName, topicIndexes, gradeType, gradeArray);
-            return gradeArray;
         }
         else {
             setTopicGrades(studentName, professionName, topicIndexes, gradeType, [grade]);
-            return [grade];
         }
     });
 }
 
 
 
-initialArrayToGrades("guy123","english",[0,0],"studyGrades",100).then(val=>{console.log(val)});
 
 
 
@@ -342,5 +339,5 @@ const deleteStudentFromClass = (studentDetails) => {
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
-    initialArrayToGrades,setIsFinishQuestions
+    initialArrayToGrades,setIsFinishQuestions,getTopicGrades
 };
