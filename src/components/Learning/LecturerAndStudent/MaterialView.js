@@ -125,9 +125,8 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                 </h2>
                                 {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
                                 <Buttons topic={material} />
-                                {console.log(material)}
                                 <Link to='/' className="iconExam" style={checkIsFinalMaterial(material) ? {} : { pointerEvents: 'none' }}>
-                                    Final Exam
+                                    <span style={{fontWeight:'700'}}>Final Exam</span>
                                     <Icon name='file outline' size='large' ></Icon>
                                 </Link>
                             </li>

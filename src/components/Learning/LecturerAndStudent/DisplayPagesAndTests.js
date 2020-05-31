@@ -66,7 +66,9 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Q
             && setCurrentQuestion({ question: Questions[0], index: 0 })
     }, [Questions])
     return (
-        <GridExampleInverted />
+        <div className="displayMaterial">
+            <GridExampleInverted />
+        </div>
     )
 }
 const mapStateToProps = (state) => {
