@@ -6,16 +6,6 @@ const { addMaterials, getMaterials, getProfession,
 
 const { getArrayFromFirestore, addTopicMaterial } = require("./firestoreDefinition");
 
-
-const { uploadFile } = require("./storageDefinition");
-
-
-
-
-//for storageDefinition!!
-//const {uploadFile} =require("./storeageDefinition");
-
-
 const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
@@ -120,7 +110,6 @@ app.get("/getStudentsForAddToClass/:professionName/:className", (req, res) => {
 });
 
 //add list of students to given class : NEED {lecturerName,professionName,className,{studentsUsername}} ,RETURN None
-//choose another URL name !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 app.post("/LecturerView/addStudentsToClass", (req, res) => {
   addStudentToClassroom(req.body);
   res.send("the student's are added to the class");
@@ -160,6 +149,14 @@ app.post("/addMaterials", (req, res) => {
   });
 });
 
+//function to finish specific topic/subTopic
+app.get("/finishLearnPages",(req,res)=>{
+
+});
+
+
+//////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
+
 //NEED {keyCollection,type}=> type is pages or questions
 app.get("/getTopicMaterials", (req, res) => {
   const { keyCollection, type } = req.query;
@@ -171,19 +168,16 @@ app.get("/getTopicMaterials", (req, res) => {
 //NEED {keyCollection,type}=> type is pages or questions
 app.post("/addTopicMatrials", (req, res) => {
   const { keyCollection, newArr, type } = req.body;
-  console.log(req.body)
   addTopicMaterial(keyCollection, newArr, type);
   res.send(true);
 });
 
 
-//////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
-
-app.post("/createMaterialPages", (req, res) => {
-
-});
 
 // inital the server in default PORT (3005)
 app.listen(PORT, () =>
   console.log(`App listening on port ${PORT}!`)
 );
+
+
+//module.exports = app;

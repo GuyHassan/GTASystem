@@ -23,7 +23,7 @@ const firestore = firebase.firestore();
 
 //function to ADD Link for specific topic FOR USE TO DATABASE.JS
 //NEED topicname
-const addLinkToTopic = async (topicName) => {
+const addKeyCollectionToTopic = async (topicName) => {
     const key = await (firestore.collection("topics").add({ topicName: topicName, pages: [], questions: [], testQuestions: [] }));
     return key.id;
 }
@@ -87,5 +87,30 @@ const getTestQuestionsFromFirestore = async (keyCollectionArray) => {
 }
 
 
+//function to get true/false of the answer of the question 
+//NEED (keyCollection,questionIndex,answer)
+//RETURN boolean
+const checkAnswer =async(keyCollection,questionIndex,answer)=>{
+    return await firestore.collection("topics").doc(keyCollection).get().then(topicDetails=>{
+        return answer===topicDetails.data().questions[questionIndex].correctAns;
+    });
+}
 
-module.exports = { addLinkToTopic, getArrayFromFirestore, addTopicMaterial, getTestQuestionsFromFirestore };
+const getSizeArray =async(keyCollection,type)=>{
+    return await firestore.collection("topics").doc(keyCollection).get().then(topicDetails=>{
+        return topicDetails.data()[type].length;
+    });
+}
+
+
+
+
+
+
+//getSizeArray("Tdpx2TFfzIEJOQbTMThw","testQuestions").then(val=>{console.log(val)});
+
+
+//checkAnswer("Tdpx2TFfzIEJOQbTMThw",0,"1").then(val=>{console.log(val)});
+
+
+module.exports = { addKeyCollectionToTopic, getArrayFromFirestore, addTopicMaterial, getTestQuestionsFromFirestore,getSizeArray };
