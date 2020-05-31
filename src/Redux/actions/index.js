@@ -57,7 +57,7 @@ export const createClassroom = (details) => (dispatch, getState) => {
 }
 
 export const getMaterials = ({ profession, className }) => async (dispatch, getState) => {
-    const { userID,isLecturer } = getState().whoIsOnline;
+    const { userID, isLecturer } = getState().whoIsOnline;
     const response = await server.get(`/getMaterials?professionName=${profession}&className=${className}&username=${userID}&isLecturer=${isLecturer}`);
     dispatch({ type: 'GET_MATERIALS', payload: response.data });
 };
@@ -68,7 +68,15 @@ export const createNewMaterial = (material) => async (dispatch, getState) => {
     dispatch({ type: 'CREATE_MATERIAL', payload: response.data });
     history.push('/LecturerView');
 }
+export const getMaterialPages = (keyCollection) => async (dispatch) => {
+    const response = await server.get(`/getTopicMaterials?keyCollection=${keyCollection}&type=pages`);
+    dispatch({ type: 'GET_MATERIAL_PAGES', payload: response.data });
 
+}
+export const getMaterialQuestions = (keyCollection) => async (dispatch) => {
+    const response = await server.get(`/getTopicMaterials?keyCollection=${keyCollection}&type=questions`);
+    dispatch({ type: 'GET_MATERIAL_QUESTIONS', payload: response.data });
+}
 // delete didnt return nothing, only the id beacuse the server didnt give back response
 export const deleteMaterial = (id) => async (dispatch) => {
     await server.delete(`/ studyMaterials / ${id} `);

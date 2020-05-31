@@ -23,17 +23,17 @@ const firestore = firebase.firestore();
 
 //function to ADD Link for specific topic FOR USE TO DATABASE.JS
 //NEED topicname
-const addLinkToTopic = async (topicName) => {
-    const key = await (firestore.collection("topics").add({ topicName: topicName, pages: [], questions: [],testQuestions:[] }));
+const addKeyCollectionToTopic = async (topicName) => {
+    const key = await (firestore.collection("topics").add({ topicName: topicName, pages: [], questions: [], testQuestions: [] }));
     return key.id;
 }
 
 //function for get array of pages or question depending on the type 
 //NEED (keyCollection,type)
 //RETURN Array of pages or questions depending on the inserted type
-const getArrayFromFirestore =async (keyCollection, type = null) => {
+const getArrayFromFirestore = async (keyCollection, type = null) => {
     return await firestore.collection("topics").doc(keyCollection).get().then(details => {
-       return type === "pages"
+        return type === "pages"
             ? details.data().pages
             : details.data().questions;
     });
@@ -49,11 +49,11 @@ const deleteArrayFromFirestore = (keyCollection, type) => {
 //NO RETURN!!!
 const addTopicMaterial = (keyCollection, newArr, type) => {
     firestore.collection("topics").doc(keyCollection).get().then(details => {
-        if (type == "pages") {
+        if (type === "pages") {
             const existPage = details.data().pages;
             firestore.collection("topics").doc(keyCollection).update({ pages: existPage.concat(newArr) });
         }
-        else if(type=="questions") {
+        else if (type === "questions") {
             const existQuestions = details.data().questions;
             firestore.collection("topics").doc(keyCollection).update({ questions: existQuestions.concat(newArr) });
         }
@@ -66,9 +66,9 @@ const addTopicMaterial = (keyCollection, newArr, type) => {
 
 //inside method !! to get Questions for specific keyCollection
 // RETURN obj : {keyCollection string,testQuestion array}
-const getSpecificTestQuestion=async(keyCollection)=>{
-    return await firestore.collection("topics").doc(keyCollection).get().then(details=>{
-        const routeDict={"keyCollection":keyCollection,"testQuestions":details.data().testQuestions};
+const getSpecificTestQuestion = async (keyCollection) => {
+    return await firestore.collection("topics").doc(keyCollection).get().then(details => {
+        const routeDict = { "keyCollection": keyCollection, "testQuestions": details.data().testQuestions };
         return routeDict;
     })
 }
@@ -77,9 +77,9 @@ const getSpecificTestQuestion=async(keyCollection)=>{
 //function to get all the question for specific topic !!
 //NEED (keyCollection Array) !!
 //RETURN an array like this : [{keyCollection,testQuestion},{keyCollection,testQuestion}]
-const getTestQuestionsFromFirestore =async (keyCollectionArray)=>{
-    let testQuestions=[];
-    keyCollectionArray.forEach((keyCollection) =>{
+const getTestQuestionsFromFirestore = async (keyCollectionArray) => {
+    let testQuestions = [];
+    keyCollectionArray.forEach((keyCollection) => {
         testQuestions.push(getSpecificTestQuestion(keyCollection));
     });
     testQuestions = await Promise.all(testQuestions);
@@ -87,5 +87,30 @@ const getTestQuestionsFromFirestore =async (keyCollectionArray)=>{
 }
 
 
+//function to get true/false of the answer of the question 
+//NEED (keyCollection,questionIndex,answer)
+//RETURN boolean
+const checkAnswer =async(keyCollection,questionIndex,answer)=>{
+    return await firestore.collection("topics").doc(keyCollection).get().then(topicDetails=>{
+        return answer===topicDetails.data().questions[questionIndex].correctAns;
+    });
+}
 
-module.exports = { addLinkToTopic, getArrayFromFirestore,addTopicMaterial,getTestQuestionsFromFirestore };
+const getSizeArray =async(keyCollection,type)=>{
+    return await firestore.collection("topics").doc(keyCollection).get().then(topicDetails=>{
+        return topicDetails.data()[type].length;
+    });
+}
+
+
+
+
+
+
+//getSizeArray("Tdpx2TFfzIEJOQbTMThw","testQuestions").then(val=>{console.log(val)});
+
+
+//checkAnswer("Tdpx2TFfzIEJOQbTMThw",0,"1").then(val=>{console.log(val)});
+
+
+module.exports = { addKeyCollectionToTopic, getArrayFromFirestore, addTopicMaterial, getTestQuestionsFromFirestore,getSizeArray };

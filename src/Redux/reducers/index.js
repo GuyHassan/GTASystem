@@ -38,10 +38,28 @@ const students = (state = {}, action) => {
             return state;
     }
 }
+const materialPages = (state = [], action) => {
+    switch (action.type) {
+        case 'GET_MATERIAL_PAGES':
+            return action.payload;
+        default:
+            return state;
+    }
+}
+const materialQuestions = (state = [], action) => {
+    switch (action.type) {
+        case 'GET_MATERIAL_QUESTIONS':
+            return action.payload;
+        default:
+            return state;
+    }
+}
 export default combineReducers({
     form: formReducer,
     whoIsOnline: currentUserReducer,
     materials: materialsReducers,
+    materialPages,
+    materialQuestions,
     classes,
     profession,
     students

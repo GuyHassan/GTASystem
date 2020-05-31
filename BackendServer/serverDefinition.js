@@ -131,7 +131,7 @@ app.get("/getStudentsClass", (req, res) => {
 //get Materials Tree : NEED {username,professionName,className} RETURN materials tree .
 app.get("/getMaterials", (req, res) => {
   const { username, professionName, className, isLecturer } = req.query;
-  getMaterials(username, professionName, className, isLecturer==='true').then(materialTree => {
+  getMaterials(username, professionName, className, isLecturer === 'true').then(materialTree => {
     if (materialTree === null) {
       // res.status("404").send("you don't have materials for this class");
       res.send([])
@@ -149,6 +149,14 @@ app.post("/addMaterials", (req, res) => {
   });
 });
 
+//function to finish specific topic/subTopic
+app.get("/finishLearnPages",(req,res)=>{
+
+});
+
+
+//////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
+
 //NEED {keyCollection,type}=> type is pages or questions
 app.get("/getTopicMaterials", (req, res) => {
   const { keyCollection, type } = req.query;
@@ -165,11 +173,6 @@ app.post("/addTopicMatrials", (req, res) => {
 });
 
 
-//////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
-
-app.post("/createMaterialPages", (req, res) => {
-
-});
 
 // inital the server in default PORT (3005)
 app.listen(PORT, () =>

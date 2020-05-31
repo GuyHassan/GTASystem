@@ -1,5 +1,5 @@
 const firebase = require("./firebaseDefinition");
-const { addLinkToTopic, getTestQuestionsFromFirestore } = require("./firestoreDefinition");
+const { addKeyCollectionToTopic, getTestQuestionsFromFirestore, getSizeArray } = require("./firestoreDefinition");
 const database = firebase.database();
 
 
@@ -96,7 +96,7 @@ const addClassrooms = (classroomDetails) => {
 }
 
 // inside method to get student list FOR addStudentToClassroom !!!
-const getStudentFromSpecificClassroom = async (lecturerName, professionName, className) => {
+const getStudentsFromSpecificClassroom = async (lecturerName, professionName, className) => {
     const students = await (database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).once("value"));
     return students.val();
 }
@@ -113,12 +113,11 @@ const addClassForSpecificStudent = (username, professionName, lecturerName) => {
 const initialArrayOfObj = (materialTree, type) => {
     let objArray = [];
     for (let i = 0; i < materialTree.length; i++) {
-        if(type=="subTopicName"||(!(materialTree[i].hasOwnProperty("subTopics")))){
-            console.log(materialTree[i]);
-            objArray.push({ [type]: materialTree[i][type],keyCollection:materialTree[i].keyCollection ,details: { grade: -1, needHelp: -1,isFinish:-1 } });
+        if (type == "subTopicName" || (!(materialTree[i].hasOwnProperty("subTopics")))) {
+            objArray.push({ [type]: materialTree[i][type], keyCollection: materialTree[i].keyCollection, details: { testGrades: -1, studyGrades: -1, finalGrade: -1, needHelp: -1, isFinishQuestions: -1 } });
         }
-        else{
-            objArray.push({ [type]: materialTree[i][type] ,details: { grade: -1, needHelp: -1,isFinish:-1 } });
+        else {
+            objArray.push({ [type]: materialTree[i][type], details: { grades: -1, finalGrade: -1 } });
         }
         if (materialTree[i].hasOwnProperty("subTopics")) {
             objArray[i]["subTopics"] = initialArrayOfObj(materialTree[i].subTopics, "subTopicName");
@@ -139,7 +138,7 @@ const addKeyCollection = async (materialTree, type) => {
         }
         else {
             if (!(materialTree[i].hasOwnProperty("keyCollection"))) {
-                keyCollection = (await addLinkToTopic(materialTree[i][type]));
+                keyCollection = (await addKeyCollectionToTopic(materialTree[i][type]));
                 materialTree[i]['keyCollection'] = keyCollection;
             }
         }
@@ -154,14 +153,14 @@ const buildGradeAndHelpTree = (student, professionName, materialTree) => {
     database.ref(`students/${student}/materials/${professionName}/needHelpAndGrades`).set(gradeAndNeedHelpTree);
 }
 
-
-const addStudentToClassroom =async ({ lecturerName, professionName, className, students }) => {
-    getStudentFromSpecificClassroom(lecturerName, professionName, className).then(response => {
+//function for adding students to classroom 
+const addStudentToClassroom = async ({ lecturerName, professionName, className, students }) => {
+    getStudentsFromSpecificClassroom(lecturerName, professionName, className).then(response => {
         response
             ? database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).set(response.concat(students))
             : database.ref(`classrooms/${lecturerName}/${professionName}/${className}/students`).set(students);
     });
-    const materialTree = await (getMaterials(lecturerName, professionName, className,true));
+    const materialTree = await (getMaterials(lecturerName, professionName, className, true));
     students.forEach(student => {
         addClassForSpecificStudent(student, professionName, lecturerName);
         if (materialTree) {
@@ -192,18 +191,20 @@ const deleteTree = (root) => {
 
 //function for initial materials NEED {lecturerName, professionName, className, materialTree}
 const addMaterials = async ({ lecturerName, professionName, className, materialTree }) => {
-    getStudentsNamesAsObject(professionName, className, true).then(students => {
-        students.forEach(student => {
-            buildGradeAndHelpTree(student.id, professionName, materialTree)
-        });
-    });
     //send to addKeyColletion and add key val 
     addKeyCollection(materialTree, "topicName").then(materialTree => {
         database.ref(`classrooms/${lecturerName}/${professionName}/${className}/topics`).set(materialTree);
+        getStudentsFromSpecificClassroom(lecturerName, professionName, className).then(students => {
+            if (Array.isArray(students)) {
+                students.forEach(student => {
+                    buildGradeAndHelpTree(student, professionName, materialTree);
+                });
+            }
+
+        });
     });
     return true;
 }
-
 
 //function for students and lecturers!!!
 //need to get username, professionName, className,isLecturer
@@ -229,11 +230,78 @@ const getTestQuestions = async (lecturerName, professionName, className, index) 
     return getTestQuestionsFromFirestore(keyCollectionArray);
 }
 
-//delete student from class : NEED {studentName,LecturerNama,professionName,className}
-const deleteStudentFromClass = (studentDetails) => {
-    deleteTree(`classrooms/${studentDetails.lecturerName}/${studentDetials.professionName}/${studentDetails.className}/studnets/${studentDetails.studentName}`);
-    deleteTree(`students/${studentDetails.studentName}/materials/${studentDetials.professionName}/`);
+///////////////////////////////////////////////////////////////////                  NEW               /////////////////////////////////////
+
+
+
+//function that update if the student finish the questions
+//NEED (studentName,professionName,topicIndexes)
+//NO RETURN!! 
+const isFinishQuestions = (studentName, professionName, topicIndexes) => {
+    if (topicIndexes.length > 1) {
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details`).update({ isFinish: 1 });
+    }
+    else {
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details`).update({ isFinish: 1 });
+    }
 }
+
+//INSIDE METHOD to get grades we have 2 types of grades : 1.testGrades , 2.studyGrades 
+//WORKING FOR initialArrayToGrades!!! 
+//NEED (studentName,professionName,topicIndexes,gradeType)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
+//RETURN TWO OPTION: 1. -1 VALUE NOT RECOMMEND , 2. Array type. 
+const getTopicGrades = async (studentName, professionName, topicIndexes, gradeType) => {
+    let gradeArr;
+    if (topicIndexes.length > 1) {
+        gradeArr = await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details/${gradeType}`)).once("value");
+        return gradeArr.val();
+    }
+    gradeArr = await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details/${gradeType}`)).once("value");
+    return gradeArr.val();
+
+}
+
+//INSIDE METHOD to set grades we have 2 types of grades : 1.testGrades , 2.studyGrades 
+//WORKING FOR initialArrayToGrades!!! 
+//NEED (studentName,professionName,topicIndexes,gradeType)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
+//NO RETURN!!!
+const setTopicGrades = async (studentName, professionName, topicIndexes, gradeType, gradeArray) => {
+    if (topicIndexes.length > 1) {
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details`).set({ [gradeType]: gradeArray });
+    }
+    else {
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details`).set({ [gradeType]: gradeArray });
+    }
+}
+
+
+
+//FUNCTION to set grades AND RETURN the updated gradesArray ,we have 2 types of grades : 1.testGrades , 2.studyGrades 
+//NEED (studentName,professionName,topicIndexes,gradeType)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
+//RETURN the updated gradeArray!!
+const initialArrayToGrades = async (studentName, professionName, topicIndexes, gradeType, grade) => {
+    return await getTopicGrades(studentName, professionName, topicIndexes, gradeType).then(gradeArray => {
+        if (Array.isArray(gradeArray)) {
+            gradeArray.push(grade);
+            setTopicGrades(studentName, professionName, topicIndexes, gradeType, gradeArray);
+            return gradeArray;
+        }
+        else {
+            setTopicGrades(studentName, professionName, topicIndexes, gradeType, [grade]);
+            return [grade];
+        }
+    });
+}
+
+//initialArrayToGrades("guy123","english",[0,0],"testGrades",100).then(val=>{console.log(val)});
+
+
+
+
+
+
+
+
 
 
 
@@ -246,20 +314,14 @@ const deleteMaterialTopic = (lecturerName, professionName, className, topicDetai
 
 }
 
+//delete student from class : NEED {studentName,LecturerNama,professionName,className}
+const deleteStudentFromClass = (studentDetails) => {
+    deleteTree(`classrooms/${studentDetails.lecturerName}/${studentDetials.professionName}/${studentDetails.className}/studnets/${studentDetails.studentName}`);
+    deleteTree(`students/${studentDetails.studentName}/materials/${studentDetials.professionName}/`);
+}
 
-/////Test!!!!!!!!!!!!!!
-//let user = { username: "yinon123", password: 12345, ID: 203409024, name: "yinon hirary", gender: "male" };
-//addStudent(user);
-//deleteTree("users","yinon123");
-//deleteTree("students","yinon123");
-//getClassrooms("tamar123").then(val =>{console.log(val.includes("sdsako"));});
-//getSizeOfChilds("lecturers/tamar123/classes").then(val =>{console.log(val);});
-//let addClass = { lecturerName: "tamar123", professionName: "physics", className: "cita b", description: "special class for physics" };
-//addClassrooms(addClass);
-//let studentDetailsForClassroom={lecturerName:"tamar123",professionName:"physics",studentsNames:["guy123","yinon123"]};
-//addStudentToClassroom(studentDetailsForClassroom);
 
-//addClassrooms(addClass)
+//IsFinishPages("guy123","english",[0,1]);
 
 ////example for addMaterials
 
@@ -281,4 +343,8 @@ const deleteMaterialTopic = (lecturerName, professionName, className, topicDetai
 
 
 
-module.exports = { addMaterials, getMaterials, getProfession, addStudentToClassroom, getStudentsNamesAsObject, getClassrooms, existInDB, checkUsernamePassword, addUsers, addClassrooms };
+module.exports = {
+    addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
+    getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
+    initialArrayToGrades
+};
