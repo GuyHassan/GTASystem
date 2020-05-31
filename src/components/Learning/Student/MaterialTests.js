@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 
 const checkBoxDefault = { ans1: false, ans2: false, ans3: false, ans4: false }
 
-const MaterialTests = ({ onClickFinish, question: { question, ans1, ans2, ans3, ans4, correctAns }, numberPage }) => {
+const MaterialTests = ({ onClickNext, question: { question, ans1, ans2, ans3, ans4, correctAns }, numberPage }) => {
     const [checkBoxState, setCheckBoxState] = useState(checkBoxDefault)
     const onChange = ({ target: { name } }) => {
         setCheckBoxState({ ...checkBoxDefault, [name]: true })
     }
     const validate = () => {
-        let correctAns = false
-        Object.entries(checkBoxState).forEach(val => { return val[1] === true ? correctAns = val : null })
+        let correctAnswer = false
+        Object.entries(checkBoxState).forEach((val, index) => { return val[1] === true ? correctAnswer = index + 1 : null })
 
         if (!correctAns)
             alert("Must Enter One Answer !")
         else {
-            onClickFinish({ ...correctAns, index: numberPage })
+            onClickNext(Number(correctAns) === correctAnswer ? 100 : 0)
         }
 
     }

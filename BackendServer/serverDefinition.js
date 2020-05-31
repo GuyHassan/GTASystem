@@ -160,7 +160,7 @@ app.post("/setIsFinishQuestion", (req, res) => {
 });
 
 //NEED (studentName,professionName,topicIndexes,gradeType,grade)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
-//NEED THIS ROUTE : /setGradeToArray?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}&grade=${grade}
+//NEED THIS ROUTE : /setArrayGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}&grade=${grade}
 app.patch("/setArrayGrade",(req,res)=>{
   const {studentName,professionName,topicIndexes,gradeType,grade}=req.query;
   initialArrayToGrades(studentName,professionName,topicIndexes,gradeType,grade).then(gradeArray=>{
@@ -170,7 +170,7 @@ app.patch("/setArrayGrade",(req,res)=>{
 
 
 //NEED (studentName,professionName,topicIndexes,gradeType)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
-//NEED THIS ROUTE : /setGradeToArray?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}
+//NEED THIS ROUTE : /getArrayGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}
 app.get("/getArrayGrade",(req,res)=>{
   const {studentName,professionName,topicIndexes,gradeType}=req.query;
   getTopicGrades(studentName,professionName,topicIndexes,gradeType).then(gradesArr=>{

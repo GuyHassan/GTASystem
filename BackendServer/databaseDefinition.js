@@ -236,10 +236,10 @@ const getTestQuestions = async (lecturerName, professionName, className, index) 
 //NO RETURN!! 
 const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
     if (topicIndexes.length > 1) {
-        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details`).update({ isFinish: 1 });
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details`).update({ isFinishQuestions: 1 });
     }
     else {
-        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details`).update({ isFinish: 1 });
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details`).update({ isFinishQuestions: 1 });
     }
 }
 

@@ -18,7 +18,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         alert("Final Test !!");
     }
 
-    const Buttons = ({ topic: { subTopicName, keyCollection, topicName } }) => {
+    const Buttons = ({ topic: { subTopicName, keyCollection, topicName }, indexes }) => {
         const name = subTopicName ? subTopicName : topicName;
         if (showButtonsID === name) {
             return isLecturer
@@ -29,10 +29,10 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                         className='ui basic black button small'>Add Question</Link>
                 </div>
                 : <div style={{ margin: '10px' }}>
-                    <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/MaterialPages`}
+                    <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/MaterialPages`}
                         className='ui basic red button small'>Learn Topic</Link>
                     {'Here i need to check if the student finish to learn the topic' ?
-                        <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/MaterialQuestions`}
+                        <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/MaterialQuestions`}
                             className='ui basic green button small'>Practice Topic</Link> : null}
                 </div >
 
@@ -83,7 +83,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                 <ul style={{ marginTop: '10px', fontSize: '20px' }} key={idTopic}>
                     <li className="subTopics" onClick={() => setShowButtonsID(topic.subTopicName)}>
                         {topic.subTopicName}
-                        <Buttons topic={topic} />
+                        <Buttons topic={topic} indexes={[parentIndex, idTopic]} />
                     </li>
 
                 </ul>
@@ -124,9 +124,9 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                     {material.topicName}
                                 </h2>
                                 {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
-                                <Buttons topic={material} />
+                                <Buttons topic={material} indexes={idMaterial} />
                                 <Link to='/' className="iconExam" style={checkIsFinalMaterial(material) ? {} : { pointerEvents: 'none' }}>
-                                    <span style={{fontWeight:'700'}}>Final Exam</span>
+                                    <span style={{ fontWeight: '700' }}>Final Exam</span>
                                     <Icon name='file outline' size='large' ></Icon>
                                 </Link>
                             </li>

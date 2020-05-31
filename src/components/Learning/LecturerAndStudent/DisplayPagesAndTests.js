@@ -4,8 +4,9 @@ import { connect } from 'react-redux';
 import { getMaterialPages, getMaterialQuestions } from '../../../Redux/actions';
 import MaterialPages from '../Student/MaterialPages';
 import { Grid, Icon } from 'semantic-ui-react'
+import { server } from '../../../Apis/server';
 
-const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Questions, match: { params: { type, keyCollection } } }) => {
+const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Questions, match: { params: { type, keyCollection, indexTopic } } }) => {
     const [pages, setPages] = useState([])
     const [questions, setQuestions] = useState([])
     const [currentpPage, setCurrentPage] = useState({ page: { title: '', freeText: '', file: '', streamLink: '' }, index: '' })
@@ -24,10 +25,11 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Q
                 : { page: Pages[prevState.index - 1], index: prevState.index - 1 }
         })
     }
-    const onClickFinish = (answer) => {
+    const nextPageQuestion = (answer) => {
         //here need to impllement and send the 'answer' attribute to back and update the DB with a new answer !!!!
         if (!currentpQuestion.index + 1 === Questions.length) {
             setCurrentQuestion(prevState => { return { question: Questions[prevState.index + 1], index: prevState.index + 1 } })
+            server.patch()
         }
         else {
             alert('Well Done, Finish the test !')
@@ -43,7 +45,7 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Q
                 <Grid.Column width="12">
                     {type === 'MaterialPages'
                         ? <MaterialPages page={currentpPage.page} numberPage={currentpPage.index} />
-                        : <MaterialTests question={currentpQuestion.question} numberPage={currentpQuestion.index} onClickFinish={onClickFinish} />
+                        : <MaterialTests question={currentpQuestion.question} numberPage={currentpQuestion.index} onClickNext={nextPageQuestion} />
                     }
                 </Grid.Column>
                 <Grid.Column width="2" verticalAlign='middle'>
