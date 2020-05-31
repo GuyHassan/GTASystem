@@ -343,7 +343,3 @@ module.exports = {
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
     initialArrayToGrades,setIsFinishQuestions,getTopicGrades
 };
-
-
-let x="1"
-console.log();
