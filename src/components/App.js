@@ -4,7 +4,7 @@ import Header from './General/Header';
 import history from '../history';
 import LearningManagement from '../components/Learning/LearningManagement';
 import GeneralManagement from './General/GeneralManagement';
-import './Style/GeneralComponents.css';
+import './Style/GeneralStyling.css';
 const App = () => {
     return (
         <Router history={history} >

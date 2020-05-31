@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { Icon } from 'semantic-ui-react'
 import history from '../../../history';
 import '../../Style/MaterialView.css';
-// const materials = [{ subTopic: [{ subTopicName: 'rational shvarim' }, { subTopicName: 'not rational shvarim' }], topicName: 'shvarim' }, { topicName: 'multiple' }]
+
 const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const [stateMaterial, setStateMaterial] = useState([]);
     const [editMode, setEditMode] = useState(false);
@@ -55,10 +55,14 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         setStateMaterial(newMaterial)
     }
     const onFinishEdit = () => {
-        console.log(stateMaterial)
         server.post("/addMaterials", { professionName: profession, className, lecturerName: user, materialTree: stateMaterial }).then((res) => {
             history.push(`/LecturerView/Classrooms/${profession}`);
         })
+    }
+    const checkIsFinalMaterial = (material) => {
+        return material.subTopics
+            ? material.subTopics.every(val => val.details.isFinishQuestions !== -1)
+            : material.details.isFinishQuestions !== -1
     }
     const subTopicRender = (subTopic, parentIndex) => {
         return subTopic.map((topic, idTopic) => {
@@ -121,12 +125,11 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                 </h2>
                                 {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
                                 <Buttons topic={material} />
-                                <Link to='/' className="iconExam">
+                                {console.log(material)}
+                                <Link to='/' className="iconExam" style={checkIsFinalMaterial(material) ? {} : { pointerEvents: 'none' }}>
                                     Final Exam
-                                    <Icon name='file outline' size='big' ></Icon>
+                                    <Icon name='file outline' size='large' ></Icon>
                                 </Link>
-
-
                             </li>
                         </ul>
                     </div>
