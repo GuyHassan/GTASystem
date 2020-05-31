@@ -2,7 +2,9 @@
 //for databaseDefinition!!
 const { addMaterials, getMaterials, getProfession,
   addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
-  addUsers, existInDB, getClassrooms, addClassrooms } = require("./databaseDefinition");
+  addUsers, existInDB, getClassrooms, addClassrooms,setIsFinishQuestions,
+  initialArrayToGrades
+ } = require("./databaseDefinition");
 
 const { getArrayFromFirestore, addTopicMaterial } = require("./firestoreDefinition");
 
@@ -149,11 +151,22 @@ app.post("/addMaterials", (req, res) => {
   });
 });
 
-//function to finish specific topic/subTopic
-app.get("/finishLearnPages",(req,res)=>{
 
+//NEED (studentName,professionName,topicIndexes)
+//NEED THIS ROUTE  : /setIsFinishQuestion?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
+app.post("/setIsFinishQuestion", (req, res) => {
+  const {studentName,professionName,topicIndexes}=req.query;
+  setIsFinishQuestions(studentName,professionName,topicIndexes);
 });
 
+//NEED (studentName,professionName,topicIndexes,gradeType,grade)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
+//NEED THIS ROUTE : /initialArrayToGrades?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}&grade=${grade}
+app.patch("/initialArrayToGrades",(req,res)=>{
+  const {studentName,professionName,topicIndexes,gradeType,grade}=req.query;
+  initialArrayToGrades(studentName,professionName,topicIndexes,gradeType,grade).then(gradeArray=>{
+    res.send(gradeArray);
+  });
+});
 
 //////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
 
@@ -171,6 +184,8 @@ app.post("/addTopicMatrials", (req, res) => {
   addTopicMaterial(keyCollection, newArr, type);
   res.send(true);
 });
+
+
 
 
 

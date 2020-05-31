@@ -22,9 +22,6 @@ const checkUsernamePassword = async (details) => {
     }
 }
 
-
-
-
 /* 
     root - the main node of tree
     child - branch of current root
@@ -113,7 +110,7 @@ const addClassForSpecificStudent = (username, professionName, lecturerName) => {
 const initialArrayOfObj = (materialTree, type) => {
     let objArray = [];
     for (let i = 0; i < materialTree.length; i++) {
-        if (type == "subTopicName" || (!(materialTree[i].hasOwnProperty("subTopics")))) {
+        if (type == "subTopicName" ||(!(materialTree[i].hasOwnProperty("subTopics")))) {
             objArray.push({ [type]: materialTree[i][type], keyCollection: materialTree[i].keyCollection, details: { testGrades: -1, studyGrades: -1, finalGrade: -1, needHelp: -1, isFinishQuestions: -1 } });
         }
         else {
@@ -237,7 +234,7 @@ const getTestQuestions = async (lecturerName, professionName, className, index) 
 //function that update if the student finish the questions
 //NEED (studentName,professionName,topicIndexes)
 //NO RETURN!! 
-const isFinishQuestions = (studentName, professionName, topicIndexes) => {
+const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
     if (topicIndexes.length > 1) {
         database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details`).update({ isFinish: 1 });
     }
@@ -267,17 +264,17 @@ const getTopicGrades = async (studentName, professionName, topicIndexes, gradeTy
 //NO RETURN!!!
 const setTopicGrades = async (studentName, professionName, topicIndexes, gradeType, gradeArray) => {
     if (topicIndexes.length > 1) {
-        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details`).set({ [gradeType]: gradeArray });
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details/${gradeType}`).set(gradeArray);
     }
     else {
-        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details`).set({ [gradeType]: gradeArray });
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details/${gradeType}`).set(gradeArray);
     }
 }
 
 
 
 //FUNCTION to set grades AND RETURN the updated gradesArray ,we have 2 types of grades : 1.testGrades , 2.studyGrades 
-//NEED (studentName,professionName,topicIndexes,gradeType)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
+//NEED (studentName,professionName,topicIndexes,gradeType,grade)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
 //RETURN the updated gradeArray!!
 const initialArrayToGrades = async (studentName, professionName, topicIndexes, gradeType, grade) => {
     return await getTopicGrades(studentName, professionName, topicIndexes, gradeType).then(gradeArray => {
@@ -293,10 +290,9 @@ const initialArrayToGrades = async (studentName, professionName, topicIndexes, g
     });
 }
 
-//initialArrayToGrades("guy123","english",[0,0],"testGrades",100).then(val=>{console.log(val)});
 
 
-
+initialArrayToGrades("guy123","english",[0,0],"studyGrades",100).then(val=>{console.log(val)});
 
 
 
@@ -346,5 +342,5 @@ const deleteStudentFromClass = (studentDetails) => {
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
-    initialArrayToGrades
+    initialArrayToGrades,setIsFinishQuestions
 };
