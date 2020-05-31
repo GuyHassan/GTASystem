@@ -110,7 +110,7 @@ const addClassForSpecificStudent = (username, professionName, lecturerName) => {
 const initialArrayOfObj = (materialTree, type) => {
     let objArray = [];
     for (let i = 0; i < materialTree.length; i++) {
-        if (type == "subTopicName" ||(!(materialTree[i].hasOwnProperty("subTopics")))) {
+        if (type == "subTopicName" || (!(materialTree[i].hasOwnProperty("subTopics")))) {
             objArray.push({ [type]: materialTree[i][type], keyCollection: materialTree[i].keyCollection, details: { testGrades: -1, studyGrades: -1, finalGrade: -1, needHelp: -1, isFinishQuestions: -1 } });
         }
         else {
@@ -235,11 +235,12 @@ const getTestQuestions = async (lecturerName, professionName, className, index) 
 //NEED (studentName,professionName,topicIndexes)
 //NO RETURN!! 
 const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
+    topicIndexesArray = topicIndexes.split(',').map(x => parseInt(x));
     if (topicIndexes.length > 1) {
-        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/subTopics/${topicIndexes[1]}/details`).update({ isFinishQuestions: 1 });
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details`).update({ isFinishQuestions: 1 });
     }
     else {
-        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes[0]}/details`).update({ isFinishQuestions: 1 });
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details`).update({ isFinishQuestions: 1 });
     }
 }
 
@@ -248,8 +249,9 @@ const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
 //NEED (studentName,professionName,topicIndexes,gradeType)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
 //RETURN TWO OPTION: 1. -1 VALUE NOT RECOMMEND , 2. Array type. 
 const getTopicGrades = async (studentName, professionName, topicIndexes, gradeType) => {
-    let gradeArr;
-    const topicIndexesArray=topicIndexes.split(',').map(x=>parseInt(x));
+    let gradeArr, topicIndexesArray = topicIndexes;
+    if (!Array.isArray(topicIndexesArray))
+        topicIndexesArray = topicIndexes.split(',').map(x => parseInt(x));
     if (topicIndexesArray.length > 1) {
         gradeArr = await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/${gradeType}`)).once("value");
         return gradeArr.val();
@@ -278,7 +280,7 @@ const setTopicGrades = async (studentName, professionName, topicIndexes, gradeTy
 //NEED (studentName,professionName,topicIndexes,gradeType,grade)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
 //RETURN the updated gradeArray!!
 const initialArrayToGrades = async (studentName, professionName, topicIndexes, gradeType, grade) => {
-    const topicIndexesArray=topicIndexes.split(',').map(x=>parseInt(x));
+    const topicIndexesArray = topicIndexes.split(',').map(x => parseInt(x));
     return await getTopicGrades(studentName, professionName, topicIndexesArray, gradeType).then(gradeArray => {
         if (Array.isArray(gradeArray)) {
             gradeArray.push(grade);
@@ -341,9 +343,9 @@ const deleteStudentFromClass = (studentDetails) => {
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
-    initialArrayToGrades,setIsFinishQuestions,getTopicGrades
+    initialArrayToGrades, setIsFinishQuestions, getTopicGrades
 };
 
 
-let x="1"
+let x = "1"
 console.log();

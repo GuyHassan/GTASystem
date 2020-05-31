@@ -5,12 +5,15 @@ import { getMaterialPages, getMaterialQuestions } from '../../../Redux/actions';
 import MaterialPages from '../Student/MaterialPages';
 import { Grid, Icon } from 'semantic-ui-react'
 import { server } from '../../../Apis/server';
+import history from '../../../history';
 
-const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Questions, match: { params: { type, keyCollection, indexTopic } } }) => {
+const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Questions, match: { params: { className, profession, type, keyCollection, indexTopic } } }) => {
     const [pages, setPages] = useState([])
     const [questions, setQuestions] = useState([])
     const [currentpPage, setCurrentPage] = useState({ page: { title: '', freeText: '', file: '', streamLink: '' }, index: '' })
     const [currentpQuestion, setCurrentQuestion] = useState({ question: { question: '', ans1: '', ans2: '', an3: '', ans4: '', correctAns: '' }, index: '' })
+    const [finishQuestion, setFinishQuestion] = useState(false);
+    const { user } = JSON.parse(localStorage.getItem("userCredential"))
     const onNextArrow = () => {
         setCurrentPage(prevState => {
             return prevState.index + 1 === Pages.length
@@ -29,10 +32,13 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Q
         //here need to impllement and send the 'answer' attribute to back and update the DB with a new answer !!!!
         if (!currentpQuestion.index + 1 === Questions.length) {
             setCurrentQuestion(prevState => { return { question: Questions[prevState.index + 1], index: prevState.index + 1 } })
-            server.patch()
+            server.patch(`/setArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&gradeType=${'studyGrade'}&grade=${answer}`)
         }
         else {
-            alert('Well Done, Finish the test !')
+            alert('Well Done, Finish the Questions !')
+            server.patch(`/setIsFinishQuestion?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}`)
+            server.patch(`/setArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&gradeType=${'studyGrade'}&grade=${answer}`)
+            history.push(`/MaterialView/${profession}/${className}`)
         }
     }
 
@@ -64,12 +70,21 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Q
             && setCurrentPage({ page: Pages[0], index: 0 })
     }, [Pages])
     useEffect(() => {
-        Questions.length
-            && setCurrentQuestion({ question: Questions[0], index: 0 })
+        server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&gradeType=${'studyGrade'}`).then(res => {
+            const lastQuestionIndex = res.data === -1 ? 0 : res.data.length;
+            !Questions.length === lastQuestionIndex
+                ? setCurrentQuestion({ question: Questions[lastQuestionIndex], index: lastQuestionIndex })
+                : setFinishQuestion(true)
+        })
+
     }, [Questions])
     return (
         <div className="displayMaterial">
-            <GridExampleInverted />
+            {finishQuestion && !type === 'MaterialPages'
+                ? <h1 style={{ textAlign: 'center', color: 'maroon' }}> Finish Questions !! </h1>
+                : <GridExampleInverted />
+            }
+
         </div>
     )
 }
