@@ -52,7 +52,7 @@ const getStudentsTree = async () => {
 }
 
 
-/* 
+/* s
 manage by needForSpecificClass boolean option , have 2 option!!! : 
     1.false - get all the student that not exist in specific class!! FOR know which one to get .
     2.true -  get the students that inside the class we send FOR view the students we have inside this class.
@@ -345,7 +345,3 @@ module.exports = {
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
     initialArrayToGrades, setIsFinishQuestions, getTopicGrades
 };
-
-
-let x = "1"
-console.log();
