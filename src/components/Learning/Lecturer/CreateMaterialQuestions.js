@@ -4,7 +4,7 @@ import { getMaterialQuestions } from '../../../Redux/actions';
 import { server } from '../../../Apis/server';
 import history from '../../../history';
 
-const details = { question: '', ans1: '', ans2: '', ans3: '', ans4: '', correctAns: '' }
+const details = { question: '', ans1: '', ans2: '', ans3: '', ans4: '', hint: '', correctAns: '' }
 
 const CreateMaterialQuestions = ({ getMaterialQuestions, materialQuestions, match: { params: { keyCollection, profession, className } } }) => {
     const [detailsQuestion, setDetailsQuestion] = useState(details);
@@ -68,6 +68,8 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, materialQuestions, matc
                 <input name="ans3" value={detailsQuestion.ans3} onChange={onChange} type="text" />
                 <label >Answer 4</label>
                 <input name="ans4" value={detailsQuestion.ans4} onChange={onChange} type="text" />
+                <label >Hint</label>
+                <input name="hint" value={detailsQuestion.hint} onChange={onChange} type="text" />
                 <label >Correct Answer</label>
                 <br />
                 <input name="correctAns" value={detailsQuestion.correctAns} onChange={onChange} type="text" style={{ width: '40px' }} />

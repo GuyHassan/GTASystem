@@ -2,13 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getClasses } from '../../../Redux/actions/index';
-// import '../../Style/GeneralComponents.css';
 
 const Professions = ({ children, getClasses, classes, match: { params } }) => {
     const [showButtonsID, setShowButtonsID] = useState('');
     const { isLecturer } = JSON.parse(localStorage.getItem('userCredential'));
-    // const typeUser = isLecturer ? '/LecturerView' : '/StudentView';
-    // to={`/LecturerView/ViewStudents/${params.id}/${classroom}`}
+   
     const Buttons = ({ idClass }) => {
         return showButtonsID === idClass
             && <div>
@@ -35,7 +33,7 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">
-                <h1 eclassName="titleComp">Classrooms</h1><br />
+                <h1 className="titleComp">Classrooms</h1><br />
                 {renderClasses()}
                 {children}
                 <br /><br />

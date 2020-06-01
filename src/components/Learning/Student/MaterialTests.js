@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 const checkBoxDefault = { ans1: false, ans2: false, ans3: false, ans4: false }
 
-const MaterialTests = ({ onClickNext, question: { question, ans1, ans2, ans3, ans4, correctAns }, numberPage }) => {
+const MaterialTests = ({ onClickNext, question: { question, ans1, ans2, ans3, ans4, correctAns, hint }, numberPage }) => {
     const [checkBoxState, setCheckBoxState] = useState(checkBoxDefault)
     const onChange = ({ target: { name } }) => {
         setCheckBoxState({ ...checkBoxDefault, [name]: true })
@@ -18,8 +18,21 @@ const MaterialTests = ({ onClickNext, question: { question, ans1, ans2, ans3, an
         }
 
     }
+    // const renderContent = () => {
+    //     return <h1></h1>
+    // }
+    // const onClickHint = () => {
+    //     <Modal
+    //         show={true}
+    //         title="Hint"
+    //         actions={renderAction()}
+    //         onDismiss={() => history.push("/LecturerView")}
+    //         className="ui container">
+    //         {renderContent()}
+    //     </Modal>
+    // }
     return (
-        <div style={{ textAlign: 'center' }}>
+        <div>
             <h1 className="titleComp" style={{ marginBottom: '20px' }}>{`Question Page  ${numberPage}`}</h1>
             <h3>{question}</h3>
             <input type="checkbox" name='ans1' checked={checkBoxState.ans1} onChange={onChange} /> {ans1} <br />
@@ -27,6 +40,7 @@ const MaterialTests = ({ onClickNext, question: { question, ans1, ans2, ans3, an
             <input type="checkbox" name='ans3' checked={checkBoxState.ans3} onChange={onChange} /> {ans3}<br />
             <input type="checkbox" name='ans4' checked={checkBoxState.ans4} onChange={onChange} /> {ans4}<br />
             <button style={{ margin: '20px' }} className='ui primary button' onClick={validate}>Next Question</button>
+            {hint && <button style={{ margin: '20px' }} className='ui primary button' /* onClick={onClickHint} */>Hint</button>}
         </div>
     )
 }
