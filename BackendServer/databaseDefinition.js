@@ -111,7 +111,7 @@ const initialArrayOfObj = (materialTree, type) => {
     let objArray = [];
     for (let i = 0; i < materialTree.length; i++) {
         if (type == "subTopicName" || (!(materialTree[i].hasOwnProperty("subTopics")))) {
-            objArray.push({ [type]: materialTree[i][type], keyCollection: materialTree[i].keyCollection, details: { testGrades: -1, studyGrades: -1, finalGrade: -1, needHelp: -1, isFinishQuestions: -1 } });
+            objArray.push({ [type]: materialTree[i][type], keyCollection: materialTree[i].keyCollection,feedback:null, details: { testGrades: -1, studyGrades: -1,finalStudyGrade:-1, finalTestGrade: -1, needHelp: -1, isFinishQuestions: -1 } });
         }
         else {
             objArray.push({ [type]: materialTree[i][type], details: { grades: -1, finalGrade: -1 } });
@@ -229,13 +229,15 @@ const getTestQuestions = async (lecturerName, professionName, className, index) 
 
 ///////////////////////////////////////////////////////////////////                  NEW               /////////////////////////////////////
 
-
+const getArrayIndexes =(stringIndexes)=>{
+    return stringIndexes.split(',').map(x => parseInt(x));
+}
 
 //function that update if the student finish the questions
 //NEED (studentName,professionName,topicIndexes)
 //NO RETURN!! 
 const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
-    topicIndexesArray = topicIndexes.split(',').map(x => parseInt(x));
+    const topicIndexesArray = getArrayIndexes(topicIndexes);
     if (topicIndexes.length > 1) {
         database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details`).update({ isFinishQuestions: 1 });
     }
@@ -251,7 +253,7 @@ const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
 const getTopicGrades = async (studentName, professionName, topicIndexes, gradeType) => {
     let gradeArr, topicIndexesArray = topicIndexes;
     if (!Array.isArray(topicIndexesArray))
-        topicIndexesArray = topicIndexes.split(',').map(x => parseInt(x));
+        topicIndexesArray = getArrayIndexes(topicIndexes);
     if (topicIndexesArray.length > 1) {
         gradeArr = await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/${gradeType}`)).once("value");
         return gradeArr.val();
@@ -276,11 +278,11 @@ const setTopicGrades = async (studentName, professionName, topicIndexes, gradeTy
 
 
 
-//FUNCTION to set grades AND RETURN the updated gradesArray ,we have 2 types of grades : 1.testGrades , 2.studyGrades 
+//FUNCTION to set grades ,we have 2 types of grades : 1.testGrades , 2.studyGrades 
 //NEED (studentName,professionName,topicIndexes,gradeType,grade)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
-//RETURN the updated gradeArray!!
+//NO RETURN !!!
 const initialArrayToGrades = async (studentName, professionName, topicIndexes, gradeType, grade) => {
-    const topicIndexesArray = topicIndexes.split(',').map(x => parseInt(x));
+    const topicIndexesArray = getArrayIndexes(topicIndexes);
     return await getTopicGrades(studentName, professionName, topicIndexesArray, gradeType).then(gradeArray => {
         if (Array.isArray(gradeArray)) {
             gradeArray.push(grade);
@@ -293,12 +295,55 @@ const initialArrayToGrades = async (studentName, professionName, topicIndexes, g
 }
 
 
+//INSIDE METHOD to set Finalgrade we have 2 types of Finalgrade :1.finalStudyGrade 2.finalTestGrade
+//WORKING FOR calFinalGrade!!! 
+//NEED (studentName,ProffessionName,topicIndexes,gradeType,finalGradeType)=> grade Type is string with two option : 1.'finalStudyGrade' => FOR STUDY!! 2. 'finalTestGrade' => FOR TEST!!
+//NO RETURN!!!
+const setFinalGrade = async (studentName, professionName, topicIndexes, finalGradeType, finalGrade) => {
+    const topicIndexesArray = getArrayIndexes(topicIndexes);
+    if (topicIndexes.length > 1) {
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/${finalGradeType}`).set(finalGrade);
+    }
+    else {
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/${finalGradeType}`).set(finalGrade);
+    }
+}
 
+//
+const getSubTopics =async(studentName,professionName,topicIndexes) =>{
+    const topicIndexesArray = getArrayIndexes(topicIndexes);
+    const subTopics= await database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics`).once("value");
+    return subTopics.val();
+}
+/*
+FUNCTION that calculate 2 option of grades :
+                                            1.studyGrades
+                                            2.testGrades
+//NEED (studentName,ProffessionName,topicIndexes,gradeType,finalGradeType)=>finalGradeType have 2 option :
+                                                                                                          1.finalStudyGrade
+                                                                                                          2.finalTestGrade
+NO RETURN VALUE!!
 
-
-
-
-
+*/
+const typeOfFinalGrades=["finalStudyGrade","finalTestGrade"];
+const calFinalGrade =(studentName,professionName,topicIndexes,finalGradeType,gradeType)=>{
+    //for subtopics and topics without subtopics
+    if(finalGradeType in typeOfFinalGrades){
+        getTopicGrades(studentName,professionName,topicIndexes,gradeType).then(gradeArray=>{
+            const finalGrade=gradeArray.reduce((a,b)=>a+b,0)/gradeArray.length;
+            setFinalGrade(studentName,professionName,topicIndexes,finalGradeType,finalGrade);
+        });
+    }
+    //only for topics with subTopics
+    else{
+        getSubTopics(studentName,professionName,topicIndexes).then(subTopicArray=>{
+            const grades=subTopicArray.map(subTopic=>subTopic.details.finalTestGrade);
+            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/grades`).set(grades);
+            const finalGrade=grades.reduce((x,y)=>x+y,0)/grades.length;
+            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/finalGrade`).set(finalGrade);
+        });
+    }
+}
 
 
 
@@ -316,26 +361,6 @@ const deleteStudentFromClass = (studentDetails) => {
     deleteTree(`classrooms/${studentDetails.lecturerName}/${studentDetials.professionName}/${studentDetails.className}/studnets/${studentDetails.studentName}`);
     deleteTree(`students/${studentDetails.studentName}/materials/${studentDetials.professionName}/`);
 }
-
-
-//IsFinishPages("guy123","english",[0,1]);
-
-////example for addMaterials
-
-
-/*
-{ subTopics:
-   [ { subTopicName: 'rational shvarim' },
-     { subTopicName: 'regular shvarim' } ],
-  topicName: 'shvarim' } [ { topicName: 'multiple' } ]
-*/
-
-
-
-
-
-
-
 
 
 
