@@ -60,9 +60,15 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         })
     }
     const checkIsFinalMaterial = (material) => {
-        return material.subTopics
-            ? material.subTopics.every(val => val.details.isFinishQuestions !== -1)
-            : material.details.isFinishQuestions !== -1
+
+
+
+
+        
+        if (!isLecturer)
+            return material.subTopics
+                ? material.subTopics.every(val => val.details.isFinishQuestions !== -1)
+                : material.details.isFinishQuestions !== -1
     }
     const subTopicRender = (subTopic, parentIndex) => {
         return subTopic.map((topic, idTopic) => {
