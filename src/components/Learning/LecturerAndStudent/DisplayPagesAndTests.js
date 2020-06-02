@@ -79,7 +79,6 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Q
         })
     }, [Questions])
 
-    console.log('blabla ', Questions.length, finishQuestion)
     return (
         <div>
             {Questions.length <= finishQuestion && type === 'MaterialQuestions'

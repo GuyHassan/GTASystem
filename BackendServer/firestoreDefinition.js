@@ -28,6 +28,7 @@ const addLinkToTopic = async (topicName) => {
     return key.id;
 }
 
+
 //function for get array of pages or question depending on the type 
 //NEED (keyCollection,type)
 //RETURN Array of pages or questions depending on the inserted type

@@ -106,8 +106,6 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                             {(material.subTopics || !material.keyCollection) && <Icon onClick={() => { updateMaterials(idMaterial) }}
                                 name='plus circle' size='large' style={{ margin: '10px' }} />}
                         </div>
-                        <Icon onClick={() => { updateMaterials(idMaterial) }}
-                                name='plus circle' size='large' style={{ margin: '10px' }} />
                         {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
                     </li>
                 </ul>
