@@ -13,7 +13,6 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const [showButtonsID, setShowButtonsID] = useState('');
     const { isLecturer, user } = JSON.parse(localStorage.getItem('userCredential'))
     const { profession, className } = params;
-
     const onClickFinalTest = () => {
         alert("Final Test !!");
     }
@@ -25,8 +24,10 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                 ? <div style={{ margin: '10px' }}>
                     <Link to={`/LecturerView/CreateMaterialPages/${profession}/${className}/${keyCollection}`}
                         className='ui basic black button small'>Add Pages</Link>
-                    <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}`}
-                        className='ui basic black button small'>Add Question</Link>
+                    <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}/questions`}
+                        className='ui basic black button small'>Add Practice Question</Link>
+                    <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}/testQuestions`}
+                        className='ui basic black button small'>Add Test Question</Link>
                 </div>
                 : <div style={{ margin: '10px' }}>
                     <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/MaterialPages`}
@@ -60,11 +61,6 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         })
     }
     const checkIsFinalMaterial = (material) => {
-
-
-
-
-        
         if (!isLecturer)
             return material.subTopics
                 ? material.subTopics.every(val => val.details.isFinishQuestions !== -1)
@@ -93,10 +89,10 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                     </li>
 
                 </ul>
-
         })
     }
     const renderEditMode = () => {
+        console.log(stateMaterial)
         return stateMaterial.map((material, idMaterial) => {
             return (
                 <ul key={idMaterial} >
@@ -107,8 +103,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                 defaultValue={material.topicName}
                                 onChange={e => { updateMaterials(idMaterial, e.target.value) }}
                             />
-
-                            {material.subTopics && <Icon onClick={() => { updateMaterials(idMaterial) }}
+                            {(material.subTopics || !material.keyCollection) && <Icon onClick={() => { updateMaterials(idMaterial) }}
                                 name='plus circle' size='large' style={{ margin: '10px' }} />}
                         </div>
                         {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
@@ -121,6 +116,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
 
     const renderMaterials = () => {
         return stateMaterial.map((material, idMaterial) => {
+            const finalExamRoute = `/StudentView/DisplayMaterials/${profession}/${className}/${material.keyCollection}/${idMaterial}/MaterialQuestions`;
             return (
                 <div className="item" key={idMaterial}>
                     <div className="content" style={{ color: '#1a75ff' }}>
@@ -131,10 +127,10 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                 </h2>
                                 {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
                                 <Buttons topic={material} indexes={idMaterial} />
-                                <Link to='/' className="iconExam" style={checkIsFinalMaterial(material) ? {} : { pointerEvents: 'none' }}>
+                                {!isLecturer && <Link to={finalExamRoute} className="iconExam" style={checkIsFinalMaterial(material) ? {} : { pointerEvents: 'none' }}>
                                     <span style={{ fontWeight: '700' }}>Final Exam</span>
                                     <Icon name='file outline' size='large' ></Icon>
-                                </Link>
+                                </Link>}
                             </li>
                         </ul>
                     </div>
@@ -169,6 +165,6 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     )
 }
 const mapStateToProps = (state) => {
-    return { materials: Object.values(state.materials) }
+    return { materials: Object.values(state.materialTopics) }
 }
 export default connect(mapStateToProps, { getMaterials })(MaterialView);

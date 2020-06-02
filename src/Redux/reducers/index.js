@@ -50,14 +50,17 @@ const materialQuestions = (state = [], action) => {
     switch (action.type) {
         case 'GET_MATERIAL_QUESTIONS':
             return action.payload;
+        case 'GET_MATERIAL_TEST_QUESTIONS':
+            return action.payload;
         default:
             return state;
     }
 }
+
 export default combineReducers({
     form: formReducer,
     whoIsOnline: currentUserReducer,
-    materials: materialsReducers,
+    materialTopics: materialsReducers,
     materialPages,
     materialQuestions,
     classes,
