@@ -346,7 +346,6 @@ const getTestQuestions = async (studentName, professionName,topicIndex) => {
     return getTestQuestionsFromFirestore(keyCollectionArray);
 }
 
-getTestQuestions("guy123","english",0).then(val=>{console.log(val)});
 
 //DELETE TOPIC/SUBTOPIC
 //NEED (lecturerName,professionName,className,topicDetails)

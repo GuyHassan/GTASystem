@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { getMaterialQuestions } from '../../../Redux/actions';
+import { getMaterialQuestions, getMaterialExamQuestions } from '../../../Redux/actions';
 import { server } from '../../../Apis/server';
 import history from '../../../history';
 
 const details = { question: '', ans1: '', ans2: '', ans3: '', ans4: '', hint: '', correctAns: '' }
 
-const CreateMaterialQuestions = ({ getMaterialQuestions, materialQuestions, match: { params: { keyCollection, profession, className } } }) => {
+const CreateMaterialQuestions = ({ getMaterialQuestions, getMaterialExamQuestions, materialQuestions, match: { params: { keyCollection, profession, className, type } } }) => {
     const [detailsQuestion, setDetailsQuestion] = useState(details);
     const [listQuestions, setListQuestions] = useState([])
     const [counterQuestions, setCounterQuestions] = useState('');
@@ -35,12 +35,11 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, materialQuestions, matc
         }
     }
     const onFinish = () => {
-
         if (Object.values(detailsQuestion).some(value => { return value !== ''; }))
             setErrorMessage('Must Enter NextPage Before Finish!');
+
         else if (listQuestions.length) {
-            server.post('/addTopicMatrials', { newArr: listQuestions, keyCollection, type: 'questions' }).then(res => {
-                console.log(listQuestions)
+            server.post('/addTopicMaterials', { newArr: listQuestions, keyCollection, type }).then(res => {
                 alert("Questions Uploaded !");
                 history.push(`/MaterialView/${profession}/${className}`);
             })
@@ -48,14 +47,16 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, materialQuestions, matc
 
     }
     useEffect(() => {
-        getMaterialQuestions(keyCollection)
-    }, [getMaterialQuestions, keyCollection])
+        type === 'questions'
+            ? getMaterialQuestions(keyCollection)
+            : getMaterialExamQuestions(keyCollection);
+    }, [getMaterialQuestions, getMaterialExamQuestions, keyCollection])
     useEffect(() => {
         setCounterQuestions(materialQuestions.length)
     }, [materialQuestions])
     return (
         <div>
-            <h1 className="titleComp">{`Page ${counterQuestions}`}</h1>
+            <h1 className="titleComp">{`Question Page ${counterQuestions}`}</h1>
             <form className="ui error form">
                 <label >Question</label>
                 <textarea name="question" value={detailsQuestion.question} onChange={onChange} placeholder="Write a Question?" cols="100" rows="3" />
@@ -88,4 +89,4 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, materialQuestions, matc
 const mapStateToProps = (state) => {
     return { materialQuestions: state.materialQuestions }
 }
-export default connect(mapStateToProps, { getMaterialQuestions })(CreateMaterialQuestions);
+export default connect(mapStateToProps, { getMaterialQuestions, getMaterialExamQuestions })(CreateMaterialQuestions);
