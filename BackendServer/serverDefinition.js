@@ -3,7 +3,7 @@
 const { addMaterials, getMaterials, getProfession,
   addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
   addUsers, existInDB, getClassrooms, addClassrooms, setIsFinishQuestions,
-  initialArrayToGrades, getTopicGrades
+  initialArrayToGrades, getTopicGrades,getTestQuestions
 } = require("./databaseDefinition");
 
 const { getArrayFromFirestore, addTopicMaterial } = require("./firestoreDefinition");
@@ -180,6 +180,19 @@ app.get("/getArrayGrade", (req, res) => {
   });
 });
 
+
+
+//NEED (studentName, professionName,topicIndex)=> the index of the topic only !!!
+//NEED THIS ROUTE /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
+app.get("getTestQuestions",(req,res)=>{
+  const {studentName, professionName,topicIndex} =req.query;
+  getTestQuestions(studentName, professionName,topicIndex).then(testQuestion=>{
+    res.send(testQuestion);
+  });
+});
+
+
+
 //////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
 
 //NEED {keyCollection,type}=> type is pages or questions
@@ -190,12 +203,13 @@ app.get("/getTopicMaterials", (req, res) => {
   });
 });
 
-//NEED {keyCollection,type}=> type is pages or questions
+//NEED {keyCollection,type}=> type is pages or questions or testQuestions
 app.post("/addTopicMatrials", (req, res) => {
   const { keyCollection, newArr, type } = req.body;
   addTopicMaterial(keyCollection, newArr, type);
   res.send(true);
 });
+
 
 
 

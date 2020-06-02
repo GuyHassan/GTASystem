@@ -39,9 +39,6 @@ const getArrayFromFirestore = async (keyCollection, type = null) => {
     });
 }
 
-const deleteArrayFromFirestore = (keyCollection, type) => {
-
-}
 
 //WORKED!!!!
 //addTopicMaterial worked with the arrays : 1. questions    2. pages     3. testQuestion
@@ -66,9 +63,9 @@ const addTopicMaterial = (keyCollection, newArr, type) => {
 
 //inside method !! to get Questions for specific keyCollection
 // RETURN obj : {keyCollection string,testQuestion array}
-const getSpecificTestQuestion = async (keyCollection) => {
+const getSpecificTestQuestion = async (keyCollection,index) => {
     return await firestore.collection("topics").doc(keyCollection).get().then(details => {
-        const routeDict = { "keyCollection": keyCollection, "testQuestions": details.data().testQuestions };
+        const routeDict = { "index":index,"keyCollection": keyCollection, "testQuestions": details.data().testQuestions };
         return routeDict;
     })
 }
@@ -79,8 +76,8 @@ const getSpecificTestQuestion = async (keyCollection) => {
 //RETURN an array like this : [{keyCollection,testQuestion},{keyCollection,testQuestion}]
 const getTestQuestionsFromFirestore = async (keyCollectionArray) => {
     let testQuestions = [];
-    keyCollectionArray.forEach((keyCollection) => {
-        testQuestions.push(getSpecificTestQuestion(keyCollection));
+    keyCollectionArray.forEach((keyCollection,index) => {
+        testQuestions.push(getSpecificTestQuestion(keyCollection,index));
     });
     testQuestions = await Promise.all(testQuestions);
     return testQuestions;
@@ -89,14 +86,11 @@ const getTestQuestionsFromFirestore = async (keyCollectionArray) => {
 
 
 
+const deleteArrayFromFirestore = (keyCollection, type) => {
+
+}
 
 
-
-
-//getSizeArray("Tdpx2TFfzIEJOQbTMThw","testQuestions").then(val=>{console.log(val)});
-
-
-//checkAnswer("Tdpx2TFfzIEJOQbTMThw",0,"1").then(val=>{console.log(val)});
 
 
 module.exports = { addLinkToTopic, getArrayFromFirestore, addTopicMaterial, getTestQuestionsFromFirestore };

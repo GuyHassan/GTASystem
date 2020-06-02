@@ -1,5 +1,5 @@
 const firebase = require("./firebaseDefinition");
-const { addKeyCollectionToTopic, getTestQuestionsFromFirestore, getSizeArray } = require("./firestoreDefinition");
+const { addKeyCollectionToTopic, getTestQuestionsFromFirestore } = require("./firestoreDefinition");
 const database = firebase.database();
 
 
@@ -114,7 +114,7 @@ const initialArrayOfObj = (materialTree, type) => {
             objArray.push({ [type]: materialTree[i][type], keyCollection: materialTree[i].keyCollection,feedback:null, details: { testGrades: -1, studyGrades: -1,finalStudyGrade:-1, finalTestGrade: -1, needHelp: -1, isFinishQuestions: -1 } });
         }
         else {
-            objArray.push({ [type]: materialTree[i][type], details: { grades: -1, finalGrade: -1 } });
+            objArray.push({ [type]: materialTree[i][type], details: { testGrades: -1, finalTestGrade: -1 } });
         }
         if (materialTree[i].hasOwnProperty("subTopics")) {
             objArray[i]["subTopics"] = initialArrayOfObj(materialTree[i].subTopics, "subTopicName");
@@ -216,17 +216,6 @@ const getMaterials = async (username, professionName, className, isLecturer) => 
 
 
 
-//function that give the testQuestion for the specific topic 
-//NEED (lecturerName,professionName,className,index)=>the index is the topicName
-//RETURN array => [{keyCollection,testQuestions},{keyCollection,testQuestions}]
-const getTestQuestions = async (lecturerName, professionName, className, index) => {
-    const topicTree = (await (database.ref(`classrooms/${lecturerName}/${professionName}/${className}/topics/${index}`).once("value"))).val();
-    const keyCollectionArray = topicTree.hasOwnProperty("subTopics")
-        ? await topicTree.subTopics.map(topic => topic.keyCollection)
-        : [topicTree.keyCollection];
-    return getTestQuestionsFromFirestore(keyCollectionArray);
-}
-
 ///////////////////////////////////////////////////////////////////                  NEW               /////////////////////////////////////
 
 const getArrayIndexes =(stringIndexes)=>{
@@ -309,7 +298,7 @@ const setFinalGrade = async (studentName, professionName, topicIndexes, finalGra
     }
 }
 
-//
+//inside function to get subtopics for specific topicIndex
 const getSubTopics =async(studentName,professionName,topicIndexes) =>{
     const topicIndexesArray = getArrayIndexes(topicIndexes);
     const subTopics= await database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics`).once("value");
@@ -322,6 +311,7 @@ FUNCTION that calculate 2 option of grades :
 //NEED (studentName,ProffessionName,topicIndexes,gradeType,finalGradeType)=>finalGradeType have 2 option :
                                                                                                           1.finalStudyGrade
                                                                                                           2.finalTestGrade
+                                                                                                          3.finalGrade => ONLY FOR TOPICS WITH SUBTOPICS!!!
 NO RETURN VALUE!!
 
 */
@@ -338,15 +328,25 @@ const calFinalGrade =(studentName,professionName,topicIndexes,finalGradeType,gra
     else{
         getSubTopics(studentName,professionName,topicIndexes).then(subTopicArray=>{
             const grades=subTopicArray.map(subTopic=>subTopic.details.finalTestGrade);
-            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/grades`).set(grades);
+            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/testGrades`).set(grades);
             const finalGrade=grades.reduce((x,y)=>x+y,0)/grades.length;
-            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/finalGrade`).set(finalGrade);
+            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/finalTestGrade`).set(finalGrade);
         });
     }
 }
 
+//function that give the testQuestion for the specific topic 
+//NEED (lecturerName,professionName,className,index)=>the index is the topicName
+//RETURN array => [{keyCollection,testQuestions},{keyCollection,testQuestions}]
+const getTestQuestions = async (studentName, professionName,topicIndex) => {
+    const topicTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndex}`).once("value"))).val();
+    const keyCollectionArray = topicTree.hasOwnProperty("subTopics")
+        ? await topicTree.subTopics.map(subTopic => subTopic.keyCollection)
+        : [topicTree.keyCollection];
+    return getTestQuestionsFromFirestore(keyCollectionArray);
+}
 
-
+getTestQuestions("guy123","english",0).then(val=>{console.log(val)});
 
 //DELETE TOPIC/SUBTOPIC
 //NEED (lecturerName,professionName,className,topicDetails)
@@ -368,5 +368,5 @@ const deleteStudentFromClass = (studentDetails) => {
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
-    initialArrayToGrades, setIsFinishQuestions, getTopicGrades
+    initialArrayToGrades, setIsFinishQuestions, getTopicGrades,getTestQuestions
 };
