@@ -64,7 +64,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
 
 
 
-        
+
         if (!isLecturer)
             return material.subTopics
                 ? material.subTopics.every(val => val.details.isFinishQuestions !== -1)
@@ -108,9 +108,11 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                 onChange={e => { updateMaterials(idMaterial, e.target.value) }}
                             />
 
-                            {material.subTopics && <Icon onClick={() => { updateMaterials(idMaterial) }}
-                                name='plus circle' size='large' style={{ margin: '10px' }} />}
+                            <Icon onClick={() => { updateMaterials(idMaterial) }}
+                                name='plus circle' size='large' style={{ margin: '10px' }} />
                         </div>
+                        <Icon onClick={() => { updateMaterials(idMaterial) }}
+                                name='plus circle' size='large' style={{ margin: '10px' }} />
                         {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
                     </li>
                 </ul>

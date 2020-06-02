@@ -56,7 +56,7 @@ const addTopicMaterial = (keyCollection, newArr, type) => {
         }
         else {
             const existTestQuestions = details.data().testQuestions;
-            firestore.collection("topics").doc(keyCollection).set({ testQuestions: existTestQuestions.concat(newArr) });
+            firestore.collection("topics").doc(keyCollection).update({ testQuestions: existTestQuestions.concat(newArr) });
         }
     });
 }
