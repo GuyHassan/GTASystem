@@ -9,12 +9,21 @@ import '../../Style/MaterialView.css';
 
 const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const [stateMaterial, setStateMaterial] = useState([]);
+    const [minGrade, setMinGrade] = useState('')
     const [editMode, setEditMode] = useState(false);
     const [showButtonsID, setShowButtonsID] = useState('');
     const { isLecturer, user } = JSON.parse(localStorage.getItem('userCredential'))
     const { profession, className } = params;
     const onClickFinalTest = () => {
         alert("Final Test !!");
+    }
+    const submitMinGrade = (e) => {
+        e.preventDefault();
+        if (!(minGrade >= 1 && minGrade <= 100))
+            alert("Min Grade Must Be Between 1-100")
+        else
+            //implement backend route
+            console.log(minGrade)
     }
 
     const Buttons = ({ topic: { subTopicName, keyCollection, topicName }, indexes }) => {
@@ -28,6 +37,11 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                         className='ui basic black button small'>Add Practice Question</Link>
                     <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}/testQuestions`}
                         className='ui basic black button small'>Add Test Question</Link>
+                    <form onChange={({ target: { value } }) => setMinGrade(value)} onSubmit={submitMinGrade}>
+                        <label>Min Grade: </label>
+                        <input name="minGrade" value={minGrade} type="text" style={{ margin: '10px', height: '30px' }} />
+                        <button className="ui basic black button tiny" style={{ height: '27px' }} >Submit</button>
+                    </form>
                 </div>
                 : <div style={{ margin: '10px' }}>
                     <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/MaterialPages`}
@@ -132,8 +146,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                     <Icon name='file outline' size='large' ></Icon>
                                 </Link>}
                                 <br /><br />
-                                {isLecturer && <label>Min Grade: </label>}
-                                {isLecturer && <input name="correctAns" value={1} /* onChange={onChange} */ type="text" style={{ marginLeft: '10px', width: '40px' }} />}
+
                             </li>
                         </ul>
                     </div>

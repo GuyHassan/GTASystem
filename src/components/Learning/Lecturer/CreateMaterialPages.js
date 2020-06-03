@@ -50,18 +50,10 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
     }
     const onFinish = () => {
         if (validate('onFinish'))
-<<<<<<< HEAD
-            
-            server.post('/addTopicMaterials', { newArr: listPages, keyCollection, type: 'pages' }).then(res => {
-            alert("Pages Uploaded !");
-            history.push(`/MaterialView/${profession}/${className}`);
-        })
-=======
             server.post('/addTopicMaterials', { newArr: listPages, keyCollection, type: 'pages' }).then(res => {
                 alert("Pages Uploaded !");
                 history.push(`/MaterialView/${profession}/${className}`);
             })
->>>>>>> ac32de13ff445ff77ed4110fb7dd73f3df1d3ef8
     }
     useEffect(() => {
         getMaterialPages(keyCollection);
