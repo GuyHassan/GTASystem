@@ -1,12 +1,13 @@
 
 //for databaseDefinition!!
 const { addMaterials, getMaterials, getProfession,
-  addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
-  addUsers, existInDB, getClassrooms, addClassrooms, setIsFinishQuestions,
-  initialArrayToGrades, getTopicGrades,getTestQuestions
-} = require("./databaseDefinition");
+      addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
+      addUsers, existInDB, getClassrooms, addClassrooms, setIsFinishQuestions,
+      initialArrayToGrades, getTopicGrades,getTestQuestions
+      } = require("./databaseDefinition");
 
-const { getArrayFromFirestore, addTopicMaterial } = require("./firestoreDefinition");
+const { getArrayFromFirestore, addTopicMaterial,
+        setPassingGrade,getPassingGrade } = require("./firestoreDefinition");
 
 const PORT = process.env.PORT || 3005;
 const express = require("express");
@@ -145,7 +146,8 @@ app.get("/getMaterials", (req, res) => {
 });
 
 
-//function for add materials NEED : {lecturerName, professionName, className, materialsTree}
+//function for add materials
+//NEED : {lecturerName, professionName, className, materialsTree}
 app.post("/addMaterials", (req, res) => {
   addMaterials(req.body).then(response => {
     res.send(response);
@@ -154,14 +156,14 @@ app.post("/addMaterials", (req, res) => {
 
 
 //NEED (studentName,professionName,topicIndexes)
-//NEED THIS ROUTE  : /setIsFinishQuestion?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
+//NEED THIS ROUTE  => /setIsFinishQuestion?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
 app.patch("/setIsFinishQuestion", (req, res) => {
   const { studentName, professionName, topicIndexes } = req.query;
   setIsFinishQuestions(studentName, professionName, topicIndexes);
 });
 
 //NEED (studentName,professionName,topicIndexes,gradeType,grade)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
-//NEED THIS ROUTE : /setArrayGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}&grade=${grade}
+//NEED THIS ROUTE => /setArrayGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}&grade=${grade}
 app.patch("/setArrayGrade", (req, res) => {
   const { studentName, professionName, topicIndexes, gradeType, grade } = req.query;
   console.log(req.query)
@@ -172,7 +174,7 @@ app.patch("/setArrayGrade", (req, res) => {
 
 
 //NEED (studentName,professionName,topicIndexes,gradeType)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
-//NEED THIS ROUTE : /getArrayGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}
+//NEED THIS ROUTE => /getArrayGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}
 app.get("/getArrayGrade", (req, res) => {
   const { studentName, professionName, topicIndexes, gradeType } = req.query;
   getTopicGrades(studentName, professionName, topicIndexes, gradeType).then(gradesArr => {
@@ -183,7 +185,7 @@ app.get("/getArrayGrade", (req, res) => {
 
 
 //NEED (studentName, professionName,topicIndex)=> the index of the topic only !!!
-//NEED THIS ROUTE /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
+//NEED THIS ROUTE => /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
 app.get("getTestQuestions",(req,res)=>{
   const {studentName, professionName,topicIndex} =req.query;
   getTestQuestions(studentName, professionName,topicIndex).then(testQuestion=>{
@@ -210,6 +212,23 @@ app.post("/addTopicMaterials", (req, res) => {
   res.send(true);
 });
 
+//setFunction for passingGrade
+//NEED (keyCollection,passingGrade)
+//NEED THIS ROUTE => /setPassingGrade?keyCollection=${keyCollection}&passingGrade=${passingGrade}
+app.patch("/setPassingGrade",(req,res)=>{
+  const {keyCollection,passingGrade}=req.query;
+  setPassingGrade(keyCollection,passingGrade);
+})
+
+//getFunction for passingGrade 
+//NEED (keyCollection)
+//NEED THIS ROUTE => /getPassingGrade?keyCollection=${keyCollection}
+app.get("/getPassingGrade",(req,res)=>{
+  const {keyCollection}=req.query;
+  getPassingGrade(keyCollection).then(grade=>{
+    res.send(grade.toString());
+  });
+});
 
 
 

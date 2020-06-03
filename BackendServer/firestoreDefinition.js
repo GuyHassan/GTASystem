@@ -24,7 +24,7 @@ const firestore = firebase.firestore();
 //function to ADD Link for specific topic FOR USE TO DATABASE.JS
 //NEED topicname
 const addLinkToTopic = async (topicName) => {
-    const key = await (firestore.collection("topics").add({ topicName: topicName, pages: [], questions: [], testQuestions: [] }));
+    const key = await (firestore.collection("topics").add({ topicName: topicName, pages: [], questions: [], testQuestions: [],passingGrade:-1 }));
     return key.id;
 }
 
@@ -40,6 +40,15 @@ const getArrayFromFirestore = async (keyCollection, type = null) => {
                 ? details.data().questions
                 : details.data().testQuestions;
     });
+}
+
+//function to set the passing grade for topic/subTopic
+const setPassingGrade = (keyCollection,passingGrade)=>{
+    firestore.collection("topics").doc(keyCollection).update({passingGrade:passingGrade});
+}
+//
+const getPassingGrade = async(keyCollection)=>{
+    return (await (firestore.collection("topics").doc(keyCollection).get())).data().passingGrade;
 }
 
 
@@ -96,4 +105,6 @@ const deleteArrayFromFirestore = (keyCollection, type) => {
 
 
 
-module.exports = { addLinkToTopic, getArrayFromFirestore, addTopicMaterial, getTestQuestionsFromFirestore };
+module.exports = { addLinkToTopic, getArrayFromFirestore, addTopicMaterial, 
+                   getTestQuestionsFromFirestore,setPassingGrade,getPassingGrade
+                 };
