@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getMaterials } from '../../../Redux/actions';
 import { server } from '../../../Apis/server';
 import { Link } from "react-router-dom";
-import { Icon } from 'semantic-ui-react'
+import { Icon, Label } from 'semantic-ui-react'
 import history from '../../../history';
 import '../../Style/MaterialView.css';
 
@@ -131,6 +131,9 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                     <span style={{ fontWeight: '700' }}>Final Exam</span>
                                     <Icon name='file outline' size='large' ></Icon>
                                 </Link>}
+                                <br /><br />
+                                {isLecturer && <label>Min Grade: </label>}
+                                {isLecturer && <input name="correctAns" value={1} /* onChange={onChange} */ type="text" style={{ marginLeft: '10px', width: '40px' }} />}
                             </li>
                         </ul>
                     </div>

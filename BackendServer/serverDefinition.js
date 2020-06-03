@@ -176,7 +176,10 @@ app.patch("/setArrayGrade", (req, res) => {
 app.get("/getArrayGrade", (req, res) => {
   const { studentName, professionName, topicIndexes, gradeType } = req.query;
   getTopicGrades(studentName, professionName, topicIndexes, gradeType).then(gradesArr => {
-    res.send(gradesArr);
+    if(Array.isArray(gradesArr)){
+      res.send(gradesArr);
+    }
+    res.sendStatus(200);
   });
 });
 

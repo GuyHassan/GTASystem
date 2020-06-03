@@ -70,8 +70,14 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Q
             && setCurrentPage({ page: Pages[0], index: 0 })
     }, [Pages])
     useEffect(() => {
+        // if (Questions.length) {
+        //     setFinishQuestion(Questions)
+        //     setCurrentQuestion({ question: Questions[0], index: 0 })
+        // }
         server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&gradeType=${'studyGrades'}`).then(res => {
-            const lastQuestionIndex = res.data === -1 ? 0 : res.data.length;
+            console.log('lastIndex - ', res)
+            const lastQuestionIndex = res.data === "OK" ? 0 : res.data.length;
+            // console.log('lastIndex - ', lastQuestionIndex)
             if (Questions.length) {
                 setFinishQuestion(lastQuestionIndex)
                 setCurrentQuestion({ question: Questions[lastQuestionIndex], index: lastQuestionIndex })
@@ -79,7 +85,6 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Q
         })
     }, [Questions])
 
-    console.log('blabla ', Questions.length, finishQuestion)
     return (
         <div>
             {Questions.length <= finishQuestion && type === 'MaterialQuestions'
