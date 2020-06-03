@@ -1,5 +1,5 @@
 const firebase = require("./firebaseDefinition");
-const { addKeyCollectionToTopic, getTestQuestionsFromFirestore } = require("./firestoreDefinition");
+const { addLinkToTopic, getTestQuestionsFromFirestore } = require("./firestoreDefinition");
 const database = firebase.database();
 
 
@@ -135,7 +135,7 @@ const addKeyCollection = async (materialTree, type) => {
         }
         else {
             if (!(materialTree[i].hasOwnProperty("keyCollection"))) {
-                keyCollection = (await addKeyCollectionToTopic(materialTree[i][type]));
+                keyCollection = (await addLinkToTopic(materialTree[i][type]));
                 materialTree[i]['keyCollection'] = keyCollection;
             }
         }

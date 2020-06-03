@@ -28,6 +28,7 @@ const addLinkToTopic = async (topicName) => {
     return key.id;
 }
 
+
 //function for get array of pages or question depending on the type 
 //NEED (keyCollection,type)
 //RETURN Array of pages or questions depending on the inserted type
@@ -58,7 +59,7 @@ const addTopicMaterial = (keyCollection, newArr, type) => {
         }
         else {
             const existTestQuestions = details.data().testQuestions;
-            firestore.collection("topics").doc(keyCollection).set({ testQuestions: existTestQuestions.concat(newArr) });
+            firestore.collection("topics").doc(keyCollection).update({ testQuestions: existTestQuestions.concat(newArr) });
         }
     });
 }

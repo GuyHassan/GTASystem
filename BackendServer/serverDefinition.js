@@ -206,7 +206,7 @@ app.get("/getTopicMaterials", (req, res) => {
   });
 });
 
-//NEED {keyCollection,type}=> type is pages or questions or testQuestions
+//NEED {keyCollection,newArr,type}=> type is pages or questions or testQuestions
 app.post("/addTopicMaterials", (req, res) => {
   const { keyCollection, newArr, type } = req.body;
   addTopicMaterial(keyCollection, newArr, type);
