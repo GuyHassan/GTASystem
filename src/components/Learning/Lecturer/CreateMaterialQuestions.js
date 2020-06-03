@@ -4,7 +4,7 @@ import { getMaterialQuestions, getMaterialExamQuestions } from '../../../Redux/a
 import { server } from '../../../Apis/server';
 import history from '../../../history';
 
-const details = { question: '', ans1: '', ans2: '', ans3: '', ans4: '', hint: '', correctAns: '' }
+const details = { question: '', ans1: '', ans2: '', ans3: '', ans4: '', hint: '', correctAns: '', minGrade: '' }
 
 const CreateMaterialQuestions = ({ getMaterialQuestions, getMaterialExamQuestions, materialQuestions, match: { params: { keyCollection, profession, className, type } } }) => {
     const [detailsQuestion, setDetailsQuestion] = useState(details);
@@ -37,7 +37,6 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, getMaterialExamQuestion
     const onFinish = () => {
         if (Object.values(detailsQuestion).some(value => { return value !== ''; }))
             setErrorMessage('Must Enter NextPage Before Finish!');
-
         else if (listQuestions.length) {
             server.post('/addTopicMaterials', { newArr: listQuestions, keyCollection, type }).then(res => {
                 alert("Questions Uploaded !");
@@ -78,7 +77,6 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, getMaterialExamQuestion
                 <div className='ui error message header' style={{ fontSize: '1em', marginBottom: '10px', marginTop: '-15px' }}>
                     {errorMessage}
                 </div>
-
             </form>
             <button onClick={onNextPage} className="ui button primary"> Next Page </button>
             <button onClick={onFinish} className="ui button black"> Finish </button>
