@@ -13,10 +13,11 @@ import MaterialView from "./LecturerAndStudent/MaterialView";
 import CreateMaterialPages from "./Lecturer/CreateMaterialPages";
 import CreateMaterialQuestions from "./Lecturer/CreateMaterialQuestions";
 import DisplayPagesAndTests from "./LecturerAndStudent/DisplayPagesAndTests";
+import DisplayHint from "./Student/DisplayHint";
 const LearningManagement = () => {
     return (
         <Switch>
-            {/* <ProtectedRoute path={`/${('LecturerView', 'StudentView')}/StudyMaterial`} exact component={StudyMaterials} /> */}
+            <ProtectedRoute path="/ShowHint" exact component={DisplayHint} />
             <ProtectedRoute path="/LecturerView/CreateMaterialQuestions/:profession/:className/:keyCollection/:type" exact component={CreateMaterialQuestions} />
             <ProtectedRoute path="/LecturerView/CreateMaterialPages/:profession/:className/:keyCollection" exact component={CreateMaterialPages} />
             <ProtectedRoute path="/LecturerView/Profession" exact component={LecturerView} />

@@ -4,7 +4,7 @@ import { getMaterialQuestions, getMaterialExamQuestions } from '../../../Redux/a
 import { server } from '../../../Apis/server';
 import history from '../../../history';
 
-const details = { question: '', ans1: '', ans2: '', ans3: '', ans4: '', hint: '', correctAns: '', minGrade: '' }
+const details = { question: '', ans1: '', ans2: '', ans3: '', ans4: '', hint: '', correctAns: '' }
 
 const CreateMaterialQuestions = ({ getMaterialQuestions, getMaterialExamQuestions, materialQuestions, match: { params: { keyCollection, profession, className, type } } }) => {
     const [detailsQuestion, setDetailsQuestion] = useState(details);
@@ -16,7 +16,7 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, getMaterialExamQuestion
         setDetailsQuestion({ ...detailsQuestion, [name]: value });
     }
     const validate = () => {
-        if (Object.values(detailsQuestion).some(value => { return value === ''; })) {
+        if (Object.values(detailsQuestion).some(value => { return value === '' })) {
             setErrorMessage("Must Enter All Fields");
             return false;
         }
@@ -69,7 +69,7 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, getMaterialExamQuestion
                 <label >Answer 4</label>
                 <input name="ans4" value={detailsQuestion.ans4} onChange={onChange} type="text" />
                 <label >Hint</label>
-                <input name="hint" value={detailsQuestion.hint} onChange={onChange} type="text" />
+                <input name="hint" value={detailsQuestion.hint} onChange={onChange} type="text" placeholder="Write dot '.' if hint is not necessary" />
                 <label >Correct Answer</label>
                 <br />
                 <input name="correctAns" value={detailsQuestion.correctAns} onChange={onChange} type="text" style={{ width: '40px' }} />

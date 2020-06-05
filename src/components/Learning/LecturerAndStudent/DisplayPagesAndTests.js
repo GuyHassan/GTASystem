@@ -71,7 +71,6 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, Pages, Q
     }, [Pages])
     useEffect(() => {
         server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&gradeType=${'studyGrades'}`).then(res => {
-            console.log('lastIndex - ', res)
             const lastQuestionIndex = res.data === "OK" ? 0 : res.data.length;
             if (Questions.length) {
                 setFinishQuestion(lastQuestionIndex)
