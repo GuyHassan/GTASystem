@@ -37,7 +37,7 @@ const existInDB = async (root, child) => {
 const addUsers = (userDetails) => {
     const isLecturer = userDetails.path === '/AdminPermission' ? true : false;
     const userLoginTree = { password: userDetails.password, isLecturer: isLecturer };
-    const userDetailsTree = { id: userDetails.ID, name: userDetails.name, gender: userDetails.gender }
+    const userDetailsTree = { id: userDetails.ID, name: userDetails.name, gender: userDetails.gender, userDetails: { className } }
     isLecturer
         ? database.ref(`lecturers/${userDetails.username}`).set(userDetailsTree)
         : database.ref(`students/${userDetails.username}`).set(userDetailsTree);
@@ -111,7 +111,7 @@ const initialArrayOfObj = (materialTree, type) => {
     let objArray = [];
     for (let i = 0; i < materialTree.length; i++) {
         if (type == "subTopicName" || (!(materialTree[i].hasOwnProperty("subTopics")))) {
-            objArray.push({ [type]: materialTree[i][type], keyCollection: materialTree[i].keyCollection,feedback:null, details: { testGrades: -1, studyGrades: -1,finalStudyGrade:-1, finalTestGrade: -1, needHelp: -1, isFinishQuestions: -1 } });
+            objArray.push({ [type]: materialTree[i][type], keyCollection: materialTree[i].keyCollection, feedback: null, details: { testGrades: -1, studyGrades: -1, finalStudyGrade: -1, finalTestGrade: -1, needHelp: -1, isFinishQuestions: -1 } });
         }
         else {
             objArray.push({ [type]: materialTree[i][type], details: { testGrades: -1, finalTestGrade: -1 } });
@@ -218,7 +218,7 @@ const getMaterials = async (username, professionName, className, isLecturer) => 
 
 ///////////////////////////////////////////////////////////////////                  NEW               /////////////////////////////////////
 
-const getArrayIndexes =(stringIndexes)=>{
+const getArrayIndexes = (stringIndexes) => {
     return stringIndexes.split(',').map(x => parseInt(x));
 }
 
@@ -286,7 +286,7 @@ const initialArrayToGrades = async (studentName, professionName, topicIndexes, g
 
 //INSIDE METHOD to set Finalgrade we have 2 types of Finalgrade :1.finalStudyGrade 2.finalTestGrade
 //WORKING FOR calFinalGrade!!! 
-//NEED (studentName,ProffessionName,topicIndexes,gradeType,finalGradeType)=> grade Type is string with two option : 1.'finalStudyGrade' => FOR STUDY!! 2. 'finalTestGrade' => FOR TEST!!
+//NEED (studentName,professionName,topicIndexes,gradeType,finalGradeType)=> grade Type is string with two option : 1.'finalStudyGrade' => FOR STUDY!! 2. 'finalTestGrade' => FOR TEST!!
 //NO RETURN!!!
 const setFinalGrade = async (studentName, professionName, topicIndexes, finalGradeType, finalGrade) => {
     const topicIndexesArray = getArrayIndexes(topicIndexes);
@@ -299,37 +299,37 @@ const setFinalGrade = async (studentName, professionName, topicIndexes, finalGra
 }
 
 //inside function to get subtopics for specific topicIndex
-const getSubTopics =async(studentName,professionName,topicIndexes) =>{
+const getSubTopics = async (studentName, professionName, topicIndexes) => {
     const topicIndexesArray = getArrayIndexes(topicIndexes);
-    const subTopics= await database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics`).once("value");
+    const subTopics = await database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics`).once("value");
     return subTopics.val();
 }
 /*
 FUNCTION that calculate 2 option of grades :
                                             1.studyGrades
                                             2.testGrades
-//NEED (studentName,ProffessionName,topicIndexes,gradeType,finalGradeType)=>finalGradeType have 2 option :
+//NEED (studentName,professionName,topicIndexes,gradeType,finalGradeType)=>finalGradeType have 2 option :
                                                                                                           1.finalStudyGrade
                                                                                                           2.finalTestGrade
                                                                                                           3.finalGrade => ONLY FOR TOPICS WITH SUBTOPICS!!!
 NO RETURN VALUE!!
 
 */
-const typeOfFinalGrades=["finalStudyGrade","finalTestGrade"];
-const calFinalGrade =(studentName,professionName,topicIndexes,finalGradeType,gradeType)=>{
+const typeOfFinalGrades = ["finalStudyGrade", "finalTestGrade"];
+const calFinalGrade = (studentName, professionName, topicIndexes, finalGradeType, gradeType) => {
     //for subtopics and topics without subtopics
-    if(finalGradeType in typeOfFinalGrades){
-        getTopicGrades(studentName,professionName,topicIndexes,gradeType).then(gradeArray=>{
-            const finalGrade=gradeArray.reduce((a,b)=>a+b,0)/gradeArray.length;
-            setFinalGrade(studentName,professionName,topicIndexes,finalGradeType,finalGrade);
+    if (finalGradeType in typeOfFinalGrades) {
+        getTopicGrades(studentName, professionName, topicIndexes, gradeType).then(gradeArray => {
+            const finalGrade = gradeArray.reduce((a, b) => a + b, 0) / gradeArray.length;
+            setFinalGrade(studentName, professionName, topicIndexes, finalGradeType, finalGrade);
         });
     }
     //only for topics with subTopics
-    else{
-        getSubTopics(studentName,professionName,topicIndexes).then(subTopicArray=>{
-            const grades=subTopicArray.map(subTopic=>subTopic.details.finalTestGrade);
+    else {
+        getSubTopics(studentName, professionName, topicIndexes).then(subTopicArray => {
+            const grades = subTopicArray.map(subTopic => subTopic.details.finalTestGrade);
             database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/testGrades`).set(grades);
-            const finalGrade=grades.reduce((x,y)=>x+y,0)/grades.length;
+            const finalGrade = grades.reduce((x, y) => x + y, 0) / grades.length;
             database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/finalTestGrade`).set(finalGrade);
         });
     }
@@ -338,13 +338,67 @@ const calFinalGrade =(studentName,professionName,topicIndexes,finalGradeType,gra
 //function that give the testQuestion for the specific topic 
 //NEED (lecturerName,professionName,className,index)=>the index is the topicName
 //RETURN array => [{keyCollection,testQuestions},{keyCollection,testQuestions}]
-const getTestQuestions = async (studentName, professionName,topicIndex) => {
+const getTestQuestions = async (studentName, professionName, topicIndex) => {
     const topicTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndex}`).once("value"))).val();
     const keyCollectionArray = topicTree.hasOwnProperty("subTopics")
         ? await topicTree.subTopics.map(subTopic => subTopic.keyCollection)
         : [topicTree.keyCollection];
     return getTestQuestionsFromFirestore(keyCollectionArray);
 }
+
+
+
+
+//////////////////////////////////////////////////////////////// THIS FUNCTIONS FOR THE DIAGRAMS!!!
+
+
+//INSIDE METHOD FOR getStudentGrade !!
+// the function build 2 things depend on the isForSpecificStudent
+//? return objTopicGrades for specific student
+//: return the avg of the student for this gradeTree
+const buildGradesTree = (gradesTree, isForSpecificStudent) => {
+    const objTopicGrades = [];
+    let gradeSum = 0;
+    let gradeCounter = 0;
+    gradesTree.forEach(topic => {
+        if (!isForSpecificStudent && topic.details.finalTestGrade != -1) {
+            gradeSum += topic.details.finalTestGrade;
+            gradeCounter++;
+        }
+        objTopicGrades.push({ topicName: topic.topicName, grade: topic.details.finalTestGrade });
+    });
+    return isForSpecificStudent
+        ? objTopicGrades
+        : gradeSum / gradeCounter;
+}
+
+//function that getStudentGrade with 2 options with boolean isForSpecificStudent : 
+/*
+
+*/
+const getStudentGrade = async (studentName, professionName, isForSpecificStudent) => {
+    const needHelpAndGradesTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades`).once("value"))).val();
+    const gradeTree = buildGradesTree(needHelpAndGradesTree, isForSpecificStudent);
+    return isForSpecificStudent
+        ? gradeTree
+        : { studentName: studentName, grade: gradeTree };
+}
+
+const getStudentsGrades = async (studentsNames, professionName) => {
+    let studentsGrades = [];
+    studentsNames.forEach(student => {
+        studentsGrades.push(getStudentGrade(student.id, professionName, false));
+    });
+    studentsGrades = await Promise.all(studentsGrades);
+    return studentsGrades;
+}
+
+
+
+//////////////////////////////////////////////////////////////// END FUNCTIONS FOR THE DIAGRAMS!!!
+
+
+
 
 
 //DELETE TOPIC/SUBTOPIC
@@ -367,5 +421,5 @@ const deleteStudentFromClass = (studentDetails) => {
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
-    initialArrayToGrades, setIsFinishQuestions, getTopicGrades,getTestQuestions
+    initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions
 };
