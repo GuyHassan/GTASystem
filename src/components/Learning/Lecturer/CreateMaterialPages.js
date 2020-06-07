@@ -90,7 +90,7 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
                     {errorMessage}
                 </div>
             </form>
-            <button onClick={onNextPage} className="ui button primary"> Next Page </button>
+            <button onClick={onNextPage} className="ui button green"> Next Page </button>
             <button onClick={onFinish} className="ui button black"> Finish </button>
             <br /><br />
         </div>

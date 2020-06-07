@@ -4,7 +4,7 @@ import '../../Style/MaterialPages.css';
 const MaterialPages = ({ page: { title, freeText, streamLink, file }, numberPage }) => {
     return (
         <div style={{ textAlign: 'center' }}>
-            <h1 className="titleComp" style={{ marginBottom: '20px' }}>{`Material Page  ${numberPage}`}</h1>
+            <h1 className="titleComp" style={{ marginBottom: '20px' }}>{`Material Page  ${numberPage + 1}`}</h1>
             <h3 style={{ textDecoration: 'underline' }}>{title}</h3>
             <p>{freeText}</p>
             {file ? <a style={{ marginBottom: '10px' }} className="ui basic green button small" target="_blank" rel="noopener noreferrer" href={file}>Open File</a> : null}

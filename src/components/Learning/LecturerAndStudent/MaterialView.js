@@ -78,6 +78,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         })
     }
     const checkIsFinalMaterial = (material) => {
+        console.log(material)
         if (!isLecturer)
             return material.subTopics
                 ? material.subTopics.every(val => val.details.isFinishQuestions !== -1)
@@ -144,7 +145,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                 </h2>
                                 {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
                                 <Buttons topic={material} indexes={idMaterial} />
-                                {!isLecturer && <Link to={finalExamRoute} className="iconExam" style={checkIsFinalMaterial(material) ? {} : { pointerEvents: 'none' }}>
+                                {!isLecturer && <Link to={finalExamRoute} className="iconExam" style={{ margin: '25px', ...checkIsFinalMaterial(material) ? {} : { pointerEvents: 'none' } }}>
                                     <span style={{ fontWeight: '700' }}>Final Exam</span>
                                     <Icon name='file outline' size='large' ></Icon>
                                 </Link>}
@@ -177,7 +178,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                     setStateMaterial(newMaterial)
                 }} name='plus' size='large' style={{ margin: '10px' }} /> : null}
             {editMode && <button name="finish" className="ui right floated black button " onClick={onFinishEdit}> Finish Edit </button>}
-            {isLecturer && <button className="ui right floated primary button " onClick={() => { setEditMode(!editMode) }}> Edit Mode </button>}
+            {isLecturer && <button className="ui right floated green button " onClick={() => { setEditMode(!editMode) }}>{editMode ? 'Normal Mode' : 'Edit Mode'} </button>}
             <br /><br />
         </div>
 

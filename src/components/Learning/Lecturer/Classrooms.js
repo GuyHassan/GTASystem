@@ -6,13 +6,13 @@ import { getClasses } from '../../../Redux/actions/index';
 const Professions = ({ children, getClasses, classes, match: { params } }) => {
     const [showButtonsID, setShowButtonsID] = useState('');
     const { isLecturer } = JSON.parse(localStorage.getItem('userCredential'));
-   
+
     const Buttons = ({ idClass }) => {
         return showButtonsID === idClass
             && <div>
-                {isLecturer && <Link to={`/LecturerView/ViewStudents/${params.profession}/${idClass}`} className="ui green basic button mini">View Students</Link>}
-                <Link to={`/MaterialView/${params.profession}/${idClass}`} className="ui brown basic button mini">View Materials</Link>
-                {isLecturer && <Link to={`/LecturerView/AddingStudentToClass/${params.profession}/${idClass}`} className="ui blue basic button mini">Add Student</Link>}
+                {isLecturer && <Link to={`/LecturerView/ViewStudents/${params.profession}/${idClass}`} className="ui green basic button small">View Students</Link>}
+                <Link to={`/MaterialView/${params.profession}/${idClass}`} className="ui brown basic button small">View Materials</Link>
+                {isLecturer && <Link to={`/LecturerView/AddingStudentToClass/${params.profession}/${idClass}`} className="ui blue basic button small">Add Student</Link>}
             </div>
     }
     const renderClasses = () => {

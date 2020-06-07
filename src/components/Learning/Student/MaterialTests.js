@@ -12,7 +12,6 @@ const MaterialTests = ({ location, onClickNext, question: { question, ans1, ans2
     }
     const validate = () => {
         let correctAnswer = false
-        Object.entries(checkBoxState).forEach((val, index) => { console.log(val) })
         Object.entries(checkBoxState).forEach((val, index) => { return val[1] === true ? correctAnswer = index + 1 : null })
         if (!correctAnswer)
             alert("Must Enter One Answer !")
@@ -24,7 +23,7 @@ const MaterialTests = ({ location, onClickNext, question: { question, ans1, ans2
 
     return (
         <div>
-            <h1 className="titleComp" style={{ marginBottom: '20px' }}>{`Question Page  ${numberPage}`}</h1>
+            <h1 className="titleComp" style={{ marginBottom: '20px' }}>{`Question Page  ${numberPage + 1}`}</h1>
             <div style={{ textAlign: 'left' }}>
                 <h3>{question}</h3>
                 <input type="checkbox" name='ans1' checked={checkBoxState.ans1} onChange={onChange} /> {ans1} <br />
@@ -35,7 +34,7 @@ const MaterialTests = ({ location, onClickNext, question: { question, ans1, ans2
             <button style={{ margin: '20px' }} className='ui basic button blue' onClick={validate}>Next Question</button>
             {hint !== '.'
                 && <Link to=
-                    {{ pathname: "/ShowHint", hint }} style={{ margin: '20px' }} className='ui basic button green' >
+                    {{ pathname: `/ShowHint/${'Question-' + numberPage + 1}`, hint }} style={{ margin: '20px' }} className='ui basic button green' >
                     Hint
                     </Link>
             }

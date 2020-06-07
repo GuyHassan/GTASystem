@@ -34,7 +34,7 @@
 .iconExam {
     text-decoration: none;
     float: right;
-    color: red;
+    color: #DC143C;
 }
 
 @media only screen and (max-width: 600px) {
