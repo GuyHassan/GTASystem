@@ -9,7 +9,7 @@ import '../../Style/MaterialView.css';
 
 const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const [stateMaterial, setStateMaterial] = useState([]);
-    const [minGrade, setMinGrade] = useState('')
+    const [passGrade, setPassGrade] = useState('')
     const [editMode, setEditMode] = useState(false);
     const [showButtonsID, setShowButtonsID] = useState('');
     const { isLecturer, user } = JSON.parse(localStorage.getItem('userCredential'))
@@ -17,13 +17,15 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const onClickFinalTest = () => {
         alert("Final Test !!");
     }
-    const submitMinGrade = (e) => {
+    const submitPassGrade = (e, keyCollection) => {
         e.preventDefault();
-        if (!(minGrade >= 1 && minGrade <= 100))
+        if (!(passGrade >= 1 && passGrade <= 100))
             alert("Min Grade Must Be Between 1-100")
-        else
-            //implement backend route
-            console.log(minGrade)
+        else {
+            server.patch(`/setPassingGrade?keyCollection=${keyCollection}&passingGrade=${passGrade}`)
+            alert("Grade is Updated");
+            setPassGrade('')
+        }
     }
 
     const Buttons = ({ topic: { subTopicName, keyCollection, topicName }, indexes }) => {
@@ -37,10 +39,11 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                         className='ui basic black button small'>Add Practice Question</Link>
                     <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}/testQuestions`}
                         className='ui basic black button small'>Add Test Question</Link>
-                    <form onChange={({ target: { value } }) => setMinGrade(value)} onSubmit={submitMinGrade}>
-                        <label>Min Grade: </label>
-                        <input name="minGrade" value={minGrade} type="text" style={{ margin: '10px', height: '30px' }} />
-                        <button className="ui basic black button tiny" style={{ height: '27px' }} >Submit</button>
+                    <br /><br />
+                    <label style={{ marginRight: '10px' }}>Passing Grade: </label>
+                    <form className="ui input" onChange={({ target: { value } }) => setPassGrade(value)} onSubmit={(e) => submitPassGrade(e, keyCollection)}>
+                        <input name="passGrade" defaultValue={passGrade} type="text" className='gradeInput' />
+                        <button className="ui basic green button tiny" style={{ height: '27px', marginLeft: '10px' }} >Submit</button>
                     </form>
                 </div>
                 : <div style={{ margin: '10px' }}>
@@ -75,6 +78,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         })
     }
     const checkIsFinalMaterial = (material) => {
+        console.log(material)
         if (!isLecturer)
             return material.subTopics
                 ? material.subTopics.every(val => val.details.isFinishQuestions !== -1)
@@ -99,8 +103,8 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                 <ul style={{ marginTop: '10px', fontSize: '20px' }} key={idTopic}>
                     <li className="subTopics" onClick={() => setShowButtonsID(topic.subTopicName)}>
                         {topic.subTopicName}
-                        <Buttons topic={topic} indexes={[parentIndex, idTopic]} />
                     </li>
+                    <Buttons topic={topic} indexes={[parentIndex, idTopic]} />
 
                 </ul>
         })
@@ -141,7 +145,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                                 </h2>
                                 {material.subTopics && subTopicRender(material.subTopics, idMaterial)}
                                 <Buttons topic={material} indexes={idMaterial} />
-                                {!isLecturer && <Link to={finalExamRoute} className="iconExam" style={checkIsFinalMaterial(material) ? {} : { pointerEvents: 'none' }}>
+                                {!isLecturer && <Link to={finalExamRoute} className="iconExam" style={{ margin: '25px', ...checkIsFinalMaterial(material) ? {} : { pointerEvents: 'none' } }}>
                                     <span style={{ fontWeight: '700' }}>Final Exam</span>
                                     <Icon name='file outline' size='large' ></Icon>
                                 </Link>}
@@ -174,7 +178,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                     setStateMaterial(newMaterial)
                 }} name='plus' size='large' style={{ margin: '10px' }} /> : null}
             {editMode && <button name="finish" className="ui right floated black button " onClick={onFinishEdit}> Finish Edit </button>}
-            {isLecturer && <button className="ui right floated primary button " onClick={() => { setEditMode(!editMode) }}> Edit Mode </button>}
+            {isLecturer && <button className="ui right floated green button " onClick={() => { setEditMode(!editMode) }}>{editMode ? 'Normal Mode' : 'Edit Mode'} </button>}
             <br /><br />
         </div>
 
