@@ -17,6 +17,7 @@ const StudentProgress = () => {
         <div>
             <h3 className="titleComp" style={{ color: '#A52A2A' }}>{profession}</h3>
             <ul>
+                
                 {topic.map(({ topicName, subTopics }) => {
                     return <li key={topicName}>
                         {topicName}
