@@ -37,7 +37,7 @@ const existInDB = async (root, child) => {
 const addUsers = (userDetails) => {
     const isLecturer = userDetails.path === '/AdminPermission' ? true : false;
     const userLoginTree = { password: userDetails.password, isLecturer: isLecturer };
-    const userDetailsTree = { id: userDetails.ID, name: userDetails.name, gender: userDetails.gender, userDetails: { className } }
+    const userDetailsTree = { id: userDetails.ID, name: userDetails.name, gender: userDetails.gender, className:userDetails.className }
     isLecturer
         ? database.ref(`lecturers/${userDetails.username}`).set(userDetailsTree)
         : database.ref(`students/${userDetails.username}`).set(userDetailsTree);
@@ -374,8 +374,11 @@ const buildGradesTree = (gradesTree, isForSpecificStudent) => {
 
 //function that getStudentGrade with 2 options with boolean isForSpecificStudent : 
 /*
-
+? we return array of topics and their finalGrade THIS IS FOR SERVER USE !!!!
+: we return object of name and total final grade THIS IS FOR INSIDE USE => getStudentsGrades!!!!
 */
+//NEED (studentName,professionName,isForSpecificStudent)=>isForSpecificStudent boolean!!
+//RETURN 2 options see above!!
 const getStudentGrade = async (studentName, professionName, isForSpecificStudent) => {
     const needHelpAndGradesTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades`).once("value"))).val();
     const gradeTree = buildGradesTree(needHelpAndGradesTree, isForSpecificStudent);
@@ -384,6 +387,9 @@ const getStudentGrade = async (studentName, professionName, isForSpecificStudent
         : { studentName: studentName, grade: gradeTree };
 }
 
+//function to return array of studentName and their totalGrade
+//NEED (studentsNames,professionName)
+//RETURN array of obj =>[{studentName,grade}]
 const getStudentsGrades = async (studentsNames, professionName) => {
     let studentsGrades = [];
     studentsNames.forEach(student => {

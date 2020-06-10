@@ -166,7 +166,6 @@ app.patch("/setIsFinishQuestion", (req, res) => {
 //NEED THIS ROUTE => /setArrayGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}&grade=${grade}
 app.patch("/setArrayGrade", (req, res) => {
   const { studentName, professionName, topicIndexes, gradeType, grade } = req.query;
-  console.log(req.query)
   initialArrayToGrades(studentName, professionName, topicIndexes, gradeType, grade).then(gradeArray => {
     res.send(true);
   });
