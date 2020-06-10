@@ -6,7 +6,7 @@ import { getClasses } from '../../../Redux/actions/index';
 const Professions = ({ children, getClasses, classes, match: { params } }) => {
     const [showButtonsID, setShowButtonsID] = useState('');
     const { isLecturer } = JSON.parse(localStorage.getItem('userCredential'));
-
+    //rendering buttons when the user click on one of classroom name
     const Buttons = ({ idClass }) => {
         return showButtonsID === idClass
             && <div>

@@ -39,11 +39,11 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
         if (!isLoggedIn) {
             return <Nav.Link as={Link} to='/Login' className="loginLogout"><p>Login</p></Nav.Link>
         }
-        if (isLecturer) {
-            concatenationElement.push(
-                <Nav.Link as={Link} key={0} to='/LecturerView/StudentPermissions' className='item'>Student Permission</Nav.Link>
-            )
-        }
+        concatenationElement.push(
+            isLecturer
+                ? <Nav.Link as={Link} key={0} to='/LecturerView/StudentPermissions' className='item'>Student Permission</Nav.Link>
+                : <Nav.Link as={Link} key={0} to={`${typeRoute}/StudentProgress`} className="item">Student Progress / Feedback</Nav.Link>
+        )
         concatenationElement.push(
             <Nav.Link as={Link} key={1} to={`${typeRoute}/Profession`} className="item">Profession View</Nav.Link>,
             <Nav.Link as={Link} key={2} to='/Login' onClick={logOut} className='loginLogout'><p>Logout</p></Nav.Link>

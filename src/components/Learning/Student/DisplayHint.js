@@ -1,8 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import history from '../../../history';
+import React from 'react';
 import Modal from '../../ReuseableComponents/Modal';
 import { useHistory } from 'react-router';
-
 
 const DisplayHint = ({ location: { hint } }) => {
     const history = useHistory();

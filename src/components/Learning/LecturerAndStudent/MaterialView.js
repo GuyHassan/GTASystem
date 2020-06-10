@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { getMaterials } from '../../../Redux/actions';
 import { server } from '../../../Apis/server';
 import { Link } from "react-router-dom";
-import { Icon, Label } from 'semantic-ui-react'
+import { Icon } from 'semantic-ui-react'
 import history from '../../../history';
 import '../../Style/MaterialView.css';
 
@@ -17,6 +17,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const onClickFinalTest = () => {
         alert("Final Test !!");
     }
+    // when the lecturer need to set pass grade we check if the grade is correct, if true he update the DB
     const submitPassGrade = (e, keyCollection) => {
         e.preventDefault();
         if (!(passGrade >= 1 && passGrade <= 100))
@@ -27,7 +28,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
             setPassGrade('')
         }
     }
-
+    //display buttons on click one of topic or subtopic, check the type of user (student or lecture )
     const Buttons = ({ topic: { subTopicName, keyCollection, topicName }, indexes }) => {
         const name = subTopicName ? subTopicName : topicName;
         if (showButtonsID === name) {
@@ -58,7 +59,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         return null;
 
     }
-    // this function updates the state that hold the material section.
+    // updates the state that hold the material section.
     const updateMaterials = (parentIndex = null, newValue = null, childIndex = null) => {
         const newMaterial = [...stateMaterial]
         if (parentIndex !== null && childIndex !== null && newValue !== null)
@@ -72,13 +73,14 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         }
         setStateMaterial(newMaterial)
     }
+    // when the lecturer finish edit the material sction
     const onFinishEdit = () => {
         server.post("/addMaterials", { professionName: profession, className, lecturerName: user, materialTree: stateMaterial }).then((res) => {
             history.push(`/LecturerView/Classrooms/${profession}`);
         })
     }
+    // check if i can give to student the option to do the Final Test !
     const checkIsFinalMaterial = (material) => {
-        console.log(material)
         if (!isLecturer)
             return material.subTopics
                 ? material.subTopics.every(val => val.details.isFinishQuestions !== -1)
@@ -109,8 +111,8 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                 </ul>
         })
     }
+    //when the user click on edit mode, we are rendering the new data with input text and give him option to chagne or add
     const renderEditMode = () => {
-        console.log(stateMaterial)
         return stateMaterial.map((material, idMaterial) => {
             return (
                 <ul key={idMaterial} >

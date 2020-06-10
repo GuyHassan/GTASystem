@@ -46,7 +46,7 @@ const StudentDiagram = ({ match: { params: { className, id } } }) => {
                 ]
             }]
         })
-    })
+    }, [setOptions, className])
     return (
         <div>
             <CanvasJSChart options={options}
