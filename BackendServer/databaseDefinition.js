@@ -2,6 +2,8 @@ const firebase = require("./firebaseDefinition");
 const { addLinkToTopic, getTestQuestionsFromFirestore } = require("./firestoreDefinition");
 const database = firebase.database();
 
+// This Is For Feedback Student !!!!
+//[{ profession: 'English', topic: [{ topicName: 'introduction', subTopics: [{ type: 'what is english', grade: 72 }, { type: 'intro', grade: 62 }] }] }
 
 //function for check if username and password are exist NEED {USERNAME,PASSWORD}
 const checkUsernamePassword = async (details) => {
@@ -37,7 +39,7 @@ const existInDB = async (root, child) => {
 const addUsers = (userDetails) => {
     const isLecturer = userDetails.path === '/AdminPermission' ? true : false;
     const userLoginTree = { password: userDetails.password, isLecturer: isLecturer };
-    const userDetailsTree = { id: userDetails.ID, name: userDetails.name, gender: userDetails.gender, userDetails: { className } }
+    const userDetailsTree = { id: userDetails.ID, name: userDetails.name, gender: userDetails.gender, className: userDetails.className }
     isLecturer
         ? database.ref(`lecturers/${userDetails.username}`).set(userDetailsTree)
         : database.ref(`students/${userDetails.username}`).set(userDetailsTree);

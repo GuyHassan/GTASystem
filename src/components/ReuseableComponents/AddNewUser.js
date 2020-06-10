@@ -143,10 +143,10 @@ const AddNewUser = ({ titleMessage, classNameJsx }) => {
             </div>
             <br />
             <br />
-            <div>
+            <div >
                 <button className="ui button primary" type="submit" value="Submit" >Submit</button>
                 <button className="ui button purple" type="button" onClick={generateRandomizePass} >Randomize Passowrd</button>
-                <button onClick={history.goBack} className="ui button green">Back</button>
+                <button onClick={history.goBack} className="ui button green" style={{ marginTop: '5px' }}>Back</button>
             </div>
             <br />
             <br />

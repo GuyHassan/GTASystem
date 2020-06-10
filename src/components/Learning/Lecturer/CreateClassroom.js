@@ -13,9 +13,12 @@ const CreateClassroom = ({ createClassroom }) => {
         firstLabel: 'Class Name', secondLabel: 'Description',
         firstField: 'className', secondField: 'description', buttonName: 'Add Classroom'
     }
+
+    //When the user finishes filling in the fields !
     const onSubmit = (formValues) => {
         createClassroom(formValues)
     }
+    // pass extra field to FormField component when i want create a new classroom
     const extraField = (renderInput) => {
         return (
             <Fragment>
@@ -29,7 +32,7 @@ const CreateClassroom = ({ createClassroom }) => {
     }
     return (
         <div>
-            <h1>New Classroom</h1>
+            <h1 className="titleComp">New Classroom</h1>
             <FormField
                 propertiesName={propertiesName}
                 onSubmit={onSubmit}

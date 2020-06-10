@@ -52,6 +52,7 @@ const AddingStudentToClass = ({ match: { params } }) => {
             {renderStudents()}
 
             <button className="ui right floated black button" onClick={addNewStudent}>Add To Class</button>
+            <br /><br />
         </div>
     )
 }

@@ -8,7 +8,6 @@ import { server } from '../../Apis/server';
 
 const Login = ({ SignIn }) => {
     const propertiesName = {
-
         firstLabel: 'User Name', secondLabel: 'Password',
         firstField: 'Username', secondField: 'Password', buttonName: 'LOGIN'
     }
@@ -45,10 +44,5 @@ const Login = ({ SignIn }) => {
     );
 };
 
-
-
-// const mapStateToProps = (state) => {
-//     return { users: Object.values(state.listOfUsers) }
-// }
 
 export default connect(null, { SignIn })(Login)

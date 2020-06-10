@@ -49,7 +49,7 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, getMaterialExamQuestion
         type === 'questions'
             ? getMaterialQuestions(keyCollection)
             : getMaterialExamQuestions(keyCollection);
-    }, [getMaterialQuestions, getMaterialExamQuestions, keyCollection])
+    }, [getMaterialQuestions, getMaterialExamQuestions, keyCollection, type])
     useEffect(() => {
         setCounterQuestions(materialQuestions.length)
     }, [materialQuestions])

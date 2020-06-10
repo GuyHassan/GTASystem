@@ -48,3 +48,9 @@
     height: 30px;
     border: 1px solid red;
 }
+
+.freeText {
+    white-space: pre-wrap;
+    font-weight: 600;
+
+}
