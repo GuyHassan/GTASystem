@@ -166,7 +166,6 @@ app.patch("/setIsFinishQuestion", (req, res) => {
 //NEED THIS ROUTE => /setArrayGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&gradeType=${gradeType}&grade=${grade}
 app.patch("/setArrayGrade", (req, res) => {
   const { studentName, professionName, topicIndexes, gradeType, grade } = req.query;
-  console.log(req.query)
   initialArrayToGrades(studentName, professionName, topicIndexes, gradeType, grade).then(gradeArray => {
     res.send(true);
   });
@@ -187,15 +186,14 @@ app.get("/getArrayGrade", (req, res) => {
 
 
 
-//NEED (studentName, professionName,topicIndex)=> the index of the topic only !!!
-//NEED THIS ROUTE => /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndex=${topicIndex}
-app.get("/getTestQuestions", (req, res) => {
-  const { studentName, professionName, topicIndex } = req.query;
-  console.log(req.query)
-  getTestQuestions(studentName, professionName, parseInt(topicIndex)).then(testQuestion => {
-    res.send(testQuestion);
-  });
-});
+// //NEED (studentName, professionName,topicIndex)=> the index of the topic only !!!
+// //NEED THIS ROUTE => /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
+// app.get("getTestQuestions",(req,res)=>{
+//   const {studentName, professionName,topicIndex} =req.query;
+//   getTestQuestions(studentName, professionName,topicIndex).then(testQuestion=>{
+//     res.send(testQuestion);
+//   });
+// });
 
 
 //COMPLETE THE DOC !!!!

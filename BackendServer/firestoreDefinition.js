@@ -1,30 +1,12 @@
 const firebase = require("./firebaseDefinition");
 
-//IMPORTANT !!!!!
-/*
-NEED TO CHECK!!!
-
-1. IN ADDPAGES CHECK IF WE WANT TO DELETE THE LAST ONES AND ADD NEW ONE!!!
-*/
-
-
-/*
-NEED TO ADD!!!!!
-OPTION: 
-1.ADD PAGES
-2.ADD QUESTIONS
-3.DELETE PAGES
-4.DELETE QUESTIONS
-*/
-
-
 // enter to firestore 
 const firestore = firebase.firestore();
 
 //function to ADD Link for specific topic FOR USE TO DATABASE.JS
 //NEED topicname
 const addLinkToTopic = async (topicName) => {
-    const key = await (firestore.collection("topics").add({ topicName: topicName, pages: [], questions: [], testQuestions: [],passingGrade:-1 }));
+    const key = await (firestore.collection("topics").add({ topicName: topicName, pages: [], questions: [], testQuestions: [], passingGrade: -1 }));
     return key.id;
 }
 
@@ -43,11 +25,12 @@ const getArrayFromFirestore = async (keyCollection, type = null) => {
 }
 
 //function to set the passing grade for topic/subTopic
-const setPassingGrade = (keyCollection,passingGrade)=>{
-    firestore.collection("topics").doc(keyCollection).update({passingGrade:passingGrade});
+const setPassingGrade = (keyCollection, passingGrade) => {
+    firestore.collection("topics").doc(keyCollection).update({ passingGrade: passingGrade });
 }
-//
-const getPassingGrade = async(keyCollection)=>{
+
+//function to get the passing grade for topic/subTopic
+const getPassingGrade = async (keyCollection) => {
     return (await (firestore.collection("topics").doc(keyCollection).get())).data().passingGrade;
 }
 
@@ -73,27 +56,27 @@ const addTopicMaterial = (keyCollection, newArr, type) => {
     });
 }
 
-//inside method !! to get Questions for specific keyCollection
-// RETURN obj : {keyCollection string,testQuestion array}
-const getSpecificTestQuestion = async (keyCollection, index) => {
-    return await firestore.collection("topics").doc(keyCollection).get().then(details => {
-        const routeDict = { "index": index, "keyCollection": keyCollection, "testQuestions": details.data().testQuestions };
-        return routeDict;
-    })
-}
+// //inside method !! to get Questions for specific keyCollection
+// // RETURN obj : {keyCollection string,testQuestion array}
+// const getSpecificTestQuestion = async (keyCollection, index) => {
+//     return await firestore.collection("topics").doc(keyCollection).get().then(details => {
+//         const routeDict = { "index": index, "keyCollection": keyCollection, "testQuestions": details.data().testQuestions };
+//         return routeDict;
+//     })
+// }
 
-//פונקציה בשביל החזרת מבחן 
-//function to get all the question for specific topic !!
-//NEED (keyCollection Array) !!
-//RETURN an array like this : [{keyCollection,testQuestion},{keyCollection,testQuestion}]
-const getTestQuestionsFromFirestore = async (keyCollectionArray) => {
-    let testQuestions = [];
-    keyCollectionArray.forEach((keyCollection, index) => {
-        testQuestions.push(getSpecificTestQuestion(keyCollection, index));
-    });
-    testQuestions = await Promise.all(testQuestions);
-    return testQuestions;
-}
+// //פונקציה בשביל החזרת מבחן 
+// //function to get all the question for specific topic !!
+// //NEED (keyCollection Array) !!
+// //RETURN an array like this : [{keyCollection,testQuestion},{keyCollection,testQuestion}]
+// const getTestQuestionsFromFirestore = async (keyCollectionArray) => {
+//     let testQuestions = [];
+//     keyCollectionArray.forEach((keyCollection, index) => {
+//         testQuestions.push(getSpecificTestQuestion(keyCollection, index));
+//     });
+//     testQuestions = await Promise.all(testQuestions);
+//     return testQuestions;
+// }
 
 
 
@@ -105,6 +88,7 @@ const deleteArrayFromFirestore = (keyCollection, type) => {
 
 
 
-module.exports = { addLinkToTopic, getArrayFromFirestore, addTopicMaterial, 
-                   getTestQuestionsFromFirestore,setPassingGrade,getPassingGrade
-                 };
+module.exports = {
+    addLinkToTopic, getArrayFromFirestore, addTopicMaterial,
+    /* getTestQuestionsFromFirestore ,*/ setPassingGrade, getPassingGrade
+};
