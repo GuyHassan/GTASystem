@@ -337,23 +337,36 @@ const calFinalGrade = (studentName, professionName, topicIndexes, finalGradeType
     }
     //only for topics with subTopics
     else {
-        getSubTopics(studentName, professionName, topicIndexes).then(subTopicArray => {
-            const grades = subTopicArray.map(subTopic => subTopic.details.finalTestGrade);
-            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/testGrades`).set(grades);
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/testGrades`).once("value").then(grades => {
             const finalGrade = grades.reduce((x, y) => x + y, 0) / grades.length;
             database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/finalTestGrade`).set(finalGrade);
         });
     }
 }
 
-const startTest=(studentName,professionName,topicIndex)=>{
-    
+
+///////NEW FUNCTION MANAGES THE QUESTIONS IN THE TEST !!!!
+const getTestQuestions=async(studentName,professionName,topicIndex)=>{
+    return await database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndex}`).once("value").then(async topicTree=>{
+        if(topicTree.val().hasOwnProperty("subTopics")){
+            let arrSize=topicTree.val().details.testGrades;
+            if(arrSize==-1){
+                return {subTopicIndex:0,questions:await getArrayFromFirestore(topicTree.val().subTopics[0].keyCollection,"testQuestions")};
+            }
+            else if(arrSize.length<topicTree.val().subTopics.length){
+                return  {subTopicIndex:arrSize.length,questions:await getArrayFromFirestore(topicTree.val().subTopics[arrSize.length].keyCollection,"testQuestions")};
+            }
+            else{
+                return "finishTest";
+            }
+        }
+        else{
+            return {questions:await getArrayFromFirestore(topicTree.val().keyCollection,"testQuestions")};
+        }
+    });
 }
 
 
-const getArrayTestQuestions=(keyCollection)=>{
-    getArrayFromFirestore(keyCollection,"testQuestions").then()
-}
 
 
 // //function that give the testQuestion for the specific topic 
@@ -453,5 +466,5 @@ const deleteStudentFromClass = (studentDetails) => {
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
-    initialArrayToGrades, setIsFinishQuestions, getTopicGrades//, getTestQuestions
+    initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions
 };

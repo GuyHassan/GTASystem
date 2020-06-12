@@ -186,14 +186,14 @@ app.get("/getArrayGrade", (req, res) => {
 
 
 
-// //NEED (studentName, professionName,topicIndex)=> the index of the topic only !!!
-// //NEED THIS ROUTE => /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
-// app.get("getTestQuestions",(req,res)=>{
-//   const {studentName, professionName,topicIndex} =req.query;
-//   getTestQuestions(studentName, professionName,topicIndex).then(testQuestion=>{
-//     res.send(testQuestion);
-//   });
-// });
+//NEED (studentName, professionName,topicIndex)=> the index of the topic only !!!
+//NEED THIS ROUTE => /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
+app.get("getTestQuestions",(req,res)=>{
+  const {studentName, professionName,topicIndex} =req.query;
+  getTestQuestions(studentName, professionName,topicIndex).then(testQuestion=>{
+    res.send(testQuestion);
+  });
+});
 
 
 
