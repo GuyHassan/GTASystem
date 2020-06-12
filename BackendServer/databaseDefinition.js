@@ -1,7 +1,7 @@
 const firebase = require("./firebaseDefinition");
-const { addLinkToTopic, getTestQuestionsFromFirestore } = require("./firestoreDefinition");
+const { addLinkToTopic, getArrayFromFirestore,getTestQuestionsFromFirestore } = require("./firestoreDefinition");
 const database = firebase.database();
-
+//{ profession: 'English', topic: [{ topicName: 'introduction', subTopics: [{ type: 'what is english', grade: 72 }, { type: 'intro', grade: 62 }] }] 
 
 //function for check if username and password are exist NEED {USERNAME,PASSWORD}
 const checkUsernamePassword = async (details) => {
@@ -236,7 +236,7 @@ const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
 }
 
 //FUNCTION to get grades we have 2 types of grades : 1.testGrades , 2.studyGrades 
-//WORKING FOR initialArrayToGrades AND for server!!! 
+//WORKING FOR initialArrayToGrades AND for server to check the condition of the student in the front!!! 
 //NEED (studentName,professionName,topicIndexes,gradeType)=> grade Type is string with two option : 1.'studyGrades' => FOR STUDY!! 2. 'testGrades' => FOR TEST!!
 //RETURN TWO OPTION: 1. -1 VALUE NOT RECOMMEND , 2. Array type. 
 const getTopicGrades = async (studentName, professionName, topicIndexes, gradeType) => {
@@ -292,6 +292,17 @@ const setFinalGrade = async (studentName, professionName, topicIndexes, finalGra
     const topicIndexesArray = getArrayIndexes(topicIndexes);
     if (topicIndexes.length > 1) {
         database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/${finalGradeType}`).set(finalGrade);
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}`).once("value").then(tree=>{
+            let arr=tree.val().details.testGrades;
+            if(testGrades==-1){
+                arr=[];
+                arr.push(finalGrade);
+            }
+            else{
+                arr.push(finalGrade);
+            }
+            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/testGrades`).set(arr);
+        })
     }
     else {
         database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/${finalGradeType}`).set(finalGrade);
@@ -335,17 +346,26 @@ const calFinalGrade = (studentName, professionName, topicIndexes, finalGradeType
     }
 }
 
-//function that give the testQuestion for the specific topic 
-//NEED (lecturerName,professionName,className,index)=>the index is the topicName
-//RETURN array => [{keyCollection,testQuestions},{keyCollection,testQuestions}]
-const getTestQuestions = async (studentName, professionName, topicIndex) => {
-    const topicTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndex}`).once("value"))).val();
-    const keyCollectionArray = topicTree.hasOwnProperty("subTopics")
-        ? await topicTree.subTopics.map(subTopic => subTopic.keyCollection)
-        : [topicTree.keyCollection];
-    return getTestQuestionsFromFirestore(keyCollectionArray);
+const startTest=(studentName,professionName,topicIndex)=>{
+    
 }
 
+
+const getArrayTestQuestions=(keyCollection)=>{
+    getArrayFromFirestore(keyCollection,"testQuestions").then()
+}
+
+
+// //function that give the testQuestion for the specific topic 
+// //NEED (lecturerName,professionName,className,index)=>the index is the topicName
+// //RETURN array => [{subTopicIndex,keyCollection,testQuestions},{subTopicIndex,keyCollection,testQuestions}]
+// const getTestQuestions = async (studentName, professionName, topicIndex) => {
+//     const topicTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndex}`).once("value"))).val();
+//     const keyCollectionArray = topicTree.hasOwnProperty("subTopics")
+//         ? await topicTree.subTopics.map(subTopic => subTopic.keyCollection)
+//         : [topicTree.keyCollection];
+//     return getTestQuestionsFromFirestore(keyCollectionArray);
+// }
 
 
 
@@ -433,5 +453,5 @@ const deleteStudentFromClass = (studentDetails) => {
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
-    initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions
+    initialArrayToGrades, setIsFinishQuestions, getTopicGrades//, getTestQuestions
 };
