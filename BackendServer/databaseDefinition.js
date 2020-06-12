@@ -342,12 +342,21 @@ const calFinalGrade = (studentName, professionName, topicIndexes, finalGradeType
 //RETURN array => [{keyCollection,testQuestions},{keyCollection,testQuestions}]
 const getTestQuestions = async (studentName, professionName, topicIndex) => {
     const topicTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndex}`).once("value"))).val();
+    console.log(topicTree.subTopics.map(subTopic=>subTopic.details.testGrades))
     const keyCollectionArray = topicTree.hasOwnProperty("subTopics")
         ? await topicTree.subTopics.map(subTopic => subTopic.keyCollection)
         : [topicTree.keyCollection];
     return getTestQuestionsFromFirestore(keyCollectionArray);
 }
 
+
+//function to get the studentTestGrades for specific topic ,help the front for render
+const getStudentTestGradesForSpecificTopic = async(studentName,professionName,topicIndex)=>{
+    const topicTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndex}`).once("value"))).val();
+    return topicTree.hasOwnProperty("subTopics")
+    ? topicTree.subTopics.map(subTopic=>subTopic.details.testGrades)
+    : [topicTree.details.testGrades];
+}
 
 
 
@@ -423,5 +432,6 @@ const deleteStudentFromClass = (studentDetails) => {
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
-    initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions
+    initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions,
+    getStudentTestGradesForSpecificTopic
 };
