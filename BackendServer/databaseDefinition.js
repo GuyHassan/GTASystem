@@ -1,5 +1,5 @@
 const firebase = require("./firebaseDefinition");
-const { addLinkToTopic, getArrayFromFirestore,getTestQuestionsFromFirestore } = require("./firestoreDefinition");
+const { addLinkToTopic, getArrayFromFirestore, getTestQuestionsFromFirestore } = require("./firestoreDefinition");
 const database = firebase.database();
 //{ profession: 'English', topic: [{ topicName: 'introduction', subTopics: [{ type: 'what is english', grade: 72 }, { type: 'intro', grade: 62 }] }] 
 
@@ -37,7 +37,7 @@ const existInDB = async (root, child) => {
 const addUsers = (userDetails) => {
     const isLecturer = userDetails.path === '/AdminPermission' ? true : false;
     const userLoginTree = { password: userDetails.password, isLecturer: isLecturer };
-    const userDetailsTree = { id: userDetails.ID, name: userDetails.name, gender: userDetails.gender, className:userDetails.className }
+    const userDetailsTree = { id: userDetails.ID, name: userDetails.name, gender: userDetails.gender, className: userDetails.className }
     isLecturer
         ? database.ref(`lecturers/${userDetails.username}`).set(userDetailsTree)
         : database.ref(`students/${userDetails.username}`).set(userDetailsTree);
@@ -292,13 +292,13 @@ const setFinalGrade = async (studentName, professionName, topicIndexes, finalGra
     const topicIndexesArray = getArrayIndexes(topicIndexes);
     if (topicIndexes.length > 1) {
         database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/${finalGradeType}`).set(finalGrade);
-        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}`).once("value").then(tree=>{
-            let arr=tree.val().details.testGrades;
-            if(testGrades==-1){
-                arr=[];
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}`).once("value").then(tree => {
+            let arr = tree.val().details.testGrades;
+            if (arr == -1) {
+                arr = [];
                 arr.push(finalGrade);
             }
-            else{
+            else {
                 arr.push(finalGrade);
             }
             database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/testGrades`).set(arr);
@@ -327,9 +327,9 @@ NO RETURN VALUE!!
 
 */
 const typeOfFinalGrades = ["finalStudyGrade", "finalTestGrade"];
-const calFinalGrade = (studentName, professionName, topicIndexes, finalGradeType, gradeType) => {
+const calFinalGrade = async (studentName, professionName, topicIndexes, finalGradeType, gradeType) => {
     //for subtopics and topics without subtopics
-    if (finalGradeType in typeOfFinalGrades) {
+    if (typeOfFinalGrades.includes(finalGradeType)) {
         getTopicGrades(studentName, professionName, topicIndexes, gradeType).then(gradeArray => {
             const finalGrade = gradeArray.reduce((a, b) => a + b, 0) / gradeArray.length;
             setFinalGrade(studentName, professionName, topicIndexes, finalGradeType, finalGrade);
@@ -337,7 +337,7 @@ const calFinalGrade = (studentName, professionName, topicIndexes, finalGradeType
     }
     //only for topics with subTopics
     else {
-        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/testGrades`).once("value").then(grades => {
+        database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/details/testGrades`).once("value").then(grades => {
             const finalGrade = grades.reduce((x, y) => x + y, 0) / grades.length;
             database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexes}/finalTestGrade`).set(finalGrade);
         });
@@ -345,23 +345,25 @@ const calFinalGrade = (studentName, professionName, topicIndexes, finalGradeType
 }
 
 
+
 ///////NEW FUNCTION MANAGES THE QUESTIONS IN THE TEST !!!!
-const getTestQuestions=async(studentName,professionName,topicIndex)=>{
-    return await database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndex}`).once("value").then(async topicTree=>{
-        if(topicTree.val().hasOwnProperty("subTopics")){
-            let arrSize=topicTree.val().details.testGrades;
-            if(arrSize==-1){
-                return {subTopicIndex:0,questions:await getArrayFromFirestore(topicTree.val().subTopics[0].keyCollection,"testQuestions")};
+const getTestQuestions = async (studentName, professionName, topicIndex) => {
+    return await database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndex}`).once("value").then(async topicTree => {
+        if (topicTree.val().hasOwnProperty("subTopics")) {
+            let arrSize = topicTree.val().details.testGrades;
+            if (arrSize == -1) {
+                return { subTopicIndex: 0, questions: await getArrayFromFirestore(topicTree.val().subTopics[0].keyCollection, "testQuestions") };
             }
-            else if(arrSize.length<topicTree.val().subTopics.length){
-                return  {subTopicIndex:arrSize.length,questions:await getArrayFromFirestore(topicTree.val().subTopics[arrSize.length].keyCollection,"testQuestions")};
+            else if (arrSize.length < topicTree.val().subTopics.length) {
+                return { subTopicIndex: arrSize.length, questions: await getArrayFromFirestore(topicTree.val().subTopics[arrSize.length].keyCollection, "testQuestions") };
             }
-            else{
-                return "finishTest";
+            else {
+                calFinalGrade(studentName, professionName, topicIndex, "finalGrade", "testGrades");
+                return [];
             }
         }
-        else{
-            return {questions:await getArrayFromFirestore(topicTree.val().keyCollection,"testQuestions")};
+        else {
+            return { questions: await getArrayFromFirestore(topicTree.val().keyCollection, "testQuestions") };
         }
     });
 }
@@ -485,5 +487,5 @@ const deleteStudentFromClass = (studentDetails) => {
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
-    initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions
+    initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions, calFinalGrade
 };

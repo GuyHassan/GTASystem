@@ -77,8 +77,9 @@ export const getMaterialQuestions = (keyCollection) => async (dispatch) => {
     const response = await server.get(`/getTopicMaterials?keyCollection=${keyCollection}&type=questions`);
     dispatch({ type: 'GET_MATERIAL_QUESTIONS', payload: response.data });
 }
-export const getMaterialExamQuestions = (keyCollection) => async (dispatch) => {
-    const response = await server.get(`/getTopicMaterials?keyCollection=${keyCollection}&type=testQuestions`);
+export const getMaterialExamQuestions = (details) => async (dispatch) => {
+    const { user, profession, indexTopic } = details;
+    const response = await server.get(`/getTestQuestions?studentName=${user}&professionName=${profession}&topicIndex=${indexTopic}`);
     dispatch({ type: 'GET_MATERIAL_TEST_QUESTIONS', payload: response.data });
 }
 

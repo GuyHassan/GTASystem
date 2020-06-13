@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Fragment } from 'react';
 import { connect } from 'react-redux';
 import { getMaterials } from '../../../Redux/actions';
 import { server } from '../../../Apis/server';
@@ -9,9 +9,9 @@ import '../../Style/MaterialView.css';
 
 const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const [stateMaterial, setStateMaterial] = useState([]);
-    const [passGrade, setPassGrade] = useState('')
     const [editMode, setEditMode] = useState(false);
     const [showButtonsID, setShowButtonsID] = useState('');
+    const [passingGrade, setPassingGrade] = useState('')
     const { isLecturer, user } = JSON.parse(localStorage.getItem('userCredential'))
     const { profession, className } = params;
     const onClickFinalTest = () => {
@@ -20,14 +20,31 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     // when the lecturer need to set pass grade we check if the grade is correct, if true he update the DB
     const submitPassGrade = (e, keyCollection) => {
         e.preventDefault();
-        if (!(passGrade >= 1 && passGrade <= 100))
+        if (!(passingGrade >= 1 && passingGrade <= 100))
             alert("Min Grade Must Be Between 1-100")
         else {
-            server.patch(`/setPassingGrade?keyCollection=${keyCollection}&passingGrade=${passGrade}`)
+            server.patch(`/setPassingGrade?keyCollection=${keyCollection}&passingGrade=${passingGrade}`)
             alert("Grade is Updated");
-            setPassGrade('')
+            setPassingGrade('')
         }
     }
+    //NEED TO FIX THAT !!!!!
+    const getPassingGrade = async (keyCollection) => {
+        const grade = await server.get(`/getPassingGrade?keyCollection=${keyCollection}`);
+        setPassingGrade(grade.data)
+    }
+    //NEED TO FIX THAT !!!!!
+    // const passingGradeJsx = (keyCollection) => {
+    //     return passingGrade > 0
+    //         ? <Fragment>
+    //             <label style={{ marginRight: '10px' }}>Passing Grade: </label>
+    //             <form className="ui input" onChange={({ target: { value } }) => setPassingGrade(value)} onSubmit={(e) => submitPassGrade(e, keyCollection)}>
+    //                 <input name="passGrade" defaultValue={passingGrade} type="text" className='gradeInput' />
+    //                 <button className="ui basic green button tiny" style={{ height: '27px', marginLeft: '10px' }} >Submit</button>
+    //             </form>
+    //         </Fragment>
+    //         : <h3>Passing Grade - {passingGrade}</h3>
+    // }
     //display buttons on click one of topic or subtopic, check the type of user (student or lecture )
     const Buttons = ({ topic: { subTopicName, keyCollection, topicName }, indexes }) => {
         const name = subTopicName ? subTopicName : topicName;
@@ -41,15 +58,11 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                     <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}/testQuestions`}
                         className='ui basic black button small'>Add Test Question</Link>
                     <br /><br />
-                    <label style={{ marginRight: '10px' }}>Passing Grade: </label>
-                    <form className="ui input" onChange={({ target: { value } }) => setPassGrade(value)} onSubmit={(e) => submitPassGrade(e, keyCollection)}>
-                        <input name="passGrade" defaultValue={passGrade} type="text" className='gradeInput' />
-                        <button className="ui basic green button tiny" style={{ height: '27px', marginLeft: '10px' }} >Submit</button>
-                    </form>
+                    {/* {!passingGrade ? getPassingGrade(keyCollection) : passingGradeJsx(keyCollection)} */}
                 </div>
                 : <div style={{ margin: '10px' }}>
                     <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/MaterialPages`}
-                        className='ui basic red button small'>Learn Topic</Link>
+                        className='ui basic red button small' style={{ margin: '5px' }}>Learn Topic</Link>
                     {'Here i need to check if the student finish to learn the topic' ?
                         <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/MaterialQuestions`}
                             className='ui basic green button small'>Practice Topic</Link> : null}
@@ -136,7 +149,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
 
     const renderMaterials = () => {
         return stateMaterial.map((material, idMaterial) => {
-            const finalExamRoute = `/StudentView/DisplayMaterials/${profession}/${className}/${material.keyCollection}/${idMaterial}/MaterialQuestions`;
+            const finalExamRoute = `/StudentView/DisplayMaterials/${profession}/${className}/${material.keyCollection}/${idMaterial}/MaterialTestQuestion`;
             return (
                 <div className="item" key={idMaterial}>
                     <div className="content" style={{ color: '#1a75ff' }}>

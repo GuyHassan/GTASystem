@@ -1,13 +1,13 @@
 
 //for databaseDefinition!!
 const { addMaterials, getMaterials, getProfession,
-      addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
-      addUsers, existInDB, getClassrooms, addClassrooms, setIsFinishQuestions,
-      initialArrayToGrades, getTopicGrades,getTestQuestions
-      } = require("./databaseDefinition");
+  addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
+  addUsers, existInDB, getClassrooms, addClassrooms, setIsFinishQuestions,
+  initialArrayToGrades, getTopicGrades, getTestQuestions, calFinalGrade
+} = require("./databaseDefinition");
 
 const { getArrayFromFirestore, addTopicMaterial,
-        setPassingGrade,getPassingGrade } = require("./firestoreDefinition");
+  setPassingGrade, getPassingGrade } = require("./firestoreDefinition");
 
 const PORT = process.env.PORT || 3005;
 const express = require("express");
@@ -177,24 +177,47 @@ app.patch("/setArrayGrade", (req, res) => {
 app.get("/getArrayGrade", (req, res) => {
   const { studentName, professionName, topicIndexes, gradeType } = req.query;
   getTopicGrades(studentName, professionName, topicIndexes, gradeType).then(gradesArr => {
-    if(Array.isArray(gradesArr)){
+    if (Array.isArray(gradesArr)) {
       res.send(gradesArr);
     }
-    res.sendStatus(200);
+    res.send("isEmpty");
   });
 });
 
 
 
 //NEED (studentName, professionName,topicIndex)=> the index of the topic only !!!
-//NEED THIS ROUTE => /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
-app.get("getTestQuestions",(req,res)=>{
-  const {studentName, professionName,topicIndex} =req.query;
-  getTestQuestions(studentName, professionName,topicIndex).then(testQuestion=>{
+//NEED THIS ROUTE => /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndex=${topicIndex}
+app.get("/getTestQuestions", (req, res) => {
+  const { studentName, professionName, topicIndex } = req.query;
+  getTestQuestions(studentName, professionName, topicIndex).then(testQuestion => {
     res.send(testQuestion);
   });
 });
 
+
+
+//COMPLETE THE DOC !!!
+
+//NEED THIS ROUTE => /calFinalGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&finalGradeType=${finalGradeType}&gradeType=${gradeType}
+app.patch("/calcFinalGrade", (req, res) => {
+  const { studentName, professionName, topicIndexes, finalGradeType, gradeType } = req.query;
+  calFinalGrade(studentName, professionName, topicIndexes, finalGradeType, gradeType).then(val=>{
+    res.send(val);
+  });
+});
+
+
+
+// //COMPLETE THE DOC !!!!
+
+// //NEED THIS ROUTE => /getStudentTestGradesForSpecificTopic?studentName=${studentName}&professionName=${professionName}&topicIndex=${topicIndex}
+// app.get("/getStudentTestGradesForSpecificTopic",(req,res)=>{
+//   const {studentName,professionName,topicIndex}=req.query;
+//   getStudentTestGradesForSpecificTopic(studentName,professionName,topicIndex).then(testGradeArray=>{
+//     res.send(testGradeArray);
+//   });
+// });
 
 
 //////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
@@ -217,17 +240,17 @@ app.post("/addTopicMaterials", (req, res) => {
 //setFunction for passingGrade
 //NEED (keyCollection,passingGrade)
 //NEED THIS ROUTE => /setPassingGrade?keyCollection=${keyCollection}&passingGrade=${passingGrade}
-app.patch("/setPassingGrade",(req,res)=>{
-  const {keyCollection,passingGrade}=req.query;
-  setPassingGrade(keyCollection,passingGrade);
+app.patch("/setPassingGrade", (req, res) => {
+  const { keyCollection, passingGrade } = req.query;
+  setPassingGrade(keyCollection, passingGrade);
 })
 
 //getFunction for passingGrade 
 //NEED (keyCollection)
 //NEED THIS ROUTE => /getPassingGrade?keyCollection=${keyCollection}
-app.get("/getPassingGrade",(req,res)=>{
-  const {keyCollection}=req.query;
-  getPassingGrade(keyCollection).then(grade=>{
+app.get("/getPassingGrade", (req, res) => {
+  const { keyCollection } = req.query;
+  getPassingGrade(keyCollection).then(grade => {
     res.send(grade.toString());
   });
 });

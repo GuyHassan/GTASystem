@@ -18,7 +18,6 @@ const MaterialTests = ({ location, onClickNext, question: { question, ans1, ans2
         else {
             onClickNext(Number(correctAns) === correctAnswer ? 100 : 0)
         }
-
     }
 
     return (
