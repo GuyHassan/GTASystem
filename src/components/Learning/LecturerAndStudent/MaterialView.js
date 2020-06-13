@@ -34,17 +34,17 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         setPassingGrade(grade.data)
     }
     //NEED TO FIX THAT !!!!!
-    const passingGradeJsx = (keyCollection) => {
-        return passingGrade > 0
-            ? <Fragment>
-                <label style={{ marginRight: '10px' }}>Passing Grade: </label>
-                <form className="ui input" onChange={({ target: { value } }) => setPassingGrade(value)} onSubmit={(e) => submitPassGrade(e, keyCollection)}>
-                    <input name="passGrade" defaultValue={passingGrade} type="text" className='gradeInput' />
-                    <button className="ui basic green button tiny" style={{ height: '27px', marginLeft: '10px' }} >Submit</button>
-                </form>
-            </Fragment>
-            : <h3>Passing Grade - {passingGrade}</h3>
-    }
+    // const passingGradeJsx = (keyCollection) => {
+    //     return passingGrade > 0
+    //         ? <Fragment>
+    //             <label style={{ marginRight: '10px' }}>Passing Grade: </label>
+    //             <form className="ui input" onChange={({ target: { value } }) => setPassingGrade(value)} onSubmit={(e) => submitPassGrade(e, keyCollection)}>
+    //                 <input name="passGrade" defaultValue={passingGrade} type="text" className='gradeInput' />
+    //                 <button className="ui basic green button tiny" style={{ height: '27px', marginLeft: '10px' }} >Submit</button>
+    //             </form>
+    //         </Fragment>
+    //         : <h3>Passing Grade - {passingGrade}</h3>
+    // }
     //display buttons on click one of topic or subtopic, check the type of user (student or lecture )
     const Buttons = ({ topic: { subTopicName, keyCollection, topicName }, indexes }) => {
         const name = subTopicName ? subTopicName : topicName;
@@ -58,8 +58,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                     <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}/testQuestions`}
                         className='ui basic black button small'>Add Test Question</Link>
                     <br /><br />
-
-                    {!passingGrade ? getPassingGrade(keyCollection) : passingGradeJsx(keyCollection)}
+                    {/* {!passingGrade ? getPassingGrade(keyCollection) : passingGradeJsx(keyCollection)} */}
                 </div>
                 : <div style={{ margin: '10px' }}>
                     <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/MaterialPages`}

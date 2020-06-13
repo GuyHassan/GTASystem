@@ -6,11 +6,10 @@ import MaterialPages from '../Student/MaterialPages';
 import { Grid, Icon } from 'semantic-ui-react'
 import { server } from '../../../Apis/server';
 import history from '../../../history';
-
+const [pageDetails, questionDetails] = [{ page: { title: '', freeText: '', file: '', streamLink: '' }, index: '' }, { question: { question: '', ans1: '', ans2: '', an3: '', ans4: '', correctAns: '' }, index: '' }]
 const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMaterialExamQuestions, Pages, Questions, match: { params: { className, profession, type, keyCollection, indexTopic } } }) => {
-    const [currentpPage, setCurrentPage] = useState({ page: { title: '', freeText: '', file: '', streamLink: '' }, index: '' })
-    const [currentpQuestion, setCurrentQuestion] = useState({ question: { question: '', ans1: '', ans2: '', an3: '', ans4: '', correctAns: '' }, index: '' })
-    // const [CurrentFinalTest, setCurrentFinalTest] = useState({ question: { question: '', ans1: '', ans2: '', an3: '', ans4: '', correctAns: '' }, index: '' })
+    const [currentpPage, setCurrentPage] = useState(pageDetails)
+    const [currentpQuestion, setCurrentQuestion] = useState(questionDetails)
     const [finishQuestion, setFinishQuestion] = useState(-1);
     const { user } = JSON.parse(localStorage.getItem("userCredential"))
     const onNextPageArrow = () => {
@@ -33,12 +32,26 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
             setCurrentQuestion(prevState => { return { question: Questions[prevState.index + 1], index: prevState.index + 1 } });
         else {
             alert('Well Done, Finish the Questions !')
+
             server.patch(`/setIsFinishQuestion?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}`);
+            server.patch(`/calFinalGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&finalGradeType=${'finalStudyGrade'}&gradeType=${'studyGrade'}`)
             history.push(`/MaterialView/${profession}/${className}`)
         }
     }
-    const nextPageFinalTest = (answer, index) => {
-        server.patch(`/setArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&gradeType=${'testGrades'}&grade=${answer}`);
+    const nextPageFinalTest = (answer) => {
+        const indexTopicNeeded = typeof Questions.subTopicIndex ? indexTopic + ',' + Questions.subTopicIndex : indexTopic;
+        server.patch(`/setArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&gradeType=${'testGrades'}&grade=${answer}`);
+        if (!currentpQuestion.index + 1 === Questions.questions.length) {
+            setCurrentQuestion(prevState => { return { question: Questions.questions[prevState.index + 1], index: prevState.index + 1 } });
+        }
+        else {
+            server.patch(`/calcFinalGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&finalGradeType=${'finalTestGrade'}&gradeType=${'testGrades'}`).then(res => {
+                alert('Well Done, Finish the Test !')
+                getMaterialExamQuestions({ profession, indexTopic, user })
+            })
+
+        }
+
     }
     const GridExampleInverted = () => (
         <Grid columns='equal' divided inverted padded textAlign='center'>
@@ -70,18 +83,24 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
             && setCurrentPage({ page: Pages[0], index: 0 })
     }, [Pages])
     useEffect(() => {
-        type === 'MaterialQuestions'
-            ? server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&gradeType=${'studyGrades'}`).then(res => {
-                const lastQuestionIndex = res.data === "OK" ? 0 : res.data.length;
+        const indexTopicNeeded = Questions.subTopicIndex ? indexTopic + ',' + Questions.subTopicIndex : indexTopic
+        if (type === 'MaterialQuestions')
+            server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&gradeType=${'studyGrades'}`).then(res => {
+                const lastQuestionIndex = res.data === "isEmpty" ? 0 : res.data.length;
                 if (Questions.length) {
                     setFinishQuestion(lastQuestionIndex)
                     setCurrentQuestion({ question: Questions[lastQuestionIndex], index: lastQuestionIndex })
                 }
             })
-            : server.get(`/getStudentTestGradesForSpecificTopic?studentName=${user}&professionName=${profession}&topicIndex=${indexTopic}`).then(res => {
-                console.log(res.data);
+        else if (!Array.isArray(Questions))
+            server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&gradeType=${'testGrades'}`).then(res => {
+                const lastQuestionIndex = res.data === "isEmpty" ? 0 : res.data.length;
+                if (Questions.questions !== undefined && Questions.questions.length) {
+                    setFinishQuestion(lastQuestionIndex)
+                    setCurrentQuestion({ question: Questions.questions[lastQuestionIndex], index: lastQuestionIndex })
+                }
             })
-    }, [Questions, profession, indexTopic, user])
+    }, [Questions, profession, indexTopic, user, type])
     console.log('Questions - ', Questions)
     return (
         <div>
@@ -93,6 +112,7 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
     )
 }
 const mapStateToProps = (state) => {
+    console.log('state - ', state.materialQuestions)
     return { Pages: state.materialPages, Questions: state.materialQuestions }
 }
 export default connect(mapStateToProps, { getMaterialPages, getMaterialQuestions, getMaterialExamQuestions })(DisplayPagesAndTests);

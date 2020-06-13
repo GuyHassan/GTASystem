@@ -88,7 +88,6 @@ const deleteArrayFromFirestore = (keyCollection, type) => {
 
 
 
-module.exports = {
-    addLinkToTopic, getArrayFromFirestore, addTopicMaterial,
-    /* getTestQuestionsFromFirestore ,*/ setPassingGrade, getPassingGrade
-};
+module.exports = { addLinkToTopic, getArrayFromFirestore, addTopicMaterial, 
+                   /*getTestQuestionsFromFirestore,*/setPassingGrade,getPassingGrade,
+                 };

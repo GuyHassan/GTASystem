@@ -3,7 +3,7 @@
 const { addMaterials, getMaterials, getProfession,
   addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
   addUsers, existInDB, getClassrooms, addClassrooms, setIsFinishQuestions,
-  initialArrayToGrades, getTopicGrades, getTestQuestions,getStudentTestGradesForSpecificTopic
+  initialArrayToGrades, getTopicGrades, getTestQuestions, calFinalGrade
 } = require("./databaseDefinition");
 
 const { getArrayFromFirestore, addTopicMaterial,
@@ -180,31 +180,44 @@ app.get("/getArrayGrade", (req, res) => {
     if (Array.isArray(gradesArr)) {
       res.send(gradesArr);
     }
-    res.sendStatus(200);
+    res.send("isEmpty");
   });
 });
 
 
 
-// //NEED (studentName, professionName,topicIndex)=> the index of the topic only !!!
-// //NEED THIS ROUTE => /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
-// app.get("getTestQuestions",(req,res)=>{
-//   const {studentName, professionName,topicIndex} =req.query;
-//   getTestQuestions(studentName, professionName,topicIndex).then(testQuestion=>{
-//     res.send(testQuestion);
+//NEED (studentName, professionName,topicIndex)=> the index of the topic only !!!
+//NEED THIS ROUTE => /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndex=${topicIndex}
+app.get("/getTestQuestions", (req, res) => {
+  const { studentName, professionName, topicIndex } = req.query;
+  getTestQuestions(studentName, professionName, topicIndex).then(testQuestion => {
+    res.send(testQuestion);
+  });
+});
+
+
+
+//COMPLETE THE DOC !!!
+
+//NEED THIS ROUTE => /calFinalGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&finalGradeType=${finalGradeType}&gradeType=${gradeType}
+app.patch("/calcFinalGrade", (req, res) => {
+  const { studentName, professionName, topicIndexes, finalGradeType, gradeType } = req.query;
+  calFinalGrade(studentName, professionName, topicIndexes, finalGradeType, gradeType).then(val=>{
+    res.send(val);
+  });
+});
+
+
+
+// //COMPLETE THE DOC !!!!
+
+// //NEED THIS ROUTE => /getStudentTestGradesForSpecificTopic?studentName=${studentName}&professionName=${professionName}&topicIndex=${topicIndex}
+// app.get("/getStudentTestGradesForSpecificTopic",(req,res)=>{
+//   const {studentName,professionName,topicIndex}=req.query;
+//   getStudentTestGradesForSpecificTopic(studentName,professionName,topicIndex).then(testGradeArray=>{
+//     res.send(testGradeArray);
 //   });
 // });
-
-
-//COMPLETE THE DOC !!!!
-
-//NEED THIS ROUTE => /getStudentTestGradesForSpecificTopic?studentName=${studentName}&professionName=${professionName}&topicIndex=${topicIndex}
-app.get("/getStudentTestGradesForSpecificTopic",(req,res)=>{
-  const {studentName,professionName,topicIndex}=req.query;
-  getStudentTestGradesForSpecificTopic(studentName,professionName,topicIndex).then(testGradeArray=>{
-    res.send(testGradeArray);
-  });
-});
 
 
 //////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////

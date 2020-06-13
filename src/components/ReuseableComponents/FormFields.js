@@ -12,7 +12,8 @@ const FormFields = ({ handleSubmit, propertiesName, children, extraField }) => {
             <Field
                 name={propertiesName.firstField}
                 component={renderInput}
-                label={`Enter ${propertiesName.firstLabel}`} >
+                label={`Enter ${propertiesName.firstLabel}`}
+            >
             </Field>
             <Field
                 name={propertiesName.secondField}
@@ -42,10 +43,11 @@ const renderError = ({ error, touched }) => {
     meta -  is a validate function (get the error message)*/
 const renderInput = ({ input, label, meta }) => {
     const className = `field ${meta.error && meta.touched ? 'error' : ''}`;
+    const type = input.name === 'Password' ? 'password' : null;
     return (
         <div className={className}>
             <label >{label}</label>
-            <input {...input} />
+            <input {...input} type={type} />
             {renderError(meta)}
 
         </div>
