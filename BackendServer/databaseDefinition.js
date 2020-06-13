@@ -439,6 +439,25 @@ const getStudentsGrades = async (studentsNames, professionName) => {
 
 /////////////////////////////////////////////////////////// THIS IS FOR STUDENT FEEDBACK
 
+const getStudentTree =async (studentName)=>{
+    const studentTree =await database.ref(`students/${studentName}`).once("value");
+    return studentTree.val();
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////HERE
+const buildProfessionFeedbackTree =(professionTree)=>{
+
+}
+
+
+const getStudentDetails=async(studentName)=>{
+    const studentTree=await getStudentTree(studentName);
+    const studentGradeTree =[];
+
+}
+
+
+
+
 
 /////////////////////////////////////////////////////////// END FOR STUDENT FEEDBACK
 
