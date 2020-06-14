@@ -363,21 +363,20 @@ const getTestQuestions = async (studentName, professionName, topicIndex) => {
     });
 }
 
-
-
-
-// //function that give the testQuestion for the specific topic 
-// //NEED (lecturerName,professionName,className,index)=>the index is the topicName
-// //RETURN array => [{subTopicIndex,keyCollection,testQuestions},{subTopicIndex,keyCollection,testQuestions}]
-// const getTestQuestions = async (studentName, professionName, topicIndex) => {
-//     const topicTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndex}`).once("value"))).val();
-//     const keyCollectionArray = topicTree.hasOwnProperty("subTopics")
-//         ? await topicTree.subTopics.map(subTopic => subTopic.keyCollection)
-//         : [topicTree.keyCollection];
-//     return getTestQuestionsFromFirestore(keyCollectionArray);
-// }
-
-
+//function to update finalGrade of the studyGrade!!!
+const calcFinalStudyGrade =(studentName,professionName,topicIndexes)=>{
+    getTopicGrades(studentName,professionName,topicIndexes,"studyGrades").then(gradesArr=>{
+        const avg =arrAvg(gradesArr);
+        if (!Array.isArray(topicIndexesArray))
+            topicIndexesArray = getArrayIndexes(topicIndexes);
+        if(topicIndexesArray.length>1){
+            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/finalStudyGrade`).set(avg);
+        }
+        else{
+            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/finalStudyGrade`).set(avg);
+        }
+    });
+}
 
 //////////////////////////////////////////////////////////////// THIS FUNCTIONS FOR THE DIAGRAMS!!!
 
@@ -443,28 +442,28 @@ const getStudentTree = async (studentName) => {
 
 
 
-const buildProfessionFeedbackTree = (professionTree) => {
+const buildProfessionFeedbackTree = (professionTree,type) => {
     let objArray = [];
     for (let i = 0; i < professionTree.length; i++) {
-        if (type == "subTopicName" || (!(professionTree[i].hasOwnProperty("subTopics")))) {
-            objArray.push({ [type]: professionTree[i][type], finalTestGrade: professionTree[i].finalTestGrade });
-        }
-        else {
-            objArray.push({ [type]: professionTree[i][type], details: { testGrades: -1, finalTestGrade: -1 } });
-        }
+        objArray.push({ [type]: professionTree[i][type],finalTestGrade :professionTree[i].details.finalTestGrade});
         if (professionTree[i].hasOwnProperty("subTopics")) {
-            objArray[i]["subTopics"] = initialArrayOfObj(professionTree[i].subTopics, "subTopicName");
+            objArray[i]["subTopics"] = buildProfessionFeedbackTree(professionTree[i].subTopics, "subTopicName");
         }
     }
     return objArray;
 }
 
-
+//function  that give all the student profession and their grades
 const getStudentDetails = async (studentName) => {
     const studentTree = await getStudentTree(studentName);
     const studentGradeTree = [];
-
+    studentTree.professionList.forEach(professionName=>{
+        studentGradeTree.push({professionName:professionName,topics:buildProfessionFeedbackTree(studentTree.materials[professionName].needHelpAndGrades,"topicName")})
+    });
+    return studentGradeTree;
 }
+
+
 
 
 
@@ -496,5 +495,6 @@ const deleteStudentFromClass = (studentDetails) => {
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
-    initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions
+    initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions,calcFinalStudyGrade
+
 };
