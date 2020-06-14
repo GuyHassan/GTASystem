@@ -14,9 +14,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const [passingGrade, setPassingGrade] = useState('')
     const { isLecturer, user } = JSON.parse(localStorage.getItem('userCredential'))
     const { profession, className } = params;
-    const onClickFinalTest = () => {
-        alert("Final Test !!");
-    }
+
     // when the lecturer need to set pass grade we check if the grade is correct, if true he update the DB
     const submitPassGrade = (e, keyCollection) => {
         e.preventDefault();
@@ -28,23 +26,25 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
             setPassingGrade('')
         }
     }
-    //NEED TO FIX THAT !!!!!
-    const getPassingGrade = async (keyCollection) => {
-        const grade = await server.get(`/getPassingGrade?keyCollection=${keyCollection}`);
-        setPassingGrade(grade.data)
+    // get passingGrade from the DB
+    const getPassingGrade = (keyCollection) => {
+        server.get(`/getPassingGrade?keyCollection=${keyCollection}`).then(grade => {
+            setPassingGrade(grade.data)
+        })
     }
-    //NEED TO FIX THAT !!!!!
-    // const passingGradeJsx = (keyCollection) => {
-    //     return passingGrade > 0
-    //         ? <Fragment>
-    //             <label style={{ marginRight: '10px' }}>Passing Grade: </label>
-    //             <form className="ui input" onChange={({ target: { value } }) => setPassingGrade(value)} onSubmit={(e) => submitPassGrade(e, keyCollection)}>
-    //                 <input name="passGrade" defaultValue={passingGrade} type="text" className='gradeInput' />
-    //                 <button className="ui basic green button tiny" style={{ height: '27px', marginLeft: '10px' }} >Submit</button>
-    //             </form>
-    //         </Fragment>
-    //         : <h3>Passing Grade - {passingGrade}</h3>
-    // }
+    // submited the passing grade the belong to this keyCollection
+    const passingGradeJsx = (keyCollection) => {
+        if (passingGrade === '')
+            getPassingGrade(keyCollection)
+        return passingGrade >= -1
+            && <Fragment>
+                <label style={{ marginRight: '10px' }}>Passing Grade: </label>
+                <form className="ui input" onChange={({ target: { value } }) => setPassingGrade(value)} onSubmit={(e) => submitPassGrade(e, keyCollection)}>
+                    <input name="passGrade" defaultValue={passingGrade} type="text" className='gradeInput' />
+                    <button className="ui basic green button tiny" style={{ height: '27px', marginLeft: '10px' }} >Submit</button>
+                </form>
+            </Fragment>
+    }
     //display buttons on click one of topic or subtopic, check the type of user (student or lecture )
     const Buttons = ({ topic: { subTopicName, keyCollection, topicName }, indexes }) => {
         const name = subTopicName ? subTopicName : topicName;
@@ -52,13 +52,15 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
             return isLecturer
                 ? <div style={{ margin: '10px' }}>
                     <Link to={`/LecturerView/CreateMaterialPages/${profession}/${className}/${keyCollection}`}
-                        className='ui basic black button small'>Add Pages</Link>
+                        className='ui basic black button small'
+                        style={{ marginBottom: '5px' }}>Add Pages</Link>
                     <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}/questions`}
-                        className='ui basic black button small'>Add Practice Question</Link>
+                        className='ui basic black button small'
+                        style={{ marginBottom: '5px' }}>Add Practice Question</Link>
                     <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}/testQuestions`}
                         className='ui basic black button small'>Add Test Question</Link>
                     <br /><br />
-                    {/* {!passingGrade ? getPassingGrade(keyCollection) : passingGradeJsx(keyCollection)} */}
+                    {passingGradeJsx(keyCollection)}
                 </div>
                 : <div style={{ margin: '10px' }}>
                     <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/MaterialPages`}
@@ -116,7 +118,10 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
             )
                 :
                 <ul style={{ marginTop: '10px', fontSize: '20px' }} key={idTopic}>
-                    <li className="subTopics" onClick={() => setShowButtonsID(topic.subTopicName)}>
+                    <li className="subTopics" onClick={() => {
+                        setShowButtonsID(topic.subTopicName)
+                        setPassingGrade('')
+                    }}>
                         {topic.subTopicName}
                     </li>
                     <Buttons topic={topic} indexes={[parentIndex, idTopic]} />
@@ -155,7 +160,10 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                     <div className="content" style={{ color: '#1a75ff' }}>
                         <ul>
                             <li style={{ color: 'green' }}>
-                                <h2 className="renderText" style={{ opacity: material.subTopics && '1' }} onClick={!material.subTopics ? () => setShowButtonsID(material.topicName) : null}>
+                                <h2 className="renderText" style={{ opacity: material.subTopics && '1' }} onClick={() => {
+                                    !material.subTopics && setShowButtonsID(material.topicName)
+                                    setPassingGrade('')
+                                }}>
                                     {material.topicName}
                                 </h2>
                                 {material.subTopics && subTopicRender(material.subTopics, idMaterial)}

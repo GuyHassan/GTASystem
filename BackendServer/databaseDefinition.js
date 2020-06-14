@@ -352,7 +352,7 @@ const getTestQuestions = async (studentName, professionName, topicIndex) => {
         else {
             let topicDetails = topicTree.val().details;
             let testQuestions = await getArrayFromFirestore(topicTree.val().keyCollection, "testQuestions");
-            if (topicDetails.testGradeArray.length < testQuestions.length) {
+            if (topicDetails.testGrades.length < testQuestions.length||topicDetails.testGrades==-1) {
                 return { questions: testQuestions };
             }
             else {

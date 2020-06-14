@@ -38,7 +38,8 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
         }
     }
     const nextPageFinalTest = (answer) => {
-        const indexTopicNeeded = typeof Questions.subTopicsIndex ? indexTopic + ',' + Questions.subTopicsIndex : indexTopic;
+        const indexTopicNeeded = Questions.hasOwnProperty("subTopicsIndex") ? indexTopic + ',' + Questions.subTopicsIndex : indexTopic;
+        console.log('index - ', indexTopicNeeded)
         server.patch(`/setArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&gradeType=${'testGrades'}&grade=${answer}`);
         if (!currentpQuestion.index + 1 === Questions.questions.length) {
             setCurrentQuestion(prevState => { return { question: Questions.questions[prevState.index + 1], index: prevState.index + 1 } });
@@ -86,7 +87,7 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
                 }
             })
         else if (type === 'MaterialTestQuestion') {
-            const indexTopicNeeded = Questions.subTopicsIndex ? indexTopic + ',' + Questions.subTopicsIndex : indexTopic
+            const indexTopicNeeded = Questions.hasOwnProperty("subTopicsIndex") ? indexTopic + ',' + Questions.subTopicsIndex : indexTopic
             console.log(Questions)
             if (!Array.isArray(Questions))
                 server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&gradeType=${'testGrades'}`).then(res => {
