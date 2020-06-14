@@ -3,7 +3,7 @@
 const { addMaterials, getMaterials, getProfession,
   addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
   addUsers, existInDB, getClassrooms, addClassrooms, setIsFinishQuestions,
-  initialArrayToGrades, getTopicGrades, getTestQuestions
+  initialArrayToGrades, getTopicGrades, getTestQuestions, calFinalGrade
 } = require("./databaseDefinition");
 
 const { getArrayFromFirestore, addTopicMaterial,
@@ -193,6 +193,28 @@ app.get("/getTestQuestions", (req, res) => {
 });
 
 
+
+//COMPLETE THE DOC !!!
+
+//NEED THIS ROUTE => /calFinalGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&finalGradeType=${finalGradeType}&gradeType=${gradeType}
+app.patch("/calcFinalGrade", (req, res) => {
+  const { studentName, professionName, topicIndexes, finalGradeType, gradeType } = req.query;
+  calFinalGrade(studentName, professionName, topicIndexes, finalGradeType, gradeType).then(val=>{
+    res.send(val);
+  });
+});
+
+
+
+// //COMPLETE THE DOC !!!!
+
+// //NEED THIS ROUTE => /getStudentTestGradesForSpecificTopic?studentName=${studentName}&professionName=${professionName}&topicIndex=${topicIndex}
+// app.get("/getStudentTestGradesForSpecificTopic",(req,res)=>{
+//   const {studentName,professionName,topicIndex}=req.query;
+//   getStudentTestGradesForSpecificTopic(studentName,professionName,topicIndex).then(testGradeArray=>{
+//     res.send(testGradeArray);
+//   });
+// });
 
 
 //////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
