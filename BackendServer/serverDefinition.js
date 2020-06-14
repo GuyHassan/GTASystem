@@ -3,7 +3,7 @@
 const { addMaterials, getMaterials, getProfession,
   addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
   addUsers, existInDB, getClassrooms, addClassrooms, setIsFinishQuestions,
-  initialArrayToGrades, getTopicGrades, getTestQuestions, calFinalGrade
+  initialArrayToGrades, getTopicGrades, getTestQuestions, calcFinalStudyGrade
 } = require("./databaseDefinition");
 
 const { getArrayFromFirestore, addTopicMaterial,
@@ -13,9 +13,6 @@ const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
-const multer = require('multer');
-const fs = require('fs');
-const upload = multer({ dest: 'upload' });
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 
@@ -154,7 +151,6 @@ app.post("/addMaterials", (req, res) => {
   });
 });
 
-
 //NEED (studentName,professionName,topicIndexes)
 //NEED THIS ROUTE  => /setIsFinishQuestion?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
 app.patch("/setIsFinishQuestion", (req, res) => {
@@ -184,8 +180,6 @@ app.get("/getArrayGrade", (req, res) => {
   });
 });
 
-
-
 //NEED (studentName, professionName,topicIndex)=> the index of the topic only !!!
 //NEED THIS ROUTE => /getTestQuestions?studentName=${studentName}&professionName=${professionName}&topicIndex=${topicIndex}
 app.get("/getTestQuestions", (req, res) => {
@@ -195,30 +189,12 @@ app.get("/getTestQuestions", (req, res) => {
   });
 });
 
-
-
-//COMPLETE THE DOC !!!
-
-//NEED THIS ROUTE => /calFinalGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&finalGradeType=${finalGradeType}&gradeType=${gradeType}
+//NEED (studentName,professionName,topicIndexes)
+//NEED THIS ROUTE => /calcFinalGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
 app.patch("/calcFinalGrade", (req, res) => {
-  const { studentName, professionName, topicIndexes, finalGradeType, gradeType } = req.query;
-  calFinalGrade(studentName, professionName, topicIndexes, finalGradeType, gradeType).then(val=>{
-    res.send(val);
-  });
+  const { studentName, professionName, topicIndexes } = req.query;
+  calcFinalStudyGrade(studentName,professionName,topicIndexes);
 });
-
-
-
-// //COMPLETE THE DOC !!!!
-
-// //NEED THIS ROUTE => /getStudentTestGradesForSpecificTopic?studentName=${studentName}&professionName=${professionName}&topicIndex=${topicIndex}
-// app.get("/getStudentTestGradesForSpecificTopic",(req,res)=>{
-//   const {studentName,professionName,topicIndex}=req.query;
-//   getStudentTestGradesForSpecificTopic(studentName,professionName,topicIndex).then(testGradeArray=>{
-//     res.send(testGradeArray);
-//   });
-// });
-
 
 //////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
 
