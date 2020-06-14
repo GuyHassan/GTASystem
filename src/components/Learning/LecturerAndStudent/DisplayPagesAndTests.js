@@ -32,25 +32,19 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
             setCurrentQuestion(prevState => { return { question: Questions[prevState.index + 1], index: prevState.index + 1 } });
         else {
             alert('Well Done, Finish the Questions !')
-
             server.patch(`/setIsFinishQuestion?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}`);
             server.patch(`/calFinalGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&finalGradeType=${'finalStudyGrade'}&gradeType=${'studyGrade'}`)
             history.push(`/MaterialView/${profession}/${className}`)
         }
     }
     const nextPageFinalTest = (answer) => {
-        const indexTopicNeeded = typeof Questions.subTopicIndex ? indexTopic + ',' + Questions.subTopicIndex : indexTopic;
+        const indexTopicNeeded = typeof Questions.subTopicsIndex ? indexTopic + ',' + Questions.subTopicsIndex : indexTopic;
         server.patch(`/setArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&gradeType=${'testGrades'}&grade=${answer}`);
         if (!currentpQuestion.index + 1 === Questions.questions.length) {
             setCurrentQuestion(prevState => { return { question: Questions.questions[prevState.index + 1], index: prevState.index + 1 } });
         }
-        else {
-            server.patch(`/calcFinalGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&finalGradeType=${'finalTestGrade'}&gradeType=${'testGrades'}`).then(res => {
-                alert('Well Done, Finish the Test !')
-                getMaterialExamQuestions({ profession, indexTopic, user })
-            })
-
-        }
+        else
+            getMaterialExamQuestions({ profession, indexTopic, user })
 
     }
     const GridExampleInverted = () => (
@@ -83,7 +77,6 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
             && setCurrentPage({ page: Pages[0], index: 0 })
     }, [Pages])
     useEffect(() => {
-        const indexTopicNeeded = Questions.subTopicIndex ? indexTopic + ',' + Questions.subTopicIndex : indexTopic
         if (type === 'MaterialQuestions')
             server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&gradeType=${'studyGrades'}`).then(res => {
                 const lastQuestionIndex = res.data === "isEmpty" ? 0 : res.data.length;
@@ -92,14 +85,24 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
                     setCurrentQuestion({ question: Questions[lastQuestionIndex], index: lastQuestionIndex })
                 }
             })
-        else if (!Array.isArray(Questions))
-            server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&gradeType=${'testGrades'}`).then(res => {
-                const lastQuestionIndex = res.data === "isEmpty" ? 0 : res.data.length;
-                if (Questions.questions !== undefined && Questions.questions.length) {
-                    setFinishQuestion(lastQuestionIndex)
-                    setCurrentQuestion({ question: Questions.questions[lastQuestionIndex], index: lastQuestionIndex })
-                }
-            })
+        else if (type === 'MaterialTestQuestion') {
+            const indexTopicNeeded = Questions.subTopicsIndex ? indexTopic + ',' + Questions.subTopicsIndex : indexTopic
+            console.log(Questions)
+            if (!Array.isArray(Questions))
+                server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&gradeType=${'testGrades'}`).then(res => {
+                    const lastQuestionIndex = res.data === "isEmpty" ? 0 : res.data.length;
+                    if (Questions.questions !== undefined && Questions.questions.length) {
+                        // setFinishQuestion(lastQuestionIndex)
+                        setCurrentQuestion({ question: Questions.questions[lastQuestionIndex], index: lastQuestionIndex })
+                    }
+                })
+            else if (Questions[0] === 'Finish') {
+                alert('Well Done, The Test Is Finish !');
+                history.push(`/MaterialView/${profession}/${className}`)
+            }
+
+        }
+
     }, [Questions, profession, indexTopic, user, type])
     console.log('Questions - ', Questions)
     return (
