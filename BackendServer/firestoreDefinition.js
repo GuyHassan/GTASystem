@@ -56,38 +56,8 @@ const addTopicMaterial = (keyCollection, newArr, type) => {
     });
 }
 
-// //inside method !! to get Questions for specific keyCollection
-// // RETURN obj : {keyCollection string,testQuestion array}
-// const getSpecificTestQuestion = async (keyCollection, index) => {
-//     return await firestore.collection("topics").doc(keyCollection).get().then(details => {
-//         const routeDict = { "index": index, "keyCollection": keyCollection, "testQuestions": details.data().testQuestions };
-//         return routeDict;
-//     })
-// }
-
-// //פונקציה בשביל החזרת מבחן 
-// //function to get all the question for specific topic !!
-// //NEED (keyCollection Array) !!
-// //RETURN an array like this : [{keyCollection,testQuestion},{keyCollection,testQuestion}]
-// const getTestQuestionsFromFirestore = async (keyCollectionArray) => {
-//     let testQuestions = [];
-//     keyCollectionArray.forEach((keyCollection, index) => {
-//         testQuestions.push(getSpecificTestQuestion(keyCollection, index));
-//     });
-//     testQuestions = await Promise.all(testQuestions);
-//     return testQuestions;
-// }
-
-
-
-
-const deleteArrayFromFirestore = (keyCollection, type) => {
-
-}
-
-
 
 
 module.exports = { addLinkToTopic, getArrayFromFirestore, addTopicMaterial, 
-                   /*getTestQuestionsFromFirestore,*/setPassingGrade,getPassingGrade,
+                   setPassingGrade,getPassingGrade,
                  };
