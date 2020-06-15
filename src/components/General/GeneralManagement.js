@@ -11,8 +11,9 @@ const GeneralManagement = () => {
         return localStorage.length ? <FailedLocation message={'You are already connected !!'} /> : <Login />;
     }
     const adminPermission = () => {
-        const { user } = JSON.parse(localStorage.getItem('userCredential'));
-        return user === ('GuyHassan' || 'YinonHirary') || user !== undefined ? <AdminPermission /> : <FailedLocation message={'You Dont Have High Permission !'} />
+        const details = JSON.parse(localStorage.getItem('userCredential'));
+        const { user } = details ? details : { user: null }
+        return user === ('GuyHassan' || 'YinonHirary') ? <AdminPermission /> : <FailedLocation message={'You Dont Have High Permission !'} />
     }
     // {/* <Switch> - is a tag that tell to the browser go to first Route that equal to your Path!*/ }
     return (

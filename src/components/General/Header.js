@@ -6,7 +6,7 @@ import { ReactComponent as Logo } from "../../assets/img/LogoNavbar.svg";
 import { connect } from 'react-redux';
 import { SignIn, SignOut } from '../../Redux/actions';
 import '../Style/Header.css';
-
+/** This component is a Navbar in the top */
 const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
     // pass a user id and return uppercase first character
     const prettyUserName = user => { return user.substring(0, 1).toUpperCase() + user.substring(1) }

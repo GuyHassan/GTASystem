@@ -82,7 +82,7 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
             : type === 'MaterialQuestions'
                 ? getMaterialQuestions(keyCollection)
                 : getMaterialExamQuestions({ profession, indexTopic, user })
-    }, [getMaterialPages, getMaterialQuestions, getMaterialExamQuestions, profession, indexTopic, keyCollection, type])
+    }, [getMaterialPages, getMaterialQuestions, getMaterialExamQuestions, profession, indexTopic, keyCollection, type, user])
     // set current page material
     useEffect(() => {
         Pages.length
@@ -94,7 +94,6 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
     useEffect(() => {
         if (type === 'MaterialQuestions')
             server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&gradeType=${'studyGrades'}`).then(res => {
-                console.log(Questions, 'blablabl')
                 const lastQuestionIndex = res.data === "isEmpty" ? 0 : res.data.length;
                 if (Questions.length) {
                     setFinishQuestion(lastQuestionIndex)
@@ -116,11 +115,11 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
             }
         }
 
-    }, [Questions, profession, indexTopic, user, type])
+    }, [Questions, profession, indexTopic, user, type, className])
     return (
         <div>
-            {Questions.length <= finishQuestion && type === 'MaterialQuestions' ||
-                type === 'MaterialTestQuestion' && Questions.length === 0
+            {(Questions.length <= finishQuestion && type === 'MaterialQuestions') ||
+                (type === 'MaterialTestQuestion' && Questions.length === 0)
                 ? <h1 style={{ textAlign: 'center', color: 'maroon' }}> No Questions Exist ! </h1>
                 : <GridExampleInverted />
             }
