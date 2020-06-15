@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { getStudents } from '../../../Redux/actions';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 
+/**
+ * This component introduces all students to the lecturer.
+ * allows for diagrams describing the progress of the students */
 const ViewStudent = ({ students, match: { params }, getStudents }) => {
-    const studentDiagram = ({ id, name }) => {
-        //{id: "yinon123", name: "yinon hirary"}
-        // here need to render the specific student diagram
-    }
     const renderStudent = () => {
         return students.map(student => {
             return (
@@ -14,9 +14,12 @@ const ViewStudent = ({ students, match: { params }, getStudents }) => {
                     <div className="content" >
                         <h2>
                             <ul>
-                                <li className="renderText" onClick={() => studentDiagram(student)}/* style={{ opacity: '1', cursor: 'default' }} */>
-                                    {student.name}
-                                </li>
+                                <Link to={`/LecturerView/StudentDiagram/${params.className}/${params.profession}/${student.id}`}>
+                                    <li className="renderText" onClick={() => studentDiagram(student)}>
+                                        {student.name}
+
+                                    </li>
+                                </Link>
                             </ul>
                         </h2>
                     </div>
@@ -34,10 +37,16 @@ const ViewStudent = ({ students, match: { params }, getStudents }) => {
             <div className="ui container" style={{ marginTop: '20px' }}>
                 <div className="ui celled list">
                     {renderStudent()}
-                    <button className='ui green button right floated' style={{ margin: '10px' }} >Class Diagram</button>
+
+                    <Link to={{
+                        pathname: `/LecturerView/StudentDiagram/${params.className}/${params.profession}`, students
+                    }}
+                        className='ui green button right floated' style={{ margin: '10px' }}>
+                        Class Diagram
+                    </Link>
                 </div>
             </div>
-        </div>
+        </div >
 
     )
 }

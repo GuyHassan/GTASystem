@@ -7,6 +7,7 @@ import { Icon } from 'semantic-ui-react'
 import history from '../../../history';
 import '../../Style/MaterialView.css';
 
+/**This component shows all the study material that the lecturer teaches or the student learns */
 const MaterialView = ({ getMaterials, match: { params }, materials }) => {
     const [stateMaterial, setStateMaterial] = useState([]);
     const [editMode, setEditMode] = useState(false);

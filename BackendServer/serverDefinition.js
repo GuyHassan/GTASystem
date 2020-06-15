@@ -3,7 +3,8 @@
 const { addMaterials, getMaterials, getProfession,
   addStudentToClassroom, getStudentsNamesAsObject, checkUsernamePassword,
   addUsers, existInDB, getClassrooms, addClassrooms, setIsFinishQuestions,
-  initialArrayToGrades, getTopicGrades, getTestQuestions, calcFinalStudyGrade
+  initialArrayToGrades, getTopicGrades, getTestQuestions, calcFinalStudyGrade,
+  getStudentDetails, getStudentGradesDiagram, getStudentsGradeDiagram
 } = require("./databaseDefinition");
 
 const { getArrayFromFirestore, addTopicMaterial,
@@ -176,7 +177,9 @@ app.get("/getArrayGrade", (req, res) => {
     if (Array.isArray(gradesArr)) {
       res.send(gradesArr);
     }
-    res.send("isEmpty");
+    else {
+      res.send("isEmpty");
+    }
   });
 });
 
@@ -193,8 +196,40 @@ app.get("/getTestQuestions", (req, res) => {
 //NEED THIS ROUTE => /calcFinalGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
 app.patch("/calcFinalGrade", (req, res) => {
   const { studentName, professionName, topicIndexes } = req.query;
-  calcFinalStudyGrade(studentName,professionName,topicIndexes);
+  calcFinalStudyGrade(studentName, professionName, topicIndexes);
 });
+
+
+/////////////////////FEEDBACK
+//NEED (studentName)
+//NEED THIS ROUTE => /getStudentFeedback?studentName=${studentName}
+app.get("/getStudentFeedback", (req, res) => {
+  const { studentName } = req.query;
+  getStudentDetails(studentName).then(feedbackDetails => {
+    res.send(feedbackDetails);
+  });
+});
+
+
+//NEED (studentName,professionName)
+//NEED THIS ROUTE => /getStudentsGradeDiagram?studentsNames=${studentsNames}&professionName=${professionName}
+app.get("/getStudentsGradeDiagram", (req, res) => {
+  const { studentsNames, professionName } = req.query;
+  getStudentsGradeDiagram(JSON.parse(studentsNames), professionName).then(studentsDiagram => {
+    res.send(studentsDiagram);
+  });
+});
+
+
+//NEED (studentName,professionName)
+//NEED THIS ROUTE => /getStudentGradesDiagram?studentName=${studentName}&professionName=${professionName}
+app.get("/getStudentGradesDiagram", (req, res) => {
+  const { studentName, professionName } = req.query;
+  getStudentGradesDiagram(studentName, professionName, true).then(studentDiagram => {
+    res.send(studentDiagram);
+  });
+});
+
 
 //////////////////////////////////////////////////////// FIRESTORE ////////////////////////////////////
 

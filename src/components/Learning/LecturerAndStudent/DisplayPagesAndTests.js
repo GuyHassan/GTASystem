@@ -33,19 +33,16 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
         else {
             alert('Well Done, Finish the Questions !')
             server.patch(`/setIsFinishQuestion?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}`);
-            server.patch(`/calFinalGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&finalGradeType=${'finalStudyGrade'}&gradeType=${'studyGrade'}`)
+            server.patch(`/calcFinalGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}`)
             history.push(`/MaterialView/${profession}/${className}`)
         }
     }
     const nextPageFinalTest = (answer) => {
         const indexTopicNeeded = Questions.hasOwnProperty("subTopicsIndex") ? indexTopic + ',' + Questions.subTopicsIndex : indexTopic;
-        console.log('index - ', indexTopicNeeded)
         server.patch(`/setArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&gradeType=${'testGrades'}&grade=${answer}`);
-        if (!currentpQuestion.index + 1 === Questions.questions.length) {
-            setCurrentQuestion(prevState => { return { question: Questions.questions[prevState.index + 1], index: prevState.index + 1 } });
-        }
-        else
-            getMaterialExamQuestions({ profession, indexTopic, user })
+        !currentpQuestion.index + 1 === Questions.questions.length
+            ? setCurrentQuestion(prevState => { return { question: Questions.questions[prevState.index + 1], index: prevState.index + 1 } })
+            : getMaterialExamQuestions({ profession, indexTopic, user })
 
     }
     const GridExampleInverted = () => (
@@ -88,7 +85,6 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
             })
         else if (type === 'MaterialTestQuestion') {
             const indexTopicNeeded = Questions.hasOwnProperty("subTopicsIndex") ? indexTopic + ',' + Questions.subTopicsIndex : indexTopic
-            console.log(Questions)
             if (!Array.isArray(Questions))
                 server.get(`/getArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&gradeType=${'testGrades'}`).then(res => {
                     const lastQuestionIndex = res.data === "isEmpty" ? 0 : res.data.length;
@@ -101,11 +97,9 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
                 alert('Well Done, The Test Is Finish !');
                 history.push(`/MaterialView/${profession}/${className}`)
             }
-
         }
 
     }, [Questions, profession, indexTopic, user, type])
-    console.log('Questions - ', Questions)
     return (
         <div>
             {Questions.length <= finishQuestion && type === 'MaterialQuestions'

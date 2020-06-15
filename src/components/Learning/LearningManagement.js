@@ -14,15 +14,15 @@ import CreateMaterialPages from "./Lecturer/CreateMaterialPages";
 import CreateMaterialQuestions from "./Lecturer/CreateMaterialQuestions";
 import DisplayPagesAndTests from "./LecturerAndStudent/DisplayPagesAndTests";
 import DisplayHint from "./Student/DisplayHint";
-import StudentDiagram from "./Student/StudentDiagram";
-import StudentProgress from "./Student/StudentProgress";
-//routing for all learning section includes protecte on him !
+import StudentDiagram from "./Lecturer/StudentDiagram";
+import StudentFeedback from "./Student/StudentFeedback";
+/**routing for all learning section includes protecte on him !*/
 const LearningManagement = () => {
     return (
         <Switch>
             <ProtectedRoute path="/ShowHint/:question" exact component={DisplayHint} />
-            <ProtectedRoute path="/StudentDiagram/:className/:id" exact component={StudentDiagram} />
-            <ProtectedRoute path="/StudentView/StudentProgress" exact component={StudentProgress} />
+            <ProtectedRoute path="/LecturerView/StudentDiagram/:className/:profession/:student?" exact component={StudentDiagram} />
+            <ProtectedRoute path="/StudentView/StudentProgress" exact component={StudentFeedback} />
             <ProtectedRoute path="/LecturerView/CreateMaterialQuestions/:profession/:className/:keyCollection/:type" exact component={CreateMaterialQuestions} />
             <ProtectedRoute path="/LecturerView/CreateMaterialPages/:profession/:className/:keyCollection" exact component={CreateMaterialPages} />
             <ProtectedRoute path="/LecturerView/Profession" exact component={LecturerView} />
