@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-
 const checkBoxDefault = { ans1: false, ans2: false, ans3: false, ans4: false }
-
+/**This component get a specific Question and rendering inside in the component DisplayPagesAndTests */
 const MaterialTests = ({ location, onClickNext, question: { question, ans1, ans2, ans3, ans4, correctAns, hint }, numberPage }) => {
     const [checkBoxState, setCheckBoxState] = useState(checkBoxDefault)
 
     const onChange = ({ target: { name } }) => {
         setCheckBoxState({ ...checkBoxDefault, [name]: true })
     }
+    //check if the answer is correct and send to DB the grade
     const validate = () => {
         let correctAnswer = false
         Object.entries(checkBoxState).forEach((val, index) => { return val[1] === true ? correctAnswer = index + 1 : null })

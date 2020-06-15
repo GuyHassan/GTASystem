@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../Style/MaterialPages.css';
-
+/**This component get a specific page material and rendering inside in the component DisplayPagesAndTests */
 const MaterialPages = ({ page: { title, freeText, streamLink, file }, numberPage }) => {
     return (
         <div style={{ textAlign: 'center' }}>

@@ -42,7 +42,7 @@ const Header = ({ SignIn, SignOut, userID, isLoggedIn, isLecturer }) => {
         concatenationElement.push(
             isLecturer
                 ? <Nav.Link as={Link} key={0} to='/LecturerView/StudentPermissions' className='item'>Student Permission</Nav.Link>
-                : <Nav.Link as={Link} key={0} to={`${typeRoute}/StudentProgress`} className="item">Student Progress / Feedback</Nav.Link>
+                : <Nav.Link as={Link} key={0} to={`${typeRoute}/StudentProgress`} className="item">Student Feedback</Nav.Link>
         )
         concatenationElement.push(
             <Nav.Link as={Link} key={1} to={`${typeRoute}/Profession`} className="item">Profession View</Nav.Link>,

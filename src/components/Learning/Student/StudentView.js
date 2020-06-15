@@ -1,11 +1,8 @@
 import React from 'react';
 import Professions from '../LecturerAndStudent/Professions';
-
+/**This component is  a first component that has in a student view */
 const StudentView = () => {
     return (
-        // <div className="ui container" style={{ marginTop: '20px' }}>
-        //     <StudyMaterials userMessage={"Student Mode"} />
-        // </div>
         <Professions />
     )
 }

@@ -1,17 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { server } from '../../../Apis/server';
 import { useHistory } from 'react-router';
+/**This component presents the possibility of adding a student to a specific classroom */
 const AddingStudentToClass = ({ match: { params } }) => {
     const [studentExists, setStudentExists] = useState({})
     const [newStudent, setNewStudent] = useState([])
     const history = useHistory();
+    // when the user click on a student name he add him to new array that he finnaly send to the DB
     const listNewStudent = (newS) => {
         newStudent.includes(newS)
             ? setNewStudent([...newStudent.filter((currStudent) => currStudent !== newS)])
             : setNewStudent([...newStudent, newS])
     }
-    const renderStudents = () => {
 
+    const renderStudents = () => {
         return Object.values(studentExists).map(student => {
             return (
                 <div className="item" key={student.id}>
@@ -25,6 +27,7 @@ const AddingStudentToClass = ({ match: { params } }) => {
             )
         })
     }
+    // this function using axios and fetch to the DB the new array that we create
     const addNewStudent = () => {
         const { user } = JSON.parse(localStorage.getItem("userCredential"));
         const details = {

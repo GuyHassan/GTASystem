@@ -1,7 +1,7 @@
 import React from 'react';
 import Modal from '../../ReuseableComponents/Modal';
 import { useHistory } from 'react-router';
-
+/**This component is a popup with a hint if is exist in the specific question */
 const DisplayHint = ({ location: { hint } }) => {
     const history = useHistory();
     return (

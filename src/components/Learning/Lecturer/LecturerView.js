@@ -1,7 +1,7 @@
 import React from 'react';
-// import StudyMaterials from '../LecturerAndStudent/StudyMaterials';
 import { Link } from 'react-router-dom';
 import Professions from '../LecturerAndStudent/Professions';
+/**first component of lecturer view  */
 const LecturerView = () => {
     return (
         <div className="ui container" >
