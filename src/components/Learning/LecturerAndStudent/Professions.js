@@ -2,10 +2,9 @@ import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getProfessions } from '../../../Redux/actions/index';
-
+/**This component show all profession that the lecturer is teaching and the student is learn */
 const Professions = ({ children, getProfessions, professions }) => {
     const { isLecturer, className } = JSON.parse(localStorage.getItem('userCredential'));
-
     const renderProfessions = () => {
         return professions.map((currProfession, idProfession) => {
             return (

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 import AddNewUser from '../../ReuseableComponents/AddNewUser';
-
+/**This component present the student permission, only lecturer can open user to the student ! */
 const StudentPermission = () => {
     const className = (handleChange, className, errClassName) => {
         return (

@@ -2,11 +2,10 @@ import React, { useEffect } from 'react';
 import { getStudents } from '../../../Redux/actions';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
-/**
- * This component introduces all students to the lecturer.
+/**This component introduces all students to the lecturer.
  * allows for diagrams describing the progress of the students */
 const ViewStudent = ({ students, match: { params }, getStudents }) => {
+    //rendering a student on a screen
     const renderStudent = () => {
         return students.map(student => {
             return (
@@ -15,9 +14,8 @@ const ViewStudent = ({ students, match: { params }, getStudents }) => {
                         <h2>
                             <ul>
                                 <Link to={`/LecturerView/StudentDiagram/${params.className}/${params.profession}/${student.id}`}>
-                                    <li className="renderText" onClick={() => studentDiagram(student)}>
+                                    <li className="renderText">
                                         {student.name}
-
                                     </li>
                                 </Link>
                             </ul>

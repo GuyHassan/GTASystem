@@ -5,7 +5,7 @@ import { createClassroom } from '../../../Redux/actions';
 import { connect } from 'react-redux';
 import { Field } from 'redux-form';
 
-
+/**This component shows fields that build a new classroom */
 const CreateClassroom = ({ createClassroom }) => {
     /* useHistory is a function from react-router, he have alot of function that help us arrange the components */
     const history = useHistory();

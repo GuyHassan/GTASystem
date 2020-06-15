@@ -7,20 +7,21 @@ import { getMaterialPages } from '../../../Redux/actions'
 
 const details = { title: '', freeText: '', file: '', streamLink: '' }
 
-// i need get from the backend the amount of pages that have in this material !! (length of  array) for updates
+/**This component Allow to the lecturer build a page of  material with the suitable field */
 const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params: { keyCollection, profession, className } } }) => {
     const [detailsPage, setDetailsPage] = useState(details);
     const [listPages, setListPages] = useState([])
     const [counterPages, setCounterPages] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const [fileUploadName, setFileUploadName] = useState('');
-
+    // when the user change the string inside the field
     const onChange = ({ target: { value, name } }) => {
         let changer = '';
         if (name === 'streamLink') changer = value.includes('youtube') ? value.replace('watch?v=', 'embed/') : value;
         else changer = value
         setDetailsPage({ ...detailsPage, [name]: changer });
     }
+    // validate the input !
     const validate = (type) => {
         if (type === 'onNextPage' && !Object.values(detailsPage).some(value => { return value !== ''; })) {
             setErrorMessage("Must Enter one of fields");
@@ -32,6 +33,7 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
         }
         return true
     }
+    // on click next page button
     const onNextPage = () => {
         if (validate('onNextPage')) {
             setCounterPages(counterPages + 1)
@@ -41,6 +43,7 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
             setErrorMessage('')
         }
     }
+    // handle the file that we get from the fileStack API
     const handleFileUpload = ({ filesUploaded }) => {
         if (filesUploaded.length) {
             setDetailsPage({ ...detailsPage, file: filesUploaded[0].url })
@@ -48,6 +51,7 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
             return true;
         }
     }
+    // on finish button 
     const onFinish = () => {
         if (validate('onFinish'))
             server.post('/addTopicMaterials', { newArr: listPages, keyCollection, type: 'pages' }).then(res => {

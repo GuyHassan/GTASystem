@@ -1,7 +1,6 @@
 import React from "react";
 import { Switch } from "react-router-dom";
 import ProtectedRoute from '../ReuseableComponents/ProtectedRoute';
-import DeleteMaterial from '../Learning/Lecturer/DeleteMaterial';
 import CreateClassroom from './Lecturer/CreateClassroom';
 import StudentView from '../Learning/Student/StudentView';
 import LecturerView from '../Learning/Lecturer/LecturerView';
@@ -27,7 +26,6 @@ const LearningManagement = () => {
             <ProtectedRoute path="/LecturerView/CreateMaterialPages/:profession/:className/:keyCollection" exact component={CreateMaterialPages} />
             <ProtectedRoute path="/LecturerView/Profession" exact component={LecturerView} />
             <ProtectedRoute path="/LecturerView/ViewStudents/:profession/:className" exact component={ViewStudents} />
-            <ProtectedRoute path="/LecturerView/DeleteMaterial/:id" exact component={DeleteMaterial} />
             <ProtectedRoute path="/MaterialView/:profession/:className" exact component={MaterialView} />
             <ProtectedRoute path="/LecturerView/AddingStudentToClass/:profession/:className" exact component={AddingStudentToClass} />
             <ProtectedRoute path="/LecturerView/CreateClassroom" exact component={CreateClassroom} />

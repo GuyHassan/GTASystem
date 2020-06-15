@@ -2,17 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { getClasses } from '../../../Redux/actions/index';
-
-const Professions = ({ children, getClasses, classes, match: { params } }) => {
+/**This component shows the classes the lecturer teaches.
+ * it also presents buttons that allow him to say what he wants to do with the same class at that moment (see students, add students, see \ add study material) */
+const Classrooms = ({ children, getClasses, classes, match: { params: { profession } } }) => {
     const [showButtonsID, setShowButtonsID] = useState('');
     const { isLecturer } = JSON.parse(localStorage.getItem('userCredential'));
+
     //rendering buttons when the user click on one of classroom name
     const Buttons = ({ idClass }) => {
         return showButtonsID === idClass
             && <div>
-                {isLecturer && <Link to={`/LecturerView/ViewStudents/${params.profession}/${idClass}`} className="ui green basic button small" style={{ marginBottom: '5px' }}>View Students</Link>}
-                <Link to={`/MaterialView/${params.profession}/${idClass}`} className="ui brown basic button small">View Materials</Link>
-                {isLecturer && <Link to={`/LecturerView/AddingStudentToClass/${params.profession}/${idClass}`} className="ui blue basic button small">Add Student</Link>}
+                {isLecturer && <Link to={`/LecturerView/ViewStudents/${profession}/${idClass}`} className="ui green basic button small" style={{ marginBottom: '5px' }}>View Students</Link>}
+                <Link to={`/MaterialView/${profession}/${idClass}`} className="ui brown basic button small">View Materials</Link>
+                {isLecturer && <Link to={`/LecturerView/AddingStudentToClass/${profession}/${idClass}`} className="ui blue basic button small">Add Student</Link>}
             </div>
     }
     const renderClasses = () => {
@@ -29,7 +31,10 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
             )
         })
     }
-    useEffect(() => { getClasses(params.profession) }, [getClasses, params])
+    // after the component rendering in the screen he call to redux to get the classes
+    useEffect(() => {
+        getClasses(profession)
+    }, [getClasses, profession])
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">
@@ -44,4 +49,4 @@ const Professions = ({ children, getClasses, classes, match: { params } }) => {
 const mapStateToProps = (state) => {
     return { classes: state.classes }
 }
-export default connect(mapStateToProps, { getClasses })(Professions);
+export default connect(mapStateToProps, { getClasses })(Classrooms);

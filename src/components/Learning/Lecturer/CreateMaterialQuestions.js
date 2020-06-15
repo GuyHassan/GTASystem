@@ -5,7 +5,7 @@ import { server } from '../../../Apis/server';
 import history from '../../../history';
 
 const details = { question: '', ans1: '', ans2: '', ans3: '', ans4: '', hint: '', correctAns: '' }
-
+/**This component Allow to the lecturer build a page of  Question for this material with the suitable field */
 const CreateMaterialQuestions = ({ getMaterialQuestions, getMaterialExamQuestions, materialQuestions, match: { params: { keyCollection, profession, className, type } } }) => {
     const [detailsQuestion, setDetailsQuestion] = useState(details);
     const [listQuestions, setListQuestions] = useState([])
@@ -16,6 +16,7 @@ const CreateMaterialQuestions = ({ getMaterialQuestions, getMaterialExamQuestion
         setDetailsQuestion({ ...detailsQuestion, [name]: value });
     }
     const validate = () => {
+        // check if all value on the field are fill !
         if (Object.values(detailsQuestion).some(value => { return value === '' })) {
             setErrorMessage("Must Enter All Fields");
             return false;

@@ -283,7 +283,7 @@ const initialArrayToGrades = async (studentName, professionName, topicIndexes, g
     });
 }
 //inside method that calculate average of array 
-const arrAvg = async (arr) => {
+const arrAvg = (arr) => {
     if (Array.isArray(arr)) {
         return arr.reduce((a, b) => parseInt(a) + parseInt(b), 0) / arr.length;
     }
@@ -356,17 +356,17 @@ const getTestQuestions = async (studentName, professionName, topicIndex) => {
                 return { questions: testQuestions };
             }
             else {
-                setFinalTestGrade(studentName, professionName, topicIndex);
+                await setFinalTestGrade(studentName, professionName, topicIndex);
                 return ['Finish'];
             }
         }
+
     });
 }
 
 //function to update finalGrade of the studyGrade!!!
 const calcFinalStudyGrade = (studentName, professionName, topicIndexes) => {
     getTopicGrades(studentName, professionName, topicIndexes, "studyGrades").then(async gradesArr => {
-        console.log(gradesArr);
         const avg = await arrAvg(gradesArr);
         if (!Array.isArray(topicIndexes))
             topicIndexesArray = getArrayIndexes(topicIndexes);

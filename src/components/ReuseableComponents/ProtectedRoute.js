@@ -1,7 +1,7 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import FailedLocation from "./FailedLocation";
-
+/** This component is protected route if student \ no user login try to get route of lecturer \ Admin he is blocked */
 const ProtectedRoute = ({ component: Component, ...rest }) => {
     const blockStudentPermission = () => {
         //return true if LecturerView is in the url path
