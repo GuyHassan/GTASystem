@@ -46,7 +46,6 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
     }
     // on next page when he in final test mode !
     const nextPageFinalTest = (answer) => {
-        console.log(Questions)
         const indexTopicNeeded = Questions.hasOwnProperty("subTopicsIndex") ? indexTopic + ',' + Questions.subTopicsIndex : indexTopic;
         server.patch(`/setArrayGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopicNeeded}&gradeType=${'testGrades'}&grade=${answer}`).then(res => {
             !(currentpQuestion.index + 1 === Questions.questions.length)

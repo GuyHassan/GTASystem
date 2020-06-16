@@ -64,7 +64,7 @@ const CreateMaterialPages = ({ getMaterialPages, getExtraMaterialPages, material
         type === 'pages'
             ? getMaterialPages(keyCollection)
             : getExtraMaterialPages(keyCollection)
-    }, [getMaterialPages, keyCollection])
+    }, [getMaterialPages, getExtraMaterialPages, keyCollection, type])
     useEffect(() => {
         setCounterPages(materialPages.length);
     }, [materialPages])
