@@ -42,6 +42,8 @@ const materialPages = (state = [], action) => {
     switch (action.type) {
         case 'GET_MATERIAL_PAGES':
             return action.payload;
+        case 'GET_EXTRA_MATERIAL_PAGES':
+            return action.payload
         default:
             return state;
     }

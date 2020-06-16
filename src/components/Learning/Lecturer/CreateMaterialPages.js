@@ -3,12 +3,12 @@ import { server } from '../../../Apis/server';
 import ReactFilestack from 'filestack-react';
 import history from '../../../history';
 import { connect } from 'react-redux';
-import { getMaterialPages } from '../../../Redux/actions'
+import { getMaterialPages, getExtraMaterialPages } from '../../../Redux/actions'
 
 const details = { title: '', freeText: '', file: '', streamLink: '' }
 
 /**This component Allow to the lecturer build a page of  material with the suitable field */
-const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params: { keyCollection, profession, className } } }) => {
+const CreateMaterialPages = ({ getMaterialPages, getExtraMaterialPages, materialPages, match: { params: { keyCollection, profession, className, type } } }) => {
     const [detailsPage, setDetailsPage] = useState(details);
     const [listPages, setListPages] = useState([])
     const [counterPages, setCounterPages] = useState('');
@@ -23,6 +23,7 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
     }
     // validate the input !
     const validate = (type) => {
+        console.log(detailsPage)
         if (type === 'onNextPage' && !Object.values(detailsPage).some(value => { return value !== ''; })) {
             setErrorMessage("Must Enter one of fields");
             return false;
@@ -54,20 +55,22 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
     // on finish button 
     const onFinish = () => {
         if (validate('onFinish'))
-            server.post('/addTopicMaterials', { newArr: listPages, keyCollection, type: 'pages' }).then(res => {
+            server.post('/addTopicMaterials', { newArr: listPages, keyCollection, type }).then(res => {
                 alert("Pages Uploaded !");
                 history.push(`/MaterialView/${profession}/${className}`);
             })
     }
     useEffect(() => {
-        getMaterialPages(keyCollection);
+        type === 'pages'
+            ? getMaterialPages(keyCollection)
+            : getExtraMaterialPages(keyCollection)
     }, [getMaterialPages, keyCollection])
     useEffect(() => {
         setCounterPages(materialPages.length);
     }, [materialPages])
     return (
         <div>
-            <h1 className="titleComp">{`Page ${counterPages}`}</h1>
+            <h1 className="titleComp">{`Page ${counterPages} ${type === 'extraPages' ? ' - Extra Pages' : ''}`}</h1>
             <form className="ui error form">
                 <label >Title Page (optional)</label>
                 <input name="title" type="text" value={detailsPage.title} onChange={onChange} />
@@ -103,4 +106,4 @@ const CreateMaterialPages = ({ getMaterialPages, materialPages, match: { params:
 const mapStateToProps = (state) => {
     return { materialPages: state.materialPages };
 }
-export default connect(mapStateToProps, { getMaterialPages })(CreateMaterialPages);
+export default connect(mapStateToProps, { getMaterialPages, getExtraMaterialPages })(CreateMaterialPages);
