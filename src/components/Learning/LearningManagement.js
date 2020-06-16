@@ -23,7 +23,7 @@ const LearningManagement = () => {
             <ProtectedRoute path="/LecturerView/StudentDiagram/:className/:profession/:student?" exact component={StudentDiagram} />
             <ProtectedRoute path="/StudentView/StudentProgress" exact component={StudentFeedback} />
             <ProtectedRoute path="/LecturerView/CreateMaterialQuestions/:profession/:className/:keyCollection/:type" exact component={CreateMaterialQuestions} />
-            <ProtectedRoute path="/LecturerView/CreateMaterialPages/:profession/:className/:keyCollection" exact component={CreateMaterialPages} />
+            <ProtectedRoute path="/LecturerView/CreateMaterialPages/:profession/:className/:keyCollection/:type" exact component={CreateMaterialPages} />
             <ProtectedRoute path="/LecturerView/Profession" exact component={LecturerView} />
             <ProtectedRoute path="/LecturerView/ViewStudents/:profession/:className" exact component={ViewStudents} />
             <ProtectedRoute path="/MaterialView/:profession/:className" exact component={MaterialView} />

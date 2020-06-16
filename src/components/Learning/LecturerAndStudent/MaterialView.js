@@ -52,7 +52,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
         if (showButtonsID === name) {
             return isLecturer
                 ? <div style={{ margin: '10px' }}>
-                    <Link to={`/LecturerView/CreateMaterialPages/${profession}/${className}/${keyCollection}`}
+                    <Link to={`/LecturerView/CreateMaterialPages/${profession}/${className}/${keyCollection}/pages`}
                         className='ui basic black button small'
                         style={{ marginBottom: '5px' }}>Add Pages</Link>
                     <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}/questions`}
@@ -60,6 +60,8 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                         style={{ marginBottom: '5px' }}>Add Practice Question</Link>
                     <Link to={`/LecturerView/CreateMaterialQuestions/${profession}/${className}/${keyCollection}/testQuestions`}
                         className='ui basic black button small'>Add Test Question</Link>
+                    <Link to={`/LecturerView/CreateMaterialPages/${profession}/${className}/${keyCollection}/extraPages`}
+                        className='ui basic blue button small'>Add Extra Material Pages</Link>
                     <br /><br />
                     {passingGradeJsx(keyCollection)}
                 </div>

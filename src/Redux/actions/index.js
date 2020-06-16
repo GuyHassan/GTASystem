@@ -82,7 +82,10 @@ export const getMaterialExamQuestions = (details) => async (dispatch) => {
     const response = await server.get(`/getTestQuestions?studentName=${user}&professionName=${profession}&topicIndex=${indexTopic}`);
     dispatch({ type: 'GET_MATERIAL_TEST_QUESTIONS', payload: response.data });
 }
-
+export const getExtraMaterialPages = (keyCollection) => async (dispatch) => {
+    const response = await server.get(`/getTopicMaterials?keyCollection=${keyCollection}&type=extraPages`);
+    dispatch({ type: 'GET_EXTRA_MATERIAL_PAGES', payload: response.data });
+}
 // delete didnt return nothing, only the id beacuse the server didnt give back response
 export const deleteMaterial = (id) => async (dispatch) => {
     await server.delete(`/ studyMaterials / ${id} `);

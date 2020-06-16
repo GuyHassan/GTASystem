@@ -21,7 +21,7 @@ const Classrooms = ({ children, getClasses, classes, match: { params: { professi
         return classes.map((classroom, idClassroom) => {
             return (
                 <div className="item" key={idClassroom}>
-                    <div className="content" /* style={{ color: '#1a75ff' }} */>
+                    <div className="content" >
                         <h2 className="renderText" onClick={() => setShowButtonsID(classroom)} >
                             {classroom}
                         </h2>
