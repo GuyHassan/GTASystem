@@ -407,7 +407,7 @@ const buildGradesTree = (gradesTree, isForSpecificStudent) => {
 */
 //NEED (studentName,professionName,isForSpecificStudent)=>isForSpecificStudent boolean!!
 //RETURN 2 options see above!!
-const getStudentGrade = async (studentName, professionName, isForSpecificStudent) => {
+const getStudentGradesDiagram = async (studentName, professionName, isForSpecificStudent) => {
     const needHelpAndGradesTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades`).once("value"))).val();
     const gradeTree = buildGradesTree(needHelpAndGradesTree, isForSpecificStudent);
     return isForSpecificStudent
@@ -418,10 +418,10 @@ const getStudentGrade = async (studentName, professionName, isForSpecificStudent
 //function to return array of studentName and their totalGrade
 //NEED (studentsNames,professionName)
 //RETURN array of obj =>[{studentName,grade}]
-const getStudentsGrades = async (studentsNames, professionName) => {
+const getStudentsGradeDiagram = async (studentsNames, professionName) => {
     let studentsGrades = [];
     studentsNames.forEach(student => {
-        studentsGrades.push(getStudentGrade(student.id, professionName, false));
+        studentsGrades.push(getStudentGradesDiagram(student.id, professionName, false));
     });
     studentsGrades = await Promise.all(studentsGrades);
     return studentsGrades;
@@ -486,9 +486,14 @@ const deleteStudentFromClass = (studentDetails) => {
 
 
 
+
+
+
+
+
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
     initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions,calcFinalStudyGrade
-
+    ,getStudentDetails, getStudentGradesDiagram, getStudentsGradeDiagram
 };
