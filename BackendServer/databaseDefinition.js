@@ -282,7 +282,7 @@ const initialArrayToGrades = async (studentName, professionName, topicIndexes, g
     });
 }
 //inside method that calculate average of array 
-const arrAvg = async (arr) => {
+const arrAvg =  (arr) => {
     if (Array.isArray(arr)) {
         return arr.reduce((a, b) => parseInt(a) + parseInt(b), 0) / arr.length;
     }
@@ -366,7 +366,7 @@ const getTestQuestions = async (studentName, professionName, topicIndex) => {
 const calcFinalStudyGrade =(studentName,professionName,topicIndexes)=>{
     getTopicGrades(studentName,professionName,topicIndexes,"studyGrades").then(gradesArr=>{
         const avg =arrAvg(gradesArr);
-        if (!Array.isArray(topicIndexesArray))
+        if (!Array.isArray(topicIndexes))
             topicIndexesArray = getArrayIndexes(topicIndexes);
         if(topicIndexesArray.length>1){
             database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/finalStudyGrade`).set(avg);
@@ -393,7 +393,7 @@ const buildGradesTree = (gradesTree, isForSpecificStudent) => {
             gradeSum += topic.details.finalTestGrade;
             gradeCounter++;
         }
-        objTopicGrades.push({ topicName: topic.topicName, grade: topic.details.finalTestGrade });
+        objTopicGrades.push({ label: topic.topicName, y: topic.details.finalTestGrade });
     });
     return isForSpecificStudent
         ? objTopicGrades
@@ -407,21 +407,21 @@ const buildGradesTree = (gradesTree, isForSpecificStudent) => {
 */
 //NEED (studentName,professionName,isForSpecificStudent)=>isForSpecificStudent boolean!!
 //RETURN 2 options see above!!
-const getStudentGrade = async (studentName, professionName, isForSpecificStudent) => {
+const getStudentGradesDiagram = async (studentName, professionName, isForSpecificStudent) => {
     const needHelpAndGradesTree = (await (database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades`).once("value"))).val();
     const gradeTree = buildGradesTree(needHelpAndGradesTree, isForSpecificStudent);
     return isForSpecificStudent
         ? gradeTree
-        : { studentName: studentName, grade: gradeTree };
+        : { label: studentName, y: gradeTree };
 }
 
 //function to return array of studentName and their totalGrade
 //NEED (studentsNames,professionName)
 //RETURN array of obj =>[{studentName,grade}]
-const getStudentsGrades = async (studentsNames, professionName) => {
+const getStudentsGradeDiagram = async (studentsNames, professionName) => {
     let studentsGrades = [];
     studentsNames.forEach(student => {
-        studentsGrades.push(getStudentGrade(student.id, professionName, false));
+        studentsGrades.push(getStudentGradesDiagram(student.id, professionName, false));
     });
     studentsGrades = await Promise.all(studentsGrades);
     return studentsGrades;
@@ -486,9 +486,14 @@ const deleteStudentFromClass = (studentDetails) => {
 
 
 
+
+
+
+
+
 module.exports = {
     addMaterials, getMaterials, getProfession, addStudentToClassroom, getClassrooms,
     getStudentsNamesAsObject, existInDB, checkUsernamePassword, addUsers, addClassrooms,
     initialArrayToGrades, setIsFinishQuestions, getTopicGrades, getTestQuestions,calcFinalStudyGrade
-
+    ,getStudentDetails, getStudentGradesDiagram, getStudentsGradeDiagram
 };
