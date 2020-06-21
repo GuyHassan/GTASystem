@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import MaterialTests from '../Student/MaterialTests';
 import { connect } from 'react-redux';
-import { getMaterialPages, getMaterialQuestions, getMaterialExamQuestions } from '../../../Redux/actions';
+import { getMaterialPages, getMaterialQuestions, getMaterialExamQuestions, getExtraMaterialPages } from '../../../Redux/actions';
 import MaterialPages from '../Student/MaterialPages';
 import { Grid, Icon } from 'semantic-ui-react'
 import { server } from '../../../Apis/server';
@@ -9,11 +9,13 @@ import history from '../../../history';
 const [pageDetails, questionDetails] = [{ page: { title: '', freeText: '', file: '', streamLink: '' }, index: '' }, { question: { question: '', ans1: '', ans2: '', an3: '', ans4: '', correctAns: '' }, index: '' }]
 /**This component shows a window where there will be material study pages.
  * in addition tests and you will be able to switch between the different pages */
-const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMaterialExamQuestions, Pages, Questions, match: { params: { className, profession, type, keyCollection, indexTopic } } }) => {
+const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMaterialExamQuestions, getExtraMaterialPages,
+    Pages, Questions, match: { params: { className, profession, type, keyCollection, indexTopic } } }) => {
     const [currentpPage, setCurrentPage] = useState(pageDetails)
     const [currentpQuestion, setCurrentQuestion] = useState(questionDetails)
     const [finishQuestion, setFinishQuestion] = useState(0);
     const { user } = JSON.parse(localStorage.getItem("userCredential"))
+    const isMaterialPages = type === 'MaterialPages' || type === 'ExtraMaterialPages'
     // on next page (material page no Question !!)
     const onNextPageArrow = () => {
         setCurrentPage(prevState => {
@@ -59,16 +61,16 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
         <Grid columns='equal' divided inverted padded textAlign='center'>
             <Grid.Row >
                 <Grid.Column width="2" verticalAlign='middle'>
-                    {type === 'MaterialPages' && <Icon name='arrow alternate circle left' onClick={onPreviousPageArrow} size='big' />}
+                    {isMaterialPages && <Icon name='arrow alternate circle left' onClick={onPreviousPageArrow} size='big' />}
                 </Grid.Column>
                 <Grid.Column width="12">
-                    {type === 'MaterialPages'
+                    {isMaterialPages
                         ? <MaterialPages page={currentpPage.page} numberPage={currentpPage.index} />
                         : <MaterialTests question={currentpQuestion.question} numberPage={currentpQuestion.index} onClickNext={type === 'MaterialQuestions' ? nextPageQuestion : nextPageFinalTest} />
                     }
                 </Grid.Column>
                 <Grid.Column width="2" verticalAlign='middle'>
-                    {type === 'MaterialPages' && <Icon name='arrow alternate circle right' size='big' className="ui floated right" onClick={onNextPageArrow} />}
+                    {isMaterialPages && <Icon name='arrow alternate circle right' size='big' className="ui floated right" onClick={onNextPageArrow} />}
                 </Grid.Column>
             </Grid.Row>
         </Grid>
@@ -80,7 +82,9 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
             ? getMaterialPages(keyCollection)
             : type === 'MaterialQuestions'
                 ? getMaterialQuestions(keyCollection)
-                : getMaterialExamQuestions({ profession, indexTopic, user })
+                : type === 'MaterialTestQuestion'
+                    ? getMaterialExamQuestions({ profession, indexTopic, user })
+                    : getExtraMaterialPages(keyCollection)
     }, [getMaterialPages, getMaterialQuestions, getMaterialExamQuestions, profession, indexTopic, keyCollection, type, user])
     // set current page material
     useEffect(() => {
@@ -128,4 +132,4 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
 const mapStateToProps = (state) => {
     return { Pages: state.materialPages, Questions: state.materialQuestions }
 }
-export default connect(mapStateToProps, { getMaterialPages, getMaterialQuestions, getMaterialExamQuestions })(DisplayPagesAndTests);
+export default connect(mapStateToProps, { getMaterialPages, getMaterialQuestions, getMaterialExamQuestions, getExtraMaterialPages })(DisplayPagesAndTests);
