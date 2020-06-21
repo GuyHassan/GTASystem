@@ -20,7 +20,9 @@ const getArrayFromFirestore = async (keyCollection, type = null) => {
             ? details.data().pages
             : type === 'questions'
                 ? details.data().questions
-                : details.data().testQuestions;
+                :type=== 'testQuestions'
+                    ? details.data().testQuestions
+                    : details.data().extraPages;
     });
 }
 
@@ -49,9 +51,13 @@ const addTopicMaterial = (keyCollection, newArr, type) => {
             const existQuestions = details.data().questions;
             firestore.collection("topics").doc(keyCollection).update({ questions: existQuestions.concat(newArr) });
         }
-        else {
+        else if(type==="testQuestions"){
             const existTestQuestions = details.data().testQuestions;
             firestore.collection("topics").doc(keyCollection).update({ testQuestions: existTestQuestions.concat(newArr) });
+        }
+        else{
+            const existExtraPages = details.data().extraPages;
+            firestore.collection("topics").doc(keyCollection).update({ extraPages: existExtraPages.concat(newArr) });
         }
     });
 }

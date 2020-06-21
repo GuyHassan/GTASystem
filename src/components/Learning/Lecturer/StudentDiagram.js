@@ -41,7 +41,6 @@ const StudentDiagram = ({ match: { params: { profession, className, student } },
                 onRender(studentDetails.data)
             })
             : server.get(`/getStudentsGradeDiagram?studentsNames=${JSON.stringify(students)}&professionName=${profession}`).then(studentDetails => {
-                console.log(studentDetails.data);
                 onRender(studentDetails.data)
             })
 

@@ -75,7 +75,7 @@ app.get("/getClasses/:username/:professionName", (req, res) => {
 app.get("/getProfession/:username/:isLecturer", (req, res) => {
   const { username, isLecturer } = req.params;
   getProfession(username, (isLecturer === 'true')).then(professionList => {
-    if (professionList.length === 0) {
+    if (Array.isArray(professionList)&&professionList.length === 0) {
       res.status("404").send("you don't have profession yet");
       return;
     }
@@ -193,10 +193,10 @@ app.get("/getTestQuestions", (req, res) => {
 });
 
 //NEED (studentName,professionName,topicIndexes)
-//NEED THIS ROUTE => /calcFinalGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}
+//NEED THIS ROUTE => /calcFinalGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&keyCollection=${keyCollection}
 app.patch("/calcFinalGrade", (req, res) => {
-  const { studentName, professionName, topicIndexes } = req.query;
-  calcFinalStudyGrade(studentName, professionName, topicIndexes);
+  const { studentName, professionName, topicIndexes,keyCollection } = req.query;
+  calcFinalStudyGrade(studentName, professionName, topicIndexes,keyCollection);
 });
 
 
