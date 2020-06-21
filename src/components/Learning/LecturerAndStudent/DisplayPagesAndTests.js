@@ -38,7 +38,7 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
             else {
                 alert('Well Done, Finish the Questions !')
                 server.patch(`/setIsFinishQuestion?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}`)
-                server.patch(`/calcFinalGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}`)
+                server.patch(`/calcFinalGrade?studentName=${user}&professionName=${profession}&topicIndexes=${indexTopic}&keyCollection=${keyCollection}`)
                 history.push(`/MaterialView/${profession}/${className}`)
             }
         })

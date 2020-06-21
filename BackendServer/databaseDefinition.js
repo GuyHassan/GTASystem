@@ -1,5 +1,5 @@
 const firebase = require("./firebaseDefinition");
-const { addLinkToTopic, getArrayFromFirestore, getTestQuestionsFromFirestore } = require("./firestoreDefinition");
+const { addLinkToTopic, getArrayFromFirestore, getPassingGrade } = require("./firestoreDefinition");
 const database = firebase.database();
 
 //function for check if username and password are exist NEED {USERNAME,PASSWORD}
@@ -226,7 +226,7 @@ const getArrayIndexes = (stringIndexes) => {
 //NO RETURN!! 
 const setIsFinishQuestions = (studentName, professionName, topicIndexes) => {
     const topicIndexesArray = getArrayIndexes(topicIndexes);
-    if (topicIndexes.length > 1) {
+    if (Array.isArray(topicIndexes)&&topicIndexes.length > 1) {
         database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details`).update({ isFinishQuestions: 1 });
     }
     else {
@@ -363,17 +363,29 @@ const getTestQuestions = async (studentName, professionName, topicIndex) => {
 }
 
 //function to update finalGrade of the studyGrade!!!
-const calcFinalStudyGrade =(studentName,professionName,topicIndexes)=>{
+const calcFinalStudyGrade =(studentName,professionName,topicIndexes,keyCollection)=>{
     getTopicGrades(studentName,professionName,topicIndexes,"studyGrades").then(gradesArr=>{
         const avg =arrAvg(gradesArr);
         if (!Array.isArray(topicIndexes))
             topicIndexesArray = getArrayIndexes(topicIndexes);
-        if(topicIndexesArray.length>1){
-            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/finalStudyGrade`).set(avg);
-        }
-        else{
-            database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/finalStudyGrade`).set(avg);
-        }
+        getPassingGrade(keyCollection).then(passingGrade=>{
+            if(passingGrade>avg){
+                if(topicIndexesArray.length>1){
+                    database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/needHelp`).set(1);
+                    
+                }
+                else{
+                    database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/needHelp`).set(1);
+                }
+            }
+            if(topicIndexesArray.length>1){
+                database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/subTopics/${topicIndexesArray[1]}/details/finalStudyGrade`).set(avg);
+                
+            }
+            else{
+                database.ref(`students/${studentName}/materials/${professionName}/needHelpAndGrades/${topicIndexesArray[0]}/details/finalStudyGrade`).set(avg);
+            }
+        });
     });
 }
 
