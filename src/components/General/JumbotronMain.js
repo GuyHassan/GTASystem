@@ -1,6 +1,5 @@
 import React from 'react';
 import '../Style/JumbotronMain.css';
-
 const JumbotronMain = (props) => {
     return (
         <div id="header" className="jumbotron text-center">
@@ -9,7 +8,6 @@ const JumbotronMain = (props) => {
                 <hr />
                 <p className="lead" >מערכת עזר מלמדת למורים ולתלמידים</p>
             </div>
-
         </div>
     );
 }

@@ -47,7 +47,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
             </Fragment>
     }
     //display buttons on click one of topic or subtopic, check the type of user (student or lecture )
-    const Buttons = ({ topic: { subTopicName, keyCollection, topicName, details: { needHelp } }, indexes }) => {
+    const Buttons = ({ topic: { subTopicName, keyCollection, topicName, details }, indexes }) => {
         const name = subTopicName ? subTopicName : topicName;
         if (showButtonsID === name) {
             return isLecturer
@@ -70,7 +70,7 @@ const MaterialView = ({ getMaterials, match: { params }, materials }) => {
                         className='ui basic red button small' style={{ marginBottom: '5px' }}>Learn Topic</Link>
                     <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/MaterialQuestions`}
                         className='ui basic green button small' style={{ marginBottom: '5px' }}>Practice Topic</Link>
-                    {needHelp !== -1 && <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/ExtraMaterialPages`}
+                    {details.needHelp !== -1 && <Link to={`/StudentView/DisplayMaterials/${profession}/${className}/${keyCollection}/${indexes}/ExtraMaterialPages`}
                         className='ui basic purple button small'>Extra Material Pages</Link>}
                 </div >
 

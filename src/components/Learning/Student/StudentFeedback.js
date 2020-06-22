@@ -33,7 +33,7 @@ const StudentFeedback = () => {
                         <ul>
                             {subTopics
                                 && subTopics.map(({ subTopicName, finalTestGrade }) => {
-                                    return <li key={subTopicName}>
+                                    return <li key={subTopicName} style={{ textTransform: 'capitalize' }}>
                                         {subTopicName} -  {gradeMessage(finalTestGrade)}
                                     </li>
                                 })

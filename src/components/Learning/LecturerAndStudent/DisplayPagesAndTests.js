@@ -85,7 +85,7 @@ const DisplayPagesAndTests = ({ getMaterialPages, getMaterialQuestions, getMater
                 : type === 'MaterialTestQuestion'
                     ? getMaterialExamQuestions({ profession, indexTopic, user })
                     : getExtraMaterialPages(keyCollection)
-    }, [getMaterialPages, getMaterialQuestions, getMaterialExamQuestions, profession, indexTopic, keyCollection, type, user])
+    }, [getMaterialPages, getMaterialQuestions, getExtraMaterialPages, getMaterialExamQuestions, profession, indexTopic, keyCollection, type, user])
     // set current page material
     useEffect(() => {
         Pages.length
