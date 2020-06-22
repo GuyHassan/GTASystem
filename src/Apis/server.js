@@ -12,4 +12,4 @@ const server = axios.create({
 // process.env.REACT_APP_LOCALHOST_RESTFUL 
 
 
-export {server};
+export { server };

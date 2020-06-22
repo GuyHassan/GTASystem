@@ -5,16 +5,18 @@ import history from '../../history';
 import FormField from '../ReuseableComponents/FormFields';
 import { server } from '../../Apis/server';
 
-
+// login component
 const Login = ({ SignIn }) => {
     const propertiesName = {
         firstLabel: 'User Name', secondLabel: 'Password',
         firstField: 'Username', secondField: 'Password', buttonName: 'LOGIN'
     }
+    // hold on  cookies the properties of this current user that is login
     const setLocalStorage = (username, isLecturer, className) => {
         const user = { user: username, isLecturer, className }
         localStorage.setItem('userCredential', JSON.stringify(user))
     }
+    // check if the user is lecturer or student and pass him to the correct route
     const userType = ({ username, isLecturer, className }) => {
         SignIn({ userID: username, isLecturer, className })
         setLocalStorage(username, isLecturer, className)
