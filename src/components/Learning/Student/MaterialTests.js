@@ -24,7 +24,9 @@ const MaterialTests = ({ location, onClickNext, question: { question, ans1, ans2
         <div>
             <h1 className="titleComp" style={{ marginBottom: '20px' }}>{`Question Page  ${numberPage + 1}`}</h1>
             <div style={{ textAlign: 'left' }}>
-                <h3>{question}</h3>
+                <h2 style={{ textDecoration: 'underline', textTransform: 'capitalize', color: '#20B2AA', fontWeight: '700' }}>Question: </h2>
+                <h3 className="freeText" >{question}</h3>
+                <h2 style={{ textDecoration: 'underline', textTransform: 'capitalize', color: '#20B2AA', fontWeight: '700' }}>Answers: </h2>
                 <input type="checkbox" name='ans1' checked={checkBoxState.ans1} onChange={onChange} /> {ans1} <br />
                 <input type="checkbox" name='ans2' checked={checkBoxState.ans2} onChange={onChange} /> {ans2}<br />
                 <input type="checkbox" name='ans3' checked={checkBoxState.ans3} onChange={onChange} /> {ans3}<br />
