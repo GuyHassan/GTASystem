@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "8dd09345ae68ce58d303580b34deb65a",
+    "revision": "2b7034ee6ad3dfdb1845f6081ac14b30",
     "url": "/GTASystem/index.html"
   },
   {
-    "revision": "785bdb6d6e055132b15e",
+    "revision": "3268d0f5668ea55d9059",
     "url": "/GTASystem/static/css/main.4e5e40d5.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/GTASystem/static/js/2.284d2a0a.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "785bdb6d6e055132b15e",
-    "url": "/GTASystem/static/js/main.b28ed619.chunk.js"
+    "revision": "3268d0f5668ea55d9059",
+    "url": "/GTASystem/static/js/main.01cd47b2.chunk.js"
   },
   {
     "revision": "ee99bdc68005941d0e80",
