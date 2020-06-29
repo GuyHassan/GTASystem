@@ -1,2 +1,3 @@
 /node_modules
 # git push heroku master
+.env
