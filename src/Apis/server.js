@@ -5,13 +5,13 @@ import axios from 'axios';
 // });
 
 
-// const server = axios.create({
-//   baseURL: "https://gta-system.herokuapp.com/"
-// });
-
 const server = axios.create({
-  baseURL: 'http://localhost:3005'
+  baseURL: process.env.REACT_APP_BASE_URL
 });
+
+// const server = axios.create({
+//   baseURL: 'http://localhost:3005'
+// });
 
 // process.env.REACT_APP_LOCALHOST_RESTFUL 
 
