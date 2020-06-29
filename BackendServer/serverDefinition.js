@@ -21,27 +21,15 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(function (req, res, next) {
   // Website you wish to allow to connect
   const allowedOrigins = [
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "http://localhost:3000",
-    "https://guyhassan.github.io",
-=======
-    "http://localhost:3000"//,"github"
->>>>>>> 816c8b0ca163e0dd0fa10a208e7e7ee9d033afe8
-=======
     "http://localhost:3000",
     "https://guyhassan.github.io"
->>>>>>> 7ab8b96fe1217b38c7d734b69472d561a6500aae
   ];
   const origin = req.headers.origin;
   if (allowedOrigins.indexOf(origin) > -1) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-<<<<<<< HEAD
-=======
   // res.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE, PATCH");
->>>>>>> 7ab8b96fe1217b38c7d734b69472d561a6500aae
   next();
 });
 
