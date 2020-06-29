@@ -1,6 +1,3 @@
-//שגיאה בהוספת שאלות תרגול 
-
-
 
 //for databaseDefinition!!
 const { addMaterials, getMaterials, getProfession,
@@ -10,29 +7,20 @@ const { addMaterials, getMaterials, getProfession,
   getStudentDetails, getStudentGradesDiagram, getStudentsGradeDiagram
 } = require("./databaseDefinition");
 
-
-
-if (process.env.NODE_ENV !== "production") {
-  const dotenv = require('dotenv');
-  dotenv.config();
-}
-
-
 const { getArrayFromFirestore, addTopicMaterial,
   setPassingGrade, getPassingGrade } = require("./firestoreDefinition");
 
-const PORT = process.env.PORT||3005;
+const PORT = process.env.PORT || 3005;
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }))
 
 // Website you wish to allow to connect need to add here the github root to the website !!!
 app.use(function (req, res, next) {
   const allowedOrigins = [
-    "http://localhost:3000",
-    "https://guyhassan.github.io/GTASystem/"
+    "http://localhost:3000"//,"github"
   ];
   const origin = req.headers.origin;
   if (allowedOrigins.indexOf(origin) > -1) {
@@ -282,9 +270,10 @@ app.get("/getPassingGrade", (req, res) => {
 
 
 
-app.listen(PORT, () =>{
-  console.log(`App listening on port ${PORT}!`);
-});
+// inital the server in default PORT (3005)
+app.listen(PORT, () =>
+  console.log(`App listening on port ${PORT}!`)
+);
 
 
 //module.exports = app;
