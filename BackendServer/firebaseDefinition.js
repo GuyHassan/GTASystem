@@ -11,14 +11,15 @@ require('firebase/storage');
 
 //define our firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyBF4C3_e9Z0Knmj2P_6BLu4qeczO0Lh6uA",
-    authDomain: "gtasystem-3e9ee.firebaseapp.com",
-    databaseURL: "https://gtasystem-3e9ee.firebaseio.com",
-    projectId: "gtasystem-3e9ee",
-    storageBucket: "gtasystem-3e9ee.appspot.com",
-    messagingSenderId: "31370967459",
-    appId: "1:31370967459:web:75495237af3ad131a90216",
-    measurementId: "G-RMWLSFVZ9M"
+    apiKey: process.env.API_KEY,
+    authDomain: process.env.AUTH_DOMAIN,
+    databaseURL: process.env.DB_URL,
+    projectId: process.env.PROJECT_ID,
+    storageBucket: process.env.STORAGE_BUCKET,
+    messagingSenderId: process.env.MESSAGING_SENDER_ID,
+    appId: process.env.APP_ID,
+    measurementId: process.env.MEASURE_ID
+
 };
 
 //initial the database
