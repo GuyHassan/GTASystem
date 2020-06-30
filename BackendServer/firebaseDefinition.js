@@ -10,7 +10,6 @@ require('firebase/database');
 require('firebase/storage');
 const dotenv = require('dotenv');
 dotenv.config();
-console.log(process.env.PROJECT_ID)
 //define our firebase
 const firebaseConfig = {
     apiKey: process.env.API_KEY,
