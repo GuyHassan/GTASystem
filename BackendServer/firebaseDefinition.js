@@ -8,7 +8,9 @@ require("firebase/auth");
 require("firebase/firestore");
 require('firebase/database');
 require('firebase/storage');
-
+const dotenv = require('dotenv');
+dotenv.config();
+console.log(process.env.PROJECT_ID)
 //define our firebase
 const firebaseConfig = {
     apiKey: process.env.API_KEY,
@@ -19,7 +21,6 @@ const firebaseConfig = {
     messagingSenderId: process.env.MESSAGING_SENDER_ID,
     appId: process.env.APP_ID,
     measurementId: process.env.MEASURE_ID
-
 };
 
 //initial the database

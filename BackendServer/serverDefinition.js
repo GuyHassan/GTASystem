@@ -19,20 +19,18 @@ app.use(bodyParser.urlencoded({ extended: true }))
 
 // Website you wish to allow to connect need to add here the github root to the website !!!
 app.use(function (req, res, next) {
-  // Website you wish to allow to connect
   const allowedOrigins = [
     "http://localhost:3000",
-    "https://guyhassan.github.io"
+    "https://guyhassan.github.io/GTASystem/"
   ];
   const origin = req.headers.origin;
   if (allowedOrigins.indexOf(origin) > -1) {
     res.setHeader("Access-Control-Allow-Origin", origin);
   }
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
-  // res.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE, PATCH");
+  res.setHeader("Access-Control-Allow-Methods", "POST, PUT, GET, OPTIONS, DELETE, PATCH");
   next();
 });
-
 
 // create a login request and check if the user exist
 app.post('/loginRequest', (req, res) => {
@@ -78,7 +76,7 @@ app.get("/getClasses/:username/:professionName", (req, res) => {
 app.get("/getProfession/:username/:isLecturer", (req, res) => {
   const { username, isLecturer } = req.params;
   getProfession(username, (isLecturer === 'true')).then(professionList => {
-    if (Array.isArray(professionList) && professionList.length === 0) {
+    if (Array.isArray(professionList)&&professionList.length === 0) {
       res.status("404").send("you don't have profession yet");
       return;
     }
@@ -198,8 +196,8 @@ app.get("/getTestQuestions", (req, res) => {
 //NEED (studentName,professionName,topicIndexes)
 //NEED THIS ROUTE => /calcFinalGrade?studentName=${studentName}&professionName=${professionName}&topicIndexes=${topicIndexes}&keyCollection=${keyCollection}
 app.patch("/calcFinalGrade", (req, res) => {
-  const { studentName, professionName, topicIndexes, keyCollection } = req.query;
-  calcFinalStudyGrade(studentName, professionName, topicIndexes, keyCollection);
+  const { studentName, professionName, topicIndexes,keyCollection } = req.query;
+  calcFinalStudyGrade(studentName, professionName, topicIndexes,keyCollection);
 });
 
 
