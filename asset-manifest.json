@@ -1,24 +1,24 @@
 {
   "files": {
     "main.css": "/GTASystem/static/css/main.4e5e40d5.chunk.css",
-    "main.js": "/GTASystem/static/js/main.785ffbc6.chunk.js",
-    "main.js.map": "/GTASystem/static/js/main.785ffbc6.chunk.js.map",
+    "main.js": "/GTASystem/static/js/main.324f6d98.chunk.js",
+    "main.js.map": "/GTASystem/static/js/main.324f6d98.chunk.js.map",
     "runtime-main.js": "/GTASystem/static/js/runtime-main.c2d123b5.js",
     "runtime-main.js.map": "/GTASystem/static/js/runtime-main.c2d123b5.js.map",
-    "static/js/2.af7bc853.chunk.js": "/GTASystem/static/js/2.af7bc853.chunk.js",
-    "static/js/2.af7bc853.chunk.js.map": "/GTASystem/static/js/2.af7bc853.chunk.js.map",
+    "static/js/2.284d2a0a.chunk.js": "/GTASystem/static/js/2.284d2a0a.chunk.js",
+    "static/js/2.284d2a0a.chunk.js.map": "/GTASystem/static/js/2.284d2a0a.chunk.js.map",
     "index.html": "/GTASystem/index.html",
-    "precache-manifest.aa4b2e3937c9f00cf353dd2e2e321f41.js": "/GTASystem/precache-manifest.aa4b2e3937c9f00cf353dd2e2e321f41.js",
+    "precache-manifest.76b59122694204d6cb14e226a95d967f.js": "/GTASystem/precache-manifest.76b59122694204d6cb14e226a95d967f.js",
     "service-worker.js": "/GTASystem/service-worker.js",
     "static/css/main.4e5e40d5.chunk.css.map": "/GTASystem/static/css/main.4e5e40d5.chunk.css.map",
-    "static/js/2.af7bc853.chunk.js.LICENSE.txt": "/GTASystem/static/js/2.af7bc853.chunk.js.LICENSE.txt",
+    "static/js/2.284d2a0a.chunk.js.LICENSE.txt": "/GTASystem/static/js/2.284d2a0a.chunk.js.LICENSE.txt",
     "static/media/LogoNavbar.be2ecc40.svg": "/GTASystem/static/media/LogoNavbar.be2ecc40.svg",
     "static/media/JumbotronMain.css": "/GTASystem/static/media/jumbotronPicture2.e8c0097f.jpg"
   },
   "entrypoints": [
     "static/js/runtime-main.c2d123b5.js",
-    "static/js/2.af7bc853.chunk.js",
+    "static/js/2.284d2a0a.chunk.js",
     "static/css/main.4e5e40d5.chunk.css",
-    "static/js/main.785ffbc6.chunk.js"
+    "static/js/main.324f6d98.chunk.js"
   ]
 }
