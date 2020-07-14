@@ -5,5 +5,4 @@ const server = axios.create({
 });
 
 
-
 export { server };

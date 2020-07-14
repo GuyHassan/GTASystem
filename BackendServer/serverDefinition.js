@@ -20,7 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // Website you wish to allow to connect need to add here the github root to the website !!!
 app.use(function (req, res, next) {
   const allowedOrigins = [
-    "http://localhost:3000"//,"github"
+    "http://localhost:3000",
+    "https://guyhassan.github.io/GTASystem/"
   ];
   const origin = req.headers.origin;
   if (allowedOrigins.indexOf(origin) > -1) {
