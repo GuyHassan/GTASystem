@@ -38,7 +38,7 @@ const Classrooms = ({ children, getClasses, classes, match: { params: { professi
     return (
         <div className="ui container" style={{ marginTop: '20px' }}>
             <div className="ui celled list">
-                <h1 className="titleComp">Classrooms</h1><br />
+                <h1 className="titleComp">Classrooms - <span style={{ textTransform: 'capitalize' }}>{profession}</span></h1><br />
                 {renderClasses()}
                 {children}
                 <br /><br />

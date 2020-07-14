@@ -8,20 +8,20 @@ const StudentFeedback = () => {
     const { user } = JSON.parse(localStorage.getItem("userCredential"))
     // this function check each  grade and return a message Depending on the grade
     const gradeMessage = (grade) => {
-        const color = grade === -1 ? 'blue' : grade <= 80 ? 'red' : 'green';
+        const color = grade === -1 ? 'blue' : grade >= 80 ? 'green' : grade < 80 && grade >= 56 ? 'purple' : 'red';
         const feedBackMessage = grade === -1
             ? "You Haven't Tested On That Part Yet :)"
             : grade >= 80
                 ? `${grade} - Excellent !!`
                 : grade >= 70 && grade < 80
-                    ? `${grade} - You Good !!! But still need to get better !`
+                    ? `${grade} - You Good !!! But Still need To Get Better !`
                     : grade >= 60 && grade < 70
-                        ? `${grade} - Must More practice ! Have to get Better ...`
+                        ? `${grade} - Must More Practice ! Have To Get Better ...`
                         : grade >= 56 && grade < 60
-                            ? `${grade} - You Almost fails !! you have to learn better !`
+                            ? `${grade} - You Almost Failed !! You Have To Learn Better !`
                             : grade < 56 && grade >= 0
-                            && `${grade} - You Fails !! Send Email To Your Teacher for more helper !`
-        return <span style={{ color }}>{feedBackMessage}</span>
+                            && `${grade} - You Failed ! You Need Send Email To Your Lecturer For Further Help !`
+        return <span style={{ color, fontWeight: '700' }}>{feedBackMessage}</span>
     }
     const listFeedbacks = studentFeedback.map(({ professionName, topics }) =>
         <div key={professionName}>

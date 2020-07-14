@@ -7,7 +7,7 @@ import GeneralManagement from './General/GeneralManagement';
 import './Style/GeneralStyling.css';
 const App = () => {
     return (
-        <Router history={history} >
+        <Router history={history}  >
             <Header />
             <div className='ui container'>
                 <LearningManagement />

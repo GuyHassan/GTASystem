@@ -5,7 +5,7 @@ const IntroductionMain = () => {
     return (
         <div>
             <h1 className='titleComp' style={{ textDecoration: 'none' }}>Introduction</h1>
-            <hr style={{ borderColor: 'blue', width: '85vw' }} />
+            <hr style={{ borderColor: 'blue', width: '80vw' }} />
             <p style={{ direction: 'rtl', textAlign: 'right', fontSize: '18px' }}>
                 צפיפות התלמידים בכיתות הלימוד בשנים האחרונות רק הולכת וגוברת, דבר המצריך מהמורה לא רק העברת החומר בכיתה אלא גם לדעת להעביר אותו בצורה שבה כל התלמידים בכיתה יהיו שווי ידע,
                 כמו כן לתת מענה גם לחזקים שבכיתה בהוספת ידע וגם לתלמידים החלשים יותר בהוספת  תרגול החומר . <br />
