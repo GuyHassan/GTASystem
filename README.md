@@ -7,7 +7,8 @@ Yinon Hirari - https://github.com/yinonhi
 ### Home Screen
 ![image](https://user-images.githubusercontent.com/33221427/87484609-491b8100-c63f-11ea-935b-31fca097281b.png)
 ### Video Project (in Hebrew Language)
-[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=BzyDQlKFe0w)
+[![Little red riding hood](http://i.imgur.com/7YTMFQp.png)](https://www.youtube.com/watch?v=BzyDQlKFe0w "Little red riding hood - Click to Watch!")
+
 ### `npm start`
 
 Runs the app in the development mode.<br />
