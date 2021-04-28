@@ -7,7 +7,7 @@ Yinon Hirari - https://github.com/yinonhi
 ### Home Screen
 ![image](https://user-images.githubusercontent.com/33221427/87484609-491b8100-c63f-11ea-935b-31fca097281b.png)
 ### Video Project (in Hebrew Language)
-https://youtu.be/BzyDQlKFe0w
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/YOUTUBE_VIDEO_ID_HERE/0.jpg)](https://www.youtube.com/watch?v=BzyDQlKFe0w)
 ### `npm start`
 
 Runs the app in the development mode.<br />
